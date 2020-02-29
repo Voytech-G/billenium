@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-beautiful-dnd": "^13.0.0",
+    "uuid": "^7.0.1"
+  }
+}
