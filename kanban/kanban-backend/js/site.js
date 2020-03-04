@@ -6,10 +6,16 @@ window.onload = (function() {
     let socket = io(SERVER_URL)
 
     const handleClick = () => {
-        // get note content
         let content = input.value
+        let rowIndex = 1
+        let columnIndex = 1
 
-        socket.emit('new-note', { content })
+        socket.emit('update-note', {
+            note_id: '5e6002c7e2a5373178827cc4',
+            content,
+            row_index: rowIndex,
+            column_index: columnIndex,
+        })
     }
 
     button.addEventListener('click', handleClick)
