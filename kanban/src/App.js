@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import uuid from "uuid/v4";
-const form = {};
+const inputContent = "";
 const itemsFromBackend = [
   { id: uuid(), content: "First task" },
   { id: uuid(), content: "Second task" },
@@ -62,11 +62,34 @@ const onDragEnd = (result, columns, setColumns) => {
     });
   }
 };
-const handleClick = (e, cid, columns, setColumns, itemsBackend, setItems) => {
+
+const handleText = (e, content, setContent) => {
+  if (e.target.value == "") {
+    alert("Pole musi mieć tekst!");
+  } else {
+    setContent(e.target.value);
+  }
+  console.log(e.target.value);
+  console.log(content);
+};
+const handleClick = (
+  e,
+  cid,
+  columns,
+  setColumns,
+  itemsBackend,
+  setItems,
+  contentTxt,
+  setContent
+) => {
   // const columnItems = [...selectedColumn.items];
   e.preventDefault();
-  // console.log(columns[cid]);
-  const newCard = { id: uuid(), content: "Six" };
+  const textToBeCleared = document.querySelector(
+    `#${CSS.escape(cid)}-txtInput`
+  );
+  // handleText(e);
+  console.log(columns[cid]);
+  const newCard = { id: uuid(), content: contentTxt };
   setItems([...itemsBackend, newCard]);
   const parentColumn = columns[cid];
   const parentItems = [...parentColumn.items, newCard];
@@ -77,7 +100,9 @@ const handleClick = (e, cid, columns, setColumns, itemsBackend, setItems) => {
       items: parentItems
     }
   });
+  setContent("");
   console.log(itemsBackend);
+  textToBeCleared.value = "";
   // console.log(parentItems);
   // console.log(items);
   // onDragEnd(result, columns, setColumns);
@@ -92,10 +117,10 @@ const handleClick = (e, cid, columns, setColumns, itemsBackend, setItems) => {
 //   form["cardContent"].value = "";
 //   // window.render();
 // };
-function App() {
+const App = () => {
   const [columns, setColumns] = useState(columnsFromBackend);
   const [itemsBackend, setItems] = useState(itemsFromBackend);
-
+  const [content, setContent] = useState(inputContent);
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
       <DragDropContext
@@ -164,6 +189,7 @@ function App() {
                           style={{ display: "flex", flexDirection: "column" }}
                         >
                           <textarea
+                            id={columnId + "-txtInput"}
                             name="cardContent"
                             style={{
                               minHeight: "50px",
@@ -171,6 +197,7 @@ function App() {
                               maxWidth: "97%",
                               minWidth: "97%"
                             }}
+                            onChange={e => handleText(e, content, setContent)}
                           />
                           <button
                             onClick={e =>
@@ -180,7 +207,9 @@ function App() {
                                 columns,
                                 setColumns,
                                 itemsBackend,
-                                setItems
+                                setItems,
+                                content,
+                                setContent
                               )
                             }
                             type="submit"
@@ -200,6 +229,6 @@ function App() {
       </DragDropContext>
     </div>
   );
-}
+};
 
 export default App;
