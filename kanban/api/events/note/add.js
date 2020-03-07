@@ -17,11 +17,11 @@ module.exports = async (payload, callback) => {
             column_id: payload.column_id,
         })
     
-        await newNote.save()
-
+        let doc = await newNote.save()
         callback({
             status: true,
-            message: 'Successfully created a new note'
+            message: 'Successfully created a new note',
+            payload: doc,
         })
 
         return

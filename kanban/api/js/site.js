@@ -21,9 +21,9 @@ window.onload = (function() {
     const handleUpdate = () => {
         socket.emit('update-note', {
             note_id: '5e640fb2229e3668e850959c',
-            content: 'updated third new note 2',
-            row_index: 1515,
-            column_id: 20,
+            content: 'updated fourth new note 2',
+            row_index: 5,
+            column_id: 5,
         }, handleUpdateResponse)
 
         return
