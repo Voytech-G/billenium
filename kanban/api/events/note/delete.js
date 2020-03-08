@@ -1,5 +1,5 @@
 const Note = require('../../database/models/Note.js')
-const validateRemovedNote = require('../../validation/note/remove.js')
+const validateRemovedNote = require('../../validation/note/delete.js')
 
 module.exports = async(payload, callback) => {
     const noteId = payload.note_id

@@ -1,4 +1,4 @@
-const validateNewNote = (content, rowIndex, columnId) => {
+const validateCreateNote = (content, rowIndex, columnId) => {
     if (content == null) {
         throw new Error(`Note content is required`)
     }
@@ -12,4 +12,4 @@ const validateNewNote = (content, rowIndex, columnId) => {
     }
 }
 
-module.exports = validateNewNote
+module.exports = validateCreateNote

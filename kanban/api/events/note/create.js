@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Note = require('../../database/models/Note')
-const validateNewNote = require('../../validation/note/new.js')
+const validateCreateNote = require('../../validation/note/create.js')
+const validateCreateNoteResponse = require('../../validation/note/createResponse')
 
 module.exports = async(payload, callback) => {
     const content = payload.content
@@ -8,7 +9,7 @@ module.exports = async(payload, callback) => {
     const columnId = payload.column_id
 
     try {
-        validateNewNote(content, rowIndex, columnId)
+        validateCreateNote(content, rowIndex, columnId)
 
         const newNote = new Note({
             _id: new mongoose.Types.ObjectId(),
@@ -18,6 +19,9 @@ module.exports = async(payload, callback) => {
         })
 
         let note = await newNote.save()
+
+        validateCreateNoteResponse(note)
+
         callback({
             status: true,
             message: 'Successfully created a new note',

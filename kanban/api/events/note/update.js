@@ -1,5 +1,6 @@
 const Note = require('../../database/models/Note.js')
 const validateUpdateNote = require('../../validation/note/update.js')
+const validateUpdateNoteResponse = require('../../validation/note/updateResponse')
 
 module.exports = async (payload, callback) => {
     const noteId = payload.note_id
@@ -10,14 +11,22 @@ module.exports = async (payload, callback) => {
     try {
         validateUpdateNote(noteId, content, rowIndex, columnId)
 
-        const filter = { _id: noteId }
-        const update = { content, row_index: rowIndex, column_id: columnId }
-        const returnNewOnUpdate = true
+        const filter = { 
+            _id: noteId 
+        }
+        
+        const update = { 
+            content, 
+            row_index: rowIndex, 
+            column_id: columnId
+        }
 
         let note = await Note.findOneAndUpdate(filter, update, {
-            new: returnNewOnUpdate,
+            new: true,
             useFindAndModify: true,
         })
+
+        validateUpdateNoteResponse(note)
 
         callback({
             status: true,
