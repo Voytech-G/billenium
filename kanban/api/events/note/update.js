@@ -31,7 +31,7 @@ module.exports = async (payload, callback) => {
 
         callback({
             status: false,
-            message: 'Failed to update the note'
+            message: `Failed to update the note: ${exception.message}`
         })
 
         return

@@ -1,6 +1,6 @@
-const validateFindNote = (error, result) => {
+const validateFindOne = (error, result) => {
     if (error != null) {
-        throw new Error(`An error occured while looking for the note to update: ${error}`)
+        throw new Error(error)
     }
 
     if (!Array.isArray(result)) {
@@ -16,4 +16,4 @@ const validateFindNote = (error, result) => {
     }
 }
 
-module.exports = validateFindNote
+module.exports = validateFindOne
