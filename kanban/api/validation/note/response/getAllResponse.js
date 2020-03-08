@@ -1,7 +1,7 @@
-const validateGetAll = result => {
+const validateGetAllResponse = result => {
     if (!Array.isArray(result)) {
         throw new Error('Invalid response')
     }
 }
 
-module.exports = validateGetAll
+module.exports = validateGetAllResponse

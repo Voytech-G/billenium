@@ -1,6 +1,6 @@
-const Note = require('../../database/models/Note.js')
-const validateUpdateNote = require('../../validation/note/update.js')
-const validateUpdateNoteResponse = require('../../validation/note/updateResponse')
+const Note = require('../../database/models/Note')
+const validateUpdateNote = require('../../validation/note/request/update')
+const validateUpdateNoteResponse = require('../../validation/note/response/updateResponse')
 
 module.exports = async (payload, callback) => {
     const noteId = payload.note_id

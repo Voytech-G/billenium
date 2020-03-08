@@ -1,14 +1,17 @@
-const Note = require('../../database/models/Note.js')
-const validateRemovedNote = require('../../validation/note/delete.js')
+const Note = require('../../database/models/Note')
+const validateDeleteNote = require('../../validation/note/request/delete')
+const validateDeleteNoteResponse = require('../../validation/note/response/deleteResponse')
 
 module.exports = async(payload, callback) => {
     const noteId = payload.note_id
     const filter = { _id: noteId }
 
     try {
+        validateDeleteNote(noteId)
+
         let response = await Note.deleteOne(filter)
 
-        validateRemovedNote(response)
+        validateDeleteNoteResponse(response)
 
         callback({
             status: true,

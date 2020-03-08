@@ -6,7 +6,7 @@ window.onload = (function() {
     const handleUpdate = () => {
         socket.emit('update-note', {
             note_id: '5e6422e02ecbd12d98ef4a44',
-            content: 'haloa21',
+            content: 'haloa215',
             row_index: 1,
             column_id: 551,
         }, handleUpdateResponse)
@@ -15,10 +15,10 @@ window.onload = (function() {
     }
 
     const handleAdd = () => {
-        socket.emit('add-note', {
-            content: 'new note new',
-            row_index: 1,
-            column_id: 1,
+        socket.emit('create-note', {
+            content: 'test note',
+            row_index: 15,
+            column_id: 15,
         }, handleAddResponse)
 
         return
@@ -26,7 +26,7 @@ window.onload = (function() {
 
     const handleDelete = () => {
         socket.emit('delete-note', {
-            note_id: '5e6422e02ecbd12d91ef4a44',
+            note_id: '5e655929c5d16d2078c73b92',
         }, handleDeleteResponse)
 
         return

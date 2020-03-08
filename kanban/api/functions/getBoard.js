@@ -1,24 +1,22 @@
 const Note = require('../database/models/Note')
 const Column = require('../database/models/Column')
-const validateGetAllNotes = require('../validation/note/getAll')
-const validateGetAllColumns = require('../validation/column/getAll')
+const validateGetAllColumnsResponse = require('../validation/column/response/getAllResponse')
+const validateGetAllNotesResponse = require('../validation/note/response/getAllResponse')
 
 const getBoard = async () => {
     try {
         let columns = await Column.find({})
         let notes = await Note.find({})
 
-        validateGetAllColumns(columns)
-        validateGetAllNotes(notes)
-
-        const result = {
-            columns,
-            notes,
-        }
+        validateGetAllColumnsResponse(columns)
+        validateGetAllNotesResponse(notes)
 
         return {
             status: true,
-            payload: result,
+            payload: {
+                columns,
+                notes,
+            },
         }
     } catch (exception) {
         return {

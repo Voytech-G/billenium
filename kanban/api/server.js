@@ -4,14 +4,15 @@ const http = require('http')
 const socketIo = require('socket.io')
 const server = http.createServer(app)
 const io = socketIo(server)
-const config = require('./database/config')
-const connectToDatabase = require('./database/connection.js')
-connectToDatabase(config)
+const appConfig = require('./config/app')
+const databaseConfig = require('./config/database')
+const connectToDatabase = require('./database/connection')
+connectToDatabase(databaseConfig)
 
-const getBoard = require('./functions/getBoard.js')
-const handleCreateNote = require('./events/note/create.js')
-const handleUpdateNote = require('./events/note/update.js')
-const handleDeleteNote = require('./events/note/delete.js')
+const getBoard = require('./functions/getBoard')
+const handleCreateNote = require('./events/note/create')
+const handleUpdateNote = require('./events/note/update')
+const handleDeleteNote = require('./events/note/delete')
 
 const handleConnectionEstablished = async socket => {
     console.log(`socket of id: ${socket.id} has just connected`)
@@ -25,7 +26,7 @@ const handleConnectionEstablished = async socket => {
 
 io.on('connection', handleConnectionEstablished)
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || appConfig.port
 const handleServerListening = () => {
     console.log(`Server is listening on port: ${PORT}`)
 }

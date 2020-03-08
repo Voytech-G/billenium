@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Note = require('../../database/models/Note')
-const validateCreateNote = require('../../validation/note/create.js')
-const validateCreateNoteResponse = require('../../validation/note/createResponse')
+const validateCreateNote = require('../../validation/note/request/create')
+const validateCreateNoteResponse = require('../../validation/note/response/createResponse')
 
 module.exports = async(payload, callback) => {
     const content = payload.content
