@@ -7,7 +7,7 @@ const initialState = {
   socket: undefined,
   columns: [
     {
-      id: uuid(),
+      id: "0",
       name: "Requested",
       board_index: 0,
       items: [
@@ -34,19 +34,19 @@ const initialState = {
       ]
     },
     {
-      id: uuid(),
+      id: "1",
       name: "Todo",
       board_index: 1,
       items: []
     },
     {
-      id: uuid(),
+      id: "2",
       name: "In Progress",
       board_index: 2,
       items: []
     },
     {
-      id: uuid(),
+      id: "3",
       name: "Done",
       board_index: 3,
       items: []
@@ -91,7 +91,11 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "ADD_CARD",
       payload: {
-        card,
+        card: {
+          id: card._id,
+          content: card.content,
+          row_index: card.row_index
+        },
         column_id: columnId
       }
     });

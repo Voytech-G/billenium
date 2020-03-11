@@ -12,7 +12,7 @@ const handleClick_addCard = (e, columnId, addCard) => {
   const cardContent = prompt(
     "wpisz deskrypcję zadania należnego do jego skompletowania"
   );
-  const newCard = { id: uuid(), content: cardContent, row_index: 0 };
+  const newCard = { _id: uuid(), content: cardContent, row_index: 0 };
 
   addCard(newCard, columnId);
 };
