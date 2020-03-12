@@ -5,53 +5,7 @@ import socketIOClient from "socket.io-client";
 
 const initialState = {
   socket: undefined,
-  columns: [
-    {
-      id: "0",
-      name: "Requested",
-      board_index: 0,
-      items: [
-        {
-          id: uuid(),
-          content: "First task",
-          row_index: 0
-        },
-        {
-          id: uuid(),
-          content: "Second task",
-          row_index: 3
-        },
-        {
-          id: uuid(),
-          content: "Third task",
-          row_index: 2
-        },
-        {
-          id: uuid(),
-          content: "Fourth task",
-          row_index: 1
-        }
-      ]
-    },
-    {
-      id: "1",
-      name: "Todo",
-      board_index: 1,
-      items: []
-    },
-    {
-      id: "2",
-      name: "In Progress",
-      board_index: 2,
-      items: []
-    },
-    {
-      id: "3",
-      name: "Done",
-      board_index: 3,
-      items: []
-    }
-  ]
+  columns: []
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");

@@ -66,6 +66,23 @@ export default (state, action) => {
           )
           .rearrangeCards()
       };
+    case "SET_COLUMN_CARDS":
+      return {
+        ...state,
+        columns: state.columns
+          .map(column =>
+            column.id === action.payload.column_id
+              ? {
+                  ...column,
+                  items: [
+                    ...column.items,
+                    { ...action.payload.card, row_index: column.items.length }
+                  ]
+                }
+              : column
+          )
+          .rearrangeCards()
+      };
     case "SET_ITEMS":
       return {
         ...state,

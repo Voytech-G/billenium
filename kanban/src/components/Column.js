@@ -6,7 +6,7 @@ import { GlobalContext } from "../context/GlobalState";
 
 import Card from "./Card";
 
-const handleClick_addCard = (e, columnId, addCard) => {
+const handleClick_addCard = (e, columnId, addCard, socket) => {
   e.preventDefault();
 
   const cardContent = prompt(
@@ -14,13 +14,19 @@ const handleClick_addCard = (e, columnId, addCard) => {
   );
   const newCard = { _id: uuid(), content: cardContent, row_index: 0 };
 
-  addCard(newCard, columnId);
+  socket.emit("create-note", { ...newCard, column_id: columnId }, res => {
+    if (res.status) {
+      addCard(newCard, columnId);
+    } else {
+      alert("Error: server returned false status");
+    }
+  });
 };
 
 const Column = ({ column }) => {
   const { id, name, items } = column;
 
-  const { addCard } = useContext(GlobalContext);
+  const { socket, addCard } = useContext(GlobalContext);
 
   return (
     <div
@@ -60,7 +66,9 @@ const Column = ({ column }) => {
                   }}
                 >
                   <button
-                    onClick={e => handleClick_addCard(e, column.id, addCard)}
+                    onClick={e =>
+                      handleClick_addCard(e, column.id, addCard, socket)
+                    }
                     type="submit"
                   >
                     Dodaj zadanie
