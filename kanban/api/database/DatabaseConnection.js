@@ -17,7 +17,7 @@ class DatabaseConnection {
      * 
      * @return bool
      */
-    async create() {
+    async open() {
         const DB_USERNAME = this.config.username
         const DB_PASSWORD = this.config.password
         const DB_OPTIONS = this.config.options

@@ -105,6 +105,7 @@ class NoteController {
      */
     static async delete(payload, callback) {
         const noteId = payload.note_id
+        console.log(noteId)
         const filter = { _id: noteId }
 
         try {

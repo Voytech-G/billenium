@@ -9,7 +9,7 @@ const DatabaseConnection = require('./database/DatabaseConnection')
 const ConnectionsHandler = require('./handler/ConnectionsHandler')
 const ServerHandler = require('./handler/ServerHandler')
 
-DatabaseConnection.create()
+DatabaseConnection.open()
 
 io.on('connection', async socket => {
   ConnectionsHandler.setupConnection(socket)
