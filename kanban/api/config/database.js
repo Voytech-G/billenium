@@ -1,4 +1,5 @@
 module.exports = {
-    DB_USER: 'kanban-admin',
-    DB_PASSWORD: 'kinethicc69',
+    username: 'kanban-admin',
+    password: 'kinethicc69',
+    options: { useNewUrlParser: true },
 }

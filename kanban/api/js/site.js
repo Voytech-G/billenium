@@ -5,10 +5,10 @@ window.onload = (function() {
 
     const handleUpdate = () => {
         socket.emit('update-note', {
-            note_id: '5e6422e02ecbd12d98ef4a44',
-            content: 'haloa215',
+            note_id: '5e6d17602751cc102ce67f9e',
+            content: 'ok test',
             row_index: 1,
-            column_id: 551,
+            column_id: '5e655929c5d16d2078c63b91',
         }, handleUpdateResponse)
 
         return
@@ -16,9 +16,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-note', {
-            content: 'test note',
-            row_index: 15,
-            column_id: 15,
+            content: 'test oasgagasggas155',
+            row_index: 51,
+            column_id: '5e655929c5d16d2078c63b91',
         }, handleAddResponse)
 
         return
