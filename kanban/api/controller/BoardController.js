@@ -1,7 +1,7 @@
-const Note = require("../database/model/Note");
-const Column = require("../database/model/Column");
 const ColumnValidator = require('../validation/column/ColumnValidator')
+const ColumnRepository = require('../database/repository/ColumnRepository')
 const NoteValidator = require('../validation/note/NoteValidator')
+const NoteRepository = require('../database/repository/NoteRepository')
 
 class BoardController {
     /**
@@ -13,8 +13,8 @@ class BoardController {
      */
     static async getBoard(callback) {
         try {
-            let columns = await Column.find({});
-            let notes = await Note.find({});
+            let columns = await ColumnRepository.findAll()
+            let notes = await NoteRepository.findAll()
         
             ColumnValidator.validateGetAllResponse(columns)
             NoteValidator.validateGetAllResponse(notes)

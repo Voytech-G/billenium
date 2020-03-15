@@ -5,7 +5,7 @@ class ColumnValidator {
      * @param {Array} response 
      * @return void
      */
-    validateGetAllResponse(response) {
+    static validateGetAllResponse(response) {
         // check if response is not array
         if (!Array.isArray(response)) {
             throw new Error('Invalid response')

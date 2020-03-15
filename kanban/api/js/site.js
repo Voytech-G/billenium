@@ -2,6 +2,7 @@ window.onload = (function() {
     let addButton = document.querySelector('.add-button')
     let updateButton = document.querySelector('.update-button')
     let deleteButton = document.querySelector('.delete-button')
+    let getAllButton = document.querySelector('.get-all-button')
 
     const column1 = '5e655929c5d16d2078c63b91'
     const column2 = '5e6bg929d2116z2078c63b42'
@@ -36,19 +37,22 @@ window.onload = (function() {
         return
     }
 
+    const handleGetAll = () => {
+        socket.emit('get-board', handleGetAllResponse)
+    }
+
     addButton.addEventListener('click', handleAdd)
     updateButton.addEventListener('click', handleUpdate)
     deleteButton.addEventListener('click', handleDelete)
+    getAllButton.addEventListener('click', handleGetAll)
     
     const SERVER_URL = 'http://localhost:4000'
     let socket = io(SERVER_URL)
     
-    const handleBoard = board => { 
-        console.log(board)
+    const handleGetAllResponse = response => { 
+        console.log(response)
     }
     
-    socket.on('board', handleBoard)
-
     const handleUpdateResponse = response => {
         console.log(response)
     }

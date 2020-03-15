@@ -23,6 +23,35 @@ class NoteRepository {
     }
 
     /**
+     * Get one note with specified parameters as filter
+     * 
+     * @param {Object} filter
+     * @return {Object} 
+     */
+    static async findOneByFilter(filter) {
+        return await Note.findOne(filter)
+    }
+
+    /**
+     * Find many notes with specified parameters as filter
+     * 
+     * @param {Object} filter 
+     * @return {Object}
+     */
+    static async findManyByFilter(filter) {
+        return await Note.find(filter)
+    }
+
+    /**
+     * Get all notes (filter not specified, returns all of them)
+     * 
+     * @return {Array}
+     */
+    static async findAll() {
+        return await Note.find({})
+    }
+
+    /**
      * Find one note and update it, in case more than one note 
      * passes the filter only the first one is updated
      * 
