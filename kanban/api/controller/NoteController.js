@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const Note = require('../database/model/Note')
+const Note = require('../database/model/Note') 
 const NoteValidator = require('../validation/note/NoteValidator')
+const NoteRepository = require('../database/repository/NoteRepository')
 
 class NoteController {
     /**
@@ -11,21 +11,14 @@ class NoteController {
      * @return void
      */
     static async create(payload, callback) {
-        const content = payload.content
-        const rowIndex = payload.row_index
-        const columnId = payload.column_id
-
         try {
             NoteValidator.validateCreateRequest(payload)
 
-            const newNote = new Note({
-                _id: new mongoose.Types.ObjectId(),
-                content,
-                row_index: rowIndex,
-                column_id: columnId,
-            })
+            const content = payload.content
+            const rowIndex = payload.row_index
+            const columnId = payload.column_id
 
-            let note = await newNote.save()
+            let note = await NoteRepository.create(content, rowIndex, columnId)
 
             NoteValidator.validateCreateResponse(note)
 
@@ -54,13 +47,13 @@ class NoteController {
      * @return void
      */
     static async update(payload, callback) {
-        const noteId = payload.note_id
-        const content = payload.content
-        const rowIndex = payload.row_index
-        const columnId = payload.column_id
-
         try {
             NoteValidator.validateUpdateRequest(payload)
+
+            const noteId = payload.note_id
+            const content = payload.content
+            const rowIndex = payload.row_index
+            const columnId = payload.column_id
 
             const filter = { 
                 _id: noteId 
@@ -72,10 +65,7 @@ class NoteController {
                 column_id: columnId
             }
 
-            let note = await Note.findOneAndUpdate(filter, update, {
-                new: true,
-                useFindAndModify: true,
-            })
+            let note = await NoteRepository.findOneAndUpdate(filter, update)
 
             NoteValidator.validateUpdateResponse(note)
 
@@ -104,12 +94,11 @@ class NoteController {
      * @return void
      */
     static async delete(payload, callback) {
-        const noteId = payload.note_id
-        console.log(noteId)
-        const filter = { _id: noteId }
-
         try {
-            NoteValidator.validateDeleteRequest(noteId)
+            NoteValidator.validateDeleteRequest(payload)
+
+            const noteId = payload.note_id
+            const filter = { _id: noteId }
 
             let response = await Note.deleteOne(filter)
 

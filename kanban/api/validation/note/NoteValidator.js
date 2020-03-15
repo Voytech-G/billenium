@@ -55,12 +55,12 @@ class NoteValidator {
      * @param {Object} payload 
      * @return void
      */
-    static validateDeleteRequest(noteId) {
-        if (noteId == null) {
+    static validateDeleteRequest(payload) {
+        if (payload.note_id == null) {
             throw new Error("Note ID is required");
         }
         
-        if (noteId.length !== noteConfig.idLength) {
+        if (payload.note_id.length !== noteConfig.idLength) {
             throw new Error("Note ID is invalid");
         }
 

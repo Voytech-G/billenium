@@ -18,9 +18,9 @@ class DatabaseConnection {
      * @return bool
      */
     async open() {
-        const DB_USERNAME = this.config.username
-        const DB_PASSWORD = this.config.password
-        const DB_OPTIONS = this.config.options
+        const DB_USERNAME = this.config.connection.username
+        const DB_PASSWORD = this.config.connection.password
+        const DB_OPTIONS = this.config.connection.options
 
         try {
             await mongoose.connect(`mongodb://${DB_USERNAME}:${DB_PASSWORD}@ds147946.mlab.com:47946/kanban-variant`, DB_OPTIONS)

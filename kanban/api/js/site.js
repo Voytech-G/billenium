@@ -3,6 +3,10 @@ window.onload = (function() {
     let updateButton = document.querySelector('.update-button')
     let deleteButton = document.querySelector('.delete-button')
 
+    const column1 = '5e655929c5d16d2078c63b91'
+    const column2 = '5e6bg929d2116z2078c63b42'
+    const column3 = '5e6dgas9c5abba2078c63ba1'
+
     const handleUpdate = () => {
         socket.emit('update-note', {
             note_id: '5e6d22fa0c3f16121889eff0',
@@ -16,9 +20,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-note', {
-            content: 'no one',
-            row_index: 51,
-            column_id: '5e655929c5d16d2078c63b91',
+            content: 'first card',
+            row_index: 0,
+            column_id: column1,
         }, handleAddResponse)
 
         return
