@@ -11,9 +11,9 @@ window.onload = (function() {
 
     const handleUpdate = () => {
         socket.emit('update-note', {
-            note_id: '5e6e2fa813f52f16d0d6f282',
+            note_id: '5e6e71c82cd5cc4a24201c34',
             content: '2card updated again again',
-            row_index: 1,
+            row_index: 0,
             column_id: column1,
         }, handleUpdateResponse)
 
@@ -22,9 +22,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-note', {
-            content: '25card',
-            row_index: 2,
-            column_id: column1,
+            content: '4card',
+            row_index: 0,
+            column_id: column2,
         }, handleAddResponse)
 
         return

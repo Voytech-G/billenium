@@ -53,18 +53,14 @@ class NoteController {
             const content = payload.content
             const rowIndex = payload.row_index
             const columnId = payload.column_id
-
-            const filter = { 
-                _id: noteId,
-            }
-            
+        
             const update = { 
                 content, 
                 row_index: rowIndex, 
                 column_id: columnId
             }
 
-            let note = await NoteRepository.updateOneByFilter(filter, update)
+            let note = await NoteRepository.updateOneByFilter({ _id: noteId }, update)
 
             NoteValidator.validateUpdateResponse(note)
 
@@ -84,6 +80,28 @@ class NoteController {
             return
         }
     }
+
+    // static async updateSwappedNoteRowIndex(noteId, rowIndex, columnId) {
+    //     let currentRowIndex = await 
+
+    //     // check if there are any notes on row_index we want to move the note
+    //     let swappedNote = await NoteRepository.findOneByFilterAndUpdate({
+    //         $and: [
+    //             { _id: { $ne: noteId }},
+    //             { row_index: rowIndex },
+    //             { column_index: columnId },
+    //         ]
+    //     },
+    //     {
+    //         row_index: 
+    //     })
+
+    //     if (swappedNote != null) {
+    //         NoteRepository.findOneByFilterAndUpdate(filter, update)
+
+    //         this.updateSwappedNoteRowIndex(rowIndex, swappedNote._id)
+    //     }
+    // }
 
     /**
      * Delete a note

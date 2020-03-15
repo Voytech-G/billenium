@@ -43,6 +43,16 @@ class NoteRepository {
     }
 
     /**
+     * Find one note and update with specified parameters in update object
+     * 
+     * @param {Object} filter 
+     * @param {Object} update 
+     */
+    static async findOneByFilterAndUpdate(filter, update) {
+        return await Note.findOneAndUpdate(filter, update)
+    }
+
+    /**
      * Get all notes (filter not specified, returns all of them)
      * 
      * @return {Array}
