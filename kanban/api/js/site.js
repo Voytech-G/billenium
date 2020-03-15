@@ -4,13 +4,14 @@ window.onload = (function() {
     let deleteButton = document.querySelector('.delete-button')
     let getAllButton = document.querySelector('.get-all-button')
 
-    const column1 = '5e655929c5d16d2078c63b91'
-    const column2 = '5e6bg929d2116z2078c63b42'
-    const column3 = '5e6dgas9c5abba2078c63ba1'
+    const column1 = '5e6a939ce5ad082e20db27f9'
+    const column2 = '5e6a947739c8ce2ef4562fcd'
+    const column3 = '5e6a9498c703912320a4ab87'
+    const column4 = '5e6a94a92e137b25f0196cc9'
 
     const handleUpdate = () => {
         socket.emit('update-note', {
-            note_id: '5e6dee8f4044f923a0efd1cb',
+            note_id: '5e6dee8f40aaf923a0efd1cb',
             content: 'first card updated',
             row_index: 0,
             column_id: column1,
@@ -21,9 +22,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-note', {
-            content: 'first card',
+            content: 'fourth card',
             row_index: 0,
-            column_id: column1,
+            column_id: column2,
         }, handleAddResponse)
 
         return
