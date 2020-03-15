@@ -3,11 +3,12 @@ const LogService = require('../service/LogService')
 
 class ConnectionsService {
     /**
-     * List of all connections
-     * 
-     * @var {Connection[]}
+     * ConnectionsService constructor
      */
-    connections = []
+    constructor() {
+        // list of active connections
+        this.connections = []
+    }
     
     /**
      * Add new connection
