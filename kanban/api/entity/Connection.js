@@ -2,13 +2,6 @@ const LogService = require('../service/LogService')
 
 class Connection {
     /**
-     * Socket id of connection
-     * 
-     * @var {Number}
-     */
-    id = undefined
-
-    /**
      * Connection constructor
      * 
      * @param {Object} socket 
