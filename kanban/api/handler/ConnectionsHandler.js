@@ -3,8 +3,6 @@ const ConnectionsService = require('../service/ConnectionsService')
 const BoardController = require('../controller/BoardController')
 
 class ConnectionsHandler {
-    connectionsService = undefined
-
     /**
      * ConnectionsHandler constructor
      */

@@ -2,13 +2,12 @@ const mongoose = require('mongoose')
 const databaseConfig = require('../config/database')
 
 class DatabaseService {
-    connection = undefined;
-    config = undefined;
-
     /**
      * DatabaseConnection constructor
      */
     constructor() {
+        this.connection = undefined
+        this.config = undefined
         this.config = databaseConfig
     }
 

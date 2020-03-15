@@ -30,7 +30,7 @@ window.onload = (function() {
 
     const handleDelete = () => {
         socket.emit('delete-note', {
-            note_id: '5e6dee8f4044f923d0efd1cb',
+            note_id: '5e6dfa055a3a2848f864f15d',
         }, handleDeleteResponse)
 
         return
