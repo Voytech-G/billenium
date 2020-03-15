@@ -26,7 +26,7 @@ class ConnectionsHandler {
         socket.on('get-board', callback => {
             BoardController.getBoard(callback)
         })
-        
+
         socket.on('create-note', (payload, callback) => {
             NoteController.create(payload, callback)
 
