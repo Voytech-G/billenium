@@ -11,7 +11,12 @@ const ServerHandler = require('./handler/ServerHandler')
 
 DatabaseService.connectionOpen()
 
-io.on('connection', async socket => {
+io.use((socket, next) => {
+  // method run every time before someone connects
+  
+  next()
+})
+.on('connection', async socket => {
   ConnectionsHandler.setupConnection(socket)
 })
 

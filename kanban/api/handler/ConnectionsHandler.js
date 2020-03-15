@@ -18,11 +18,19 @@ class ConnectionsHandler {
      */
     async setupConnection(socket) {
         console.log(`Socket of ID: ${socket.id} has just connected`);
-
         this.addConnection(socket)
+        
+        // method run every incoming event
+        socket.use((payload, next) => {
+            this.connectionsService.handleIncomingEvent(payload, next)
+
+            return
+        })
 
         socket.on('get-board', callback => {
             BoardController.getBoard(callback)
+
+            return
         })
 
         socket.on('create-note', (payload, callback) => {
