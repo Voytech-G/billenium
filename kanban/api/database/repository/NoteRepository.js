@@ -23,17 +23,29 @@ class NoteRepository {
     }
 
     /**
-     * Find one note and update it
+     * Find one note and update it, in case more than one note 
+     * passes the filter only the first one is updated
      * 
      * @param {Object} filter 
      * @param {Object} update 
      * @return {Object}
      */
-    static async findOneAndUpdate(filter, update) {
+    static async updateOneByFilter(filter, update) {
         return await Note.findOneAndUpdate(filter, update, {
             new: noteConfig.repository.RETURN_NEW_AFTER_UPDATE,
             useFindAndModify: noteConfig.repository.USE_FIND_AND_MODIFY,
         })
+    }
+
+    /**
+     * Delete one note found by parameters specified in filter. If more than one note 
+     * passes the filter only one of those is removed
+     * 
+     * @param {Object} filter
+     * @return {Object} 
+     */
+    static async deleteOneByFilter(filter) {
+        return await Note.deleteOne(filter)
     }
 }
 

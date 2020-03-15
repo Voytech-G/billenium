@@ -1,4 +1,3 @@
-const Note = require('../database/model/Note') 
 const NoteValidator = require('../validation/note/NoteValidator')
 const NoteRepository = require('../database/repository/NoteRepository')
 
@@ -56,7 +55,7 @@ class NoteController {
             const columnId = payload.column_id
 
             const filter = { 
-                _id: noteId 
+                _id: noteId,
             }
             
             const update = { 
@@ -65,7 +64,7 @@ class NoteController {
                 column_id: columnId
             }
 
-            let note = await NoteRepository.findOneAndUpdate(filter, update)
+            let note = await NoteRepository.updateOneByFilter(filter, update)
 
             NoteValidator.validateUpdateResponse(note)
 
@@ -100,7 +99,7 @@ class NoteController {
             const noteId = payload.note_id
             const filter = { _id: noteId }
 
-            let response = await Note.deleteOne(filter)
+            let response = await NoteRepository.deleteOneByFilter(filter)
 
             NoteValidator.validateDeleteResponse(response)
 
