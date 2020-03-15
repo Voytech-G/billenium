@@ -1,9 +1,8 @@
 const mongoose = require('mongoose')
 const Note = require('../model/Note')
+const noteConfig = require('../../config/note')
 
 class NoteRepository {
-    RETURN_NEW_AFTER_UPDATE = true
-
     /**
      * Create a new note
      * 
@@ -32,8 +31,8 @@ class NoteRepository {
      */
     static async findOneAndUpdate(filter, update) {
         return await Note.findOneAndUpdate(filter, update, {
-            new: this.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: this.USE_FIND_AND_MODIFY,
+            new: noteConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: noteConfig.repository.USE_FIND_AND_MODIFY,
         })
     }
 }

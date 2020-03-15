@@ -60,7 +60,7 @@ class NoteValidator {
             throw new Error("Note ID is required");
         }
         
-        if (payload.note_id.length !== noteConfig.idLength) {
+        if (payload.note_id.length !== noteConfig.ID_LENGTH) {
             throw new Error("Note ID is invalid");
         }
 

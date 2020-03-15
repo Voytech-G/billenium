@@ -9,10 +9,10 @@ window.onload = (function() {
 
     const handleUpdate = () => {
         socket.emit('update-note', {
-            note_id: '5e6d22fa0c3f16121889eff0',
-            content: 'change me to tes',
-            row_index: 1,
-            column_id: '5e655929c5d16d2078c63b91',
+            note_id: '5e6dee8f4044f923a0efd1cb',
+            content: 'first card updated',
+            row_index: 0,
+            column_id: column1,
         }, handleUpdateResponse)
 
         return

@@ -5,11 +5,11 @@ const socketIo = require('socket.io')
 const server = http.createServer(app)
 const io = socketIo(server)
 const appConfig = require('./config/app')
-const DatabaseConnection = require('./database/DatabaseConnection')
+const DatabaseService = require('./service/DatabaseService')
 const ConnectionsHandler = require('./handler/ConnectionsHandler')
 const ServerHandler = require('./handler/ServerHandler')
 
-DatabaseConnection.open()
+DatabaseService.connectionOpen()
 
 io.on('connection', async socket => {
   ConnectionsHandler.setupConnection(socket)

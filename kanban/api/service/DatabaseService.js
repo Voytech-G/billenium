@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const databaseConfig = require('../config/database')
 
-class DatabaseConnection {
+class DatabaseService {
     connection = undefined;
     config = undefined;
 
@@ -17,7 +17,7 @@ class DatabaseConnection {
      * 
      * @return bool
      */
-    async open() {
+    async connectionOpen() {
         const DB_USERNAME = this.config.connection.username
         const DB_PASSWORD = this.config.connection.password
         const DB_OPTIONS = this.config.connection.options
@@ -32,7 +32,7 @@ class DatabaseConnection {
             });
             
             this.connection.once('open', () => {
-                this.handleOpened()
+                this.handleConnectionOpened()
             })
 
             return true
@@ -48,7 +48,7 @@ class DatabaseConnection {
      * 
      * @return void 
      */
-    handleOpened() {
+    handleConnectionOpened() {
         console.log('Created a connection to the database!')
 
         return
@@ -73,4 +73,4 @@ class DatabaseConnection {
     }
 }
 
-module.exports = new DatabaseConnection()
+module.exports = new DatabaseService()
