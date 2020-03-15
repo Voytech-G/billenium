@@ -22,9 +22,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-note', {
-            content: '4card',
-            row_index: 0,
-            column_id: column2,
+            content: '25card',
+            row_index: 2,
+            column_id: column1,
         }, handleAddResponse)
 
         return

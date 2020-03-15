@@ -1,4 +1,4 @@
-const Connection = require('../Entity/Connection')
+const Connection = require('../entity/Connection')
 const LogService = require('../service/LogService')
 
 class ConnectionsService {
