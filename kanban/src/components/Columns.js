@@ -13,6 +13,8 @@ const onDragEnd = (result, columns, moveCard, socket) => {
   const card = columns
     .map(column => column.items.filter(item => item.id === draggableId))
     .flat()[0];
+  // console.log("Source:" + source.index);
+  // console.log("Source" + source.index);
 
   moveCard(
     card,
@@ -28,7 +30,8 @@ const onDragEnd = (result, columns, moveCard, socket) => {
       note_id: card.id,
       content: card.content,
       row_index: destination.index,
-      column_id: destination.droppableId
+      column_id: destination.droppableId,
+      source_index: source.index
     },
     res => {
       if (!res.status) {

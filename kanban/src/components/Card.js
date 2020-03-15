@@ -1,6 +1,11 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
+const handleClick_deleteCard = e => {
+  e.preventDefault();
+  console.log(e);
+};
+
 const Card = ({ card }) => {
   const { id, content, row_index } = card;
 
@@ -19,10 +24,39 @@ const Card = ({ card }) => {
               minHeight: "50px",
               backgroundColor: snapshot.isDragging ? "#263B4A" : "#456C86",
               color: "white",
+              display: "flex",
+              flexDirection: "column",
+              boxSizing: "border-box",
+              padding: "10px",
+              minHeight: "100px",
+              justifyContent: "space-between",
               ...provided.draggableProps.style
             }}
           >
             {content}
+            <form
+              style={{
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
+              <button
+                style={{}}
+                onClick={e =>
+                  handleClick_deleteCard(
+                    e
+                    // column.id,
+                    // addCard,
+                    // socket,
+                    // column.items,
+                    // setColumns
+                  )
+                }
+                type="submit"
+              >
+                X
+              </button>
+            </form>
           </div>
         );
       }}

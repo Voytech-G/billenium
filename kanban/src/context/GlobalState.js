@@ -39,6 +39,7 @@ export const GlobalProvider = ({ children }) => {
         dest_card_index: destCardIndex
       }
     });
+    console.log(sourceCardIndex);
   }
 
   function addCard(card, columnId) {
@@ -53,6 +54,7 @@ export const GlobalProvider = ({ children }) => {
         column_id: columnId
       }
     });
+    console.log(card._id);
   }
 
   function setItems(columnId, items) {

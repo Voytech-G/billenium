@@ -9,14 +9,13 @@ const App = () => {
   const { setColumns, addCard } = useContext(GlobalContext);
 
   useEffect(() => {
-    socket.on("board", data => {
+    socket.emit("get-board", data => {
       const { notes } = data.payload;
-
+      // console.log(data);
       const columnsWithItems = data.payload.columns.map(column => ({
         id: column._id,
         name: column.name,
         board_index: column.board_index,
-
         items: notes
           .filter(note => note.column_id === column._id)
           .map(note => ({
@@ -25,10 +24,10 @@ const App = () => {
             row_index: note.row_index
           }))
       }));
-
+      console.log(columnsWithItems);
       setColumns(columnsWithItems);
     });
-  });
+  }, []);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>

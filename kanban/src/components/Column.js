@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import uuid from "uuid/v4";
 
@@ -6,17 +6,29 @@ import { GlobalContext } from "../context/GlobalState";
 
 import Card from "./Card";
 
-const handleClick_addCard = (e, columnId, addCard, socket) => {
+const handleClick_addCard = (
+  e,
+  columnId,
+  addCard,
+  socket,
+  columnItems,
+  setColumns
+) => {
   e.preventDefault();
-
-  const cardContent = prompt(
-    "wpisz deskrypcję zadania należnego do jego skompletowania"
-  );
-  const newCard = { _id: uuid(), content: cardContent, row_index: 0 };
+  // console.log(columnItems.length);
+  const cardContent = prompt("Type task name to add");
+  const newCard = {
+    // _id: "",
+    content: cardContent,
+    row_index: columnItems.length
+  };
 
   socket.emit("create-note", { ...newCard, column_id: columnId }, res => {
     if (res.status) {
+      newCard._id = res.payload._id;
       addCard(newCard, columnId);
+      // console.log(newCard);
+      // console.log(res);
     } else {
       alert("Error: server returned false status");
     }
@@ -26,7 +38,7 @@ const handleClick_addCard = (e, columnId, addCard, socket) => {
 const Column = ({ column }) => {
   const { id, name, items } = column;
 
-  const { socket, addCard } = useContext(GlobalContext);
+  const { socket, addCard, setColumns } = useContext(GlobalContext);
 
   return (
     <div
@@ -67,11 +79,18 @@ const Column = ({ column }) => {
                 >
                   <button
                     onClick={e =>
-                      handleClick_addCard(e, column.id, addCard, socket)
+                      handleClick_addCard(
+                        e,
+                        column.id,
+                        addCard,
+                        socket,
+                        column.items,
+                        setColumns
+                      )
                     }
                     type="submit"
                   >
-                    Dodaj zadanie
+                    Add task
                   </button>
                 </form>
                 {provided.placeholder}
