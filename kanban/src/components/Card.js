@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Draggable } from "react-beautiful-dnd";
-
-const handleClick_deleteCard = e => {
+import { GlobalContext } from "../context/GlobalState";
+const handleClick_deleteCard = (
+  e,
+  removeCard,
+  socket,
+  setColumns,
+  cardId,
+  cardIndex,
+  columnId
+) => {
   e.preventDefault();
-  console.log(e);
+  removeCard(cardId, cardIndex, columnId);
+  // socket.emit("delete-note", { card, column_id: columnId }, res => {
+  //   if (res.status) {
+  //     removeCard(card, columnId);
+  //   } else {
+  //     alert("Error: server returned false status");
+  //   }
+  // });
 };
 
-const Card = ({ card }) => {
+const Card = ({ card, columnId }) => {
   const { id, content, row_index } = card;
-
+  const { socket, removeCard, setColumns } = useContext(GlobalContext);
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
@@ -44,12 +59,13 @@ const Card = ({ card }) => {
                 style={{}}
                 onClick={e =>
                   handleClick_deleteCard(
-                    e
-                    // column.id,
-                    // addCard,
-                    // socket,
-                    // column.items,
-                    // setColumns
+                    e,
+                    removeCard,
+                    socket,
+                    setColumns,
+                    id,
+                    row_index,
+                    columnId
                   )
                 }
                 type="submit"

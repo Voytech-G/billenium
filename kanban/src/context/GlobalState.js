@@ -56,7 +56,20 @@ export const GlobalProvider = ({ children }) => {
     });
     console.log(card._id);
   }
-
+  function removeCard(cardId, cardIndex, columnId) {
+    dispatch({
+      type: "REMOVE_CARD",
+      payload: {
+        card: {
+          id: cardId,
+          row_index: cardIndex
+        },
+        column_id: columnId
+      }
+    });
+    // console.log(cardId);
+    // console.log(cardIndex);
+  }
   function setItems(columnId, items) {
     dispatch({
       type: "SET_ITEMS",
@@ -74,6 +87,7 @@ export const GlobalProvider = ({ children }) => {
         moveCard,
         addCard,
         setItems,
+        removeCard,
         socket: state.socket,
         columns: state.columns
       }}

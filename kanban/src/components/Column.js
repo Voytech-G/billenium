@@ -69,7 +69,7 @@ const Column = ({ column }) => {
                 {items
                   .sort((a, b) => a.row_index - b.row_index)
                   .map(item => (
-                    <Card card={item} />
+                    <Card card={item} columnId={column.id} />
                   ))}
                 <form
                   style={{

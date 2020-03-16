@@ -24,7 +24,7 @@ const App = () => {
             row_index: note.row_index
           }))
       }));
-      console.log(columnsWithItems);
+      // console.log(columnsWithItems);
       setColumns(columnsWithItems);
     });
   }, []);

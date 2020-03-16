@@ -66,6 +66,24 @@ export default (state, action) => {
           )
           .rearrangeCards()
       };
+    case "REMOVE_CARD":
+      return {
+        ...state,
+        columns: state.columns
+          .map(column => {
+            return column.id === action.payload.column_id
+              ? {
+                  ...column,
+                  items: [
+                    ...column.items.filter(
+                      note => note.id !== action.payload.card.id
+                    )
+                  ]
+                }
+              : column;
+          })
+          .rearrangeCards()
+      };
     case "SET_COLUMN_CARDS":
       return {
         ...state,
