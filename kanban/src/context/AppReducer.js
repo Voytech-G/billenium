@@ -70,8 +70,8 @@ export default (state, action) => {
       return {
         ...state,
         columns: state.columns
-          .map(column => {
-            return column.id === action.payload.column_id
+          .map(column =>
+            column.id === action.payload.column_id
               ? {
                   ...column,
                   items: [
@@ -80,8 +80,26 @@ export default (state, action) => {
                     )
                   ]
                 }
-              : column;
-          })
+              : column
+          )
+          .rearrangeCards()
+      };
+    case "EDIT_CARD":
+      return {
+        ...state,
+        columns: state.columns
+          .map(column =>
+            column.id === action.payload.column_id
+              ? {
+                  ...column,
+                  items: [
+                    ...column.items.filter(
+                      note => note.id !== action.payload.card.id
+                    )
+                  ]
+                }
+              : column
+          )
           .rearrangeCards()
       };
     case "SET_COLUMN_CARDS":

@@ -56,6 +56,20 @@ export const GlobalProvider = ({ children }) => {
     });
     console.log(card._id);
   }
+  function editCard(card, columnId) {
+    dispatch({
+      type: "EDIT_CARD",
+      payload: {
+        card: {
+          id: card._id,
+          content: card.content,
+          row_index: card.row_index
+        },
+        column_id: columnId
+      }
+    });
+    console.log(card._id);
+  }
   function removeCard(cardId, cardIndex, columnId) {
     dispatch({
       type: "REMOVE_CARD",

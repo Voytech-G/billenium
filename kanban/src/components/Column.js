@@ -27,7 +27,7 @@ const handleClick_addCard = (
     if (res.status) {
       newCard._id = res.payload._id;
       addCard(newCard, columnId);
-      // console.log(newCard);
+      console.log(res.payload._id);
       // console.log(res);
     } else {
       alert("Error: server returned false status");

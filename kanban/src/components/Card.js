@@ -12,13 +12,40 @@ const handleClick_deleteCard = (
 ) => {
   e.preventDefault();
   removeCard(cardId, cardIndex, columnId);
-  // socket.emit("delete-note", { card, column_id: columnId }, res => {
-  //   if (res.status) {
-  //     removeCard(card, columnId);
-  //   } else {
-  //     alert("Error: server returned false status");
-  //   }
-  // });
+  socket.emit(
+    "delete-note",
+    { card_id: cardId, row_index: cardIndex, column_id: columnId },
+    res => {
+      if (res.status) {
+        removeCard(cardId, cardIndex, columnId);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
+};
+const handleClick_editCard = (
+  e,
+  removeCard,
+  socket,
+  setColumns,
+  cardId,
+  cardIndex,
+  columnId
+) => {
+  e.preventDefault();
+  removeCard(cardId, cardIndex, columnId);
+  socket.emit(
+    "delete-note",
+    { card_id: cardId, row_index: cardIndex, column_id: columnId },
+    res => {
+      if (res.status) {
+        removeCard(cardId, cardIndex, columnId);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 
 const Card = ({ card, columnId }) => {
@@ -55,6 +82,23 @@ const Card = ({ card, columnId }) => {
                 flexDirection: "column"
               }}
             >
+              <button
+                style={{}}
+                onClick={e =>
+                  handleClick_editCard(
+                    e,
+                    removeCard,
+                    socket,
+                    setColumns,
+                    id,
+                    row_index,
+                    columnId
+                  )
+                }
+                type="submit"
+              >
+                Edit
+              </button>
               <button
                 style={{}}
                 onClick={e =>
