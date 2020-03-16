@@ -52,12 +52,12 @@ class NoteController {
 
             const noteId = payload.note_id
             const content = payload.content
-            // row index of target position
-            const rowIndex = payload.row_index
-            // column id of target position
-            const columnId = payload.column_id
-            // row index of starting position
-            const sourceIndex = payload.source_index
+
+            const targetRowIndex = payload.target_row_index
+            const targetColumnId = payload.target_column_id
+
+            const sourceRowIndex = payload.source_row_index
+            const sourceColumnId = payload.source_column_id
 
             const update = { 
                 content, 
