@@ -31,7 +31,8 @@ const onDragEnd = (result, columns, moveCard, socket) => {
       content: card.content,
       row_index: destination.index,
       column_id: destination.droppableId,
-      source_index: source.index
+      source_index: source.index,
+      source_id: source.droppableId
     },
     res => {
       if (!res.status) {
