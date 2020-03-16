@@ -59,14 +59,14 @@ class NoteController {
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
 
+            // set target note row index to source note row index (swap them)
+            this.updateTargetNoteRowIndex(noteId, targetRowIndex, targetColumnId, sourceRowIndex, sourceColumnId)
+
             const update = { 
                 content, 
-                row_index: rowIndex, 
-                column_id: columnId
+                row_index: targetRowIndex, 
+                column_id: targetColumnId,
             }
-
-            // set target note row index to source note row index (swap them)
-            this.updateTargetNoteRowIndex(noteId, rowIndex, columnId, sourceIndex)
 
             let note = await NoteRepository.updateOneByFilter({ _id: noteId }, update)
 
@@ -89,23 +89,35 @@ class NoteController {
         }
     }
 
-    static async updateTargetNoteRowIndex(noteId, rowIndex, columnId, sourceIndex) {
+    /**
+     * Swap target note with source note
+     * 
+     * @param {String} noteId 
+     * @param {Number} rowIndex 
+     * @param {String} columnId 
+     * @param {Number} sourceIndex 
+     * @return void
+     */
+    static async updateTargetNoteRowIndex(noteId, targetRowIndex, targetColumnId, sourceRowIndex, sourceColumnId) {
         // get note that is not the same as source at target row_index and in target column_id
         const filter = {
             $and: [
                 { _id: { $ne: noteId }},
-                { row_index: rowIndex },
-                { column_id: columnId },
+                { row_index: targetRowIndex },
+                { column_id: targetColumnId },
             ]
         }
 
-        // change target note row_index to source note row_index
+        // change target note row_index and column_id to source note row_index and column_id
         const update = {
-            row_index: sourceIndex,
+            row_index: sourceRowIndex,
+            column_id: sourceColumnId,
         }
 
         // check if there are any notes on row_index we want to move the note
         await NoteRepository.findOneByFilterAndUpdate(filter, update)
+
+        return
     }
 
     /**
