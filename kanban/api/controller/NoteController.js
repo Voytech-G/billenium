@@ -49,23 +49,15 @@ class NoteController {
     static async update(payload, callback) {
         try {
             NoteValidator.validateUpdateRequest(payload)
-
+            
             const noteId = payload.note_id
             const content = payload.content
 
-            const targetRowIndex = payload.target_row_index
-            const targetColumnId = payload.target_column_id
-
-            const sourceRowIndex = payload.source_row_index
-            const sourceColumnId = payload.source_column_id
-
             // set target note row index to source note row index (swap them)
-            this.updateTargetNoteRowIndex(noteId, targetRowIndex, targetColumnId, sourceRowIndex, sourceColumnId)
+            this.swapNotes(payload)
 
             const update = { 
                 content, 
-                row_index: targetRowIndex, 
-                column_id: targetColumnId,
             }
 
             let note = await NoteRepository.updateOneByFilter({ _id: noteId }, update)
@@ -92,13 +84,23 @@ class NoteController {
     /**
      * Swap target note with source note
      * 
-     * @param {String} noteId 
-     * @param {Number} rowIndex 
-     * @param {String} columnId 
-     * @param {Number} sourceIndex 
+     * @param {Object} payload 
      * @return void
      */
-    static async updateTargetNoteRowIndex(noteId, targetRowIndex, targetColumnId, sourceRowIndex, sourceColumnId) {
+    static async swapNotes(payload) {
+        const result = NoteValidator.validateSwapNotesRequest(payload)
+
+        if (result === false) {
+            return
+        }
+
+        const noteId = payload.note_id
+        const targetRowIndex = payload.target_row_index
+        const targetColumnId = payload.target_column_id
+        
+        const sourceRowIndex = payload.source_row_index
+        const sourceColumnId = payload.source_column_id
+        
         // get note that is not the same as source at target row_index and in target column_id
         const filter = {
             $and: [
