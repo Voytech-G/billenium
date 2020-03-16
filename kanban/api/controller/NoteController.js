@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const NoteValidator = require('../validation/note/NoteValidator')
 const NoteRepository = require('../database/repository/NoteRepository')
 
@@ -51,14 +52,21 @@ class NoteController {
 
             const noteId = payload.note_id
             const content = payload.content
+            // row index of target position
             const rowIndex = payload.row_index
+            // column id of target position
             const columnId = payload.column_id
-        
+            // row index of starting position
+            const sourceIndex = payload.source_index
+
             const update = { 
                 content, 
                 row_index: rowIndex, 
                 column_id: columnId
             }
+
+            // set target note row index to source note row index (swap them)
+            this.updateTargetNoteRowIndex(noteId, rowIndex, columnId, sourceIndex)
 
             let note = await NoteRepository.updateOneByFilter({ _id: noteId }, update)
 
@@ -81,27 +89,24 @@ class NoteController {
         }
     }
 
-    // static async updateSwappedNoteRowIndex(noteId, rowIndex, columnId) {
-    //     let currentRowIndex = await 
+    static async updateTargetNoteRowIndex(noteId, rowIndex, columnId, sourceIndex) {
+        // get note that is not the same as source at target row_index and in target column_id
+        const filter = {
+            $and: [
+                { _id: { $ne: noteId }},
+                { row_index: rowIndex },
+                { column_id: columnId },
+            ]
+        }
 
-    //     // check if there are any notes on row_index we want to move the note
-    //     let swappedNote = await NoteRepository.findOneByFilterAndUpdate({
-    //         $and: [
-    //             { _id: { $ne: noteId }},
-    //             { row_index: rowIndex },
-    //             { column_index: columnId },
-    //         ]
-    //     },
-    //     {
-    //         row_index: 
-    //     })
+        // change target note row_index to source note row_index
+        const update = {
+            row_index: sourceIndex,
+        }
 
-    //     if (swappedNote != null) {
-    //         NoteRepository.findOneByFilterAndUpdate(filter, update)
-
-    //         this.updateSwappedNoteRowIndex(rowIndex, swappedNote._id)
-    //     }
-    // }
+        // check if there are any notes on row_index we want to move the note
+        await NoteRepository.findOneByFilterAndUpdate(filter, update)
+    }
 
     /**
      * Delete a note

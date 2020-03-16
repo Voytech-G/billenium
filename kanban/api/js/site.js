@@ -11,10 +11,11 @@ window.onload = (function() {
 
     const handleUpdate = () => {
         socket.emit('update-note', {
-            note_id: '5e6e71c82cd5cc4a24201c34',
-            content: '2card updated again again',
-            row_index: 0,
-            column_id: column1,
+            note_id: '5e6fde8acbcfaf0ac8e6636d',
+            content: '3card',
+            row_index: 2,
+            column_id: column2,
+            source_index: 0,
         }, handleUpdateResponse)
 
         return
