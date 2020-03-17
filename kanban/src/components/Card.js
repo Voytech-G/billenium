@@ -40,7 +40,7 @@ const handleClick_editCard = (
 
   socket.emit(
     "update-note",
-    { card_id: cardId, source_row_index: cardIndex, card_content: content },
+    { card_id: cardId, card_content: content },
     res => {
       if (res.status) {
         editCard(cardId, cardIndex, columnId, cardContent);
