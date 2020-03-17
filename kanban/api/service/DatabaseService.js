@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const databaseConfig = require('../config/database')
+const LogService = require('../service/LogService')
 
 class DatabaseService {
     /**
@@ -14,15 +15,18 @@ class DatabaseService {
     /**
      * Create database connection
      * 
-     * @return bool
+     * @return void
      */
     async connectionOpen() {
+        const DB_CONTAINER_NAME = this.config.connection.databaseContainerName
+        const DB_PORT = this.config.connection.databasePort
+        const DB_NAME = this.config.connection.databaseName
         const DB_USERNAME = this.config.connection.username
         const DB_PASSWORD = this.config.connection.password
         const DB_OPTIONS = this.config.connection.options
 
         try {
-            await mongoose.connect(`mongodb://${DB_USERNAME}:${DB_PASSWORD}@ds147946.mlab.com:47946/kanban-variant`, DB_OPTIONS)
+            await mongoose.connect(`mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_CONTAINER_NAME}.mlab.com:${DB_PORT}/${DB_NAME}`, DB_OPTIONS)
 
             this.connection = mongoose.connection
         
@@ -34,11 +38,11 @@ class DatabaseService {
                 this.handleConnectionOpened()
             })
 
-            return true
+            return
         } catch (exception) {
             this.handleError(exception)
             
-            return false
+            process.exit()
         }
     }
 
@@ -48,7 +52,7 @@ class DatabaseService {
      * @return void 
      */
     handleConnectionOpened() {
-        console.log('Created a connection to the database!')
+        LogService.success('Created a connection to the database!')
 
         return
     }
@@ -62,13 +66,13 @@ class DatabaseService {
     handleError(error) {
         // if error is not string or is undefined
         if (error == null || typeof error != 'string') {
-            console.error('A database error occured')
+            LogService.error('A database error occured')
 
-            return
+            process.exit(0)
         }
 
-        console.error(`A database error occured: ${error}`)
-        return
+        LogService.error(`A database error occured: ${error}`)
+        process.exit(0)
     }
 }
 
