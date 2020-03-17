@@ -29,9 +29,12 @@ const onDragEnd = (result, columns, moveCard, socket) => {
     {
       note_id: card.id,
       content: card.content,
-      row_index: destination.index,
-      column_id: destination.droppableId,
-      source_index: source.index
+
+      target_row_index: destination.index,
+      target_column_id: destination.droppableId,
+
+      source_row_index: source.index,
+      source_column_id: source.droppableId,
     },
     res => {
       if (!res.status) {
