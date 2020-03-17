@@ -35,17 +35,18 @@ const handleClick_editCard = (
 ) => {
   e.preventDefault();
   removeCard(cardId, cardIndex, columnId);
-  socket.emit(
-    "delete-note",
-    { card_id: cardId, row_index: cardIndex, column_id: columnId },
-    res => {
-      if (res.status) {
-        removeCard(cardId, cardIndex, columnId);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  console.log(e);
+  // socket.emit(
+  //   "edit-note",
+  //   { card_id: cardId, row_index: cardIndex, column_id: columnId },
+  //   res => {
+  //     if (res.status) {
+  //       removeCard(cardId, cardIndex, columnId);
+  //     } else {
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 
 const Card = ({ card, columnId }) => {
