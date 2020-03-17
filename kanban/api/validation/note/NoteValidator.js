@@ -42,6 +42,36 @@ class NoteValidator {
     }
 
     /**
+     * Validate move note request data
+     * 
+     * @param {Object} payload 
+     * @return void
+     */
+    static validateMoveRequest(payload) {
+        if (payload.note_id == null) {
+            throw new Error('Note ID is required')
+        }
+
+        if (payload.target_row_index == null) {
+            throw new Error('Note target row index is required')
+        }
+
+        if (payload.target_column_id == null) {
+            throw new Error('Note target column ID is required')
+        }
+
+        if (payload.source_row_index == null) {
+            throw new Error('Note source row index is required')
+        }
+
+        if (payload.source_column_id == null) {
+            throw new Error('Note source column ID is required')
+        }
+
+        return
+    }
+
+    /**
      * Validate delete note request data
      * 
      * @param {Object} payload 
@@ -89,6 +119,17 @@ class NoteValidator {
         }
 
         return
+    }
+
+    /**
+     * Validate move note response data
+     * 
+     * @param {Object} response 
+     */
+    static validateMoveResponse(response) {
+        if (response == null) {
+            throw new Error('No notes moved')
+        }
     }
 
     /**

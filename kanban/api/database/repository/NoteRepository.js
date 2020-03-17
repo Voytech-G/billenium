@@ -43,16 +43,6 @@ class NoteRepository {
     }
 
     /**
-     * Find one note and update with specified parameters in update object
-     * 
-     * @param {Object} filter 
-     * @param {Object} update 
-     */
-    static async findOneByFilterAndUpdate(filter, update) {
-        return await Note.findOneAndUpdate(filter, update)
-    }
-
-    /**
      * Get all notes (filter not specified, returns all of them)
      * 
      * @return {Array}
@@ -69,11 +59,24 @@ class NoteRepository {
      * @param {Object} update 
      * @return {Object}
      */
-    static async updateOneByFilter(filter, update) {
+    static async findOneByFilterAndUpdate(filter, update) {
         return await Note.findOneAndUpdate(filter, update, {
             new: noteConfig.repository.RETURN_NEW_AFTER_UPDATE,
             useFindAndModify: noteConfig.repository.USE_FIND_AND_MODIFY,
         })
+    }
+
+    /**
+     * Find many notes with given filter, update all, response contains
+     * 'n' field with number of matched documents and 'nModified' field with
+     * number of documents modified
+     * 
+     * @param {Object} filter 
+     * @param {Object} update
+     * @return {Object} 
+     */
+    static async findManyByFilterAndUpdate(filter, update) {
+        return await Note.updateMany(filter, update)
     }
 
     /**

@@ -45,6 +45,12 @@ class ConnectionsHandler {
             return
         })
 
+        socket.on('move-note', (payload, callback) => {
+            NoteController.move(payload, callback)
+
+            return
+        })
+
         socket.on('delete-note', (payload, callback) => {
             NoteController.delete(payload, callback)
         
