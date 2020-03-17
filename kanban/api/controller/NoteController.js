@@ -49,12 +49,15 @@ class NoteController {
     static async update(payload, callback) {
         try {
             NoteValidator.validateUpdateRequest(payload)
-            
+
+            // check if we are moving the note to another position
+            // only if payload contains data about position of updated note we swap them
+            if (this.isSwappingNotes(payload)) {
+                this.swapNotes(payload)
+            }
+
             const noteId = payload.note_id
             const content = payload.content
-
-            // set target note row index to source note row index (swap them)
-            this.swapNotes(payload)
 
             const update = { 
                 content, 
@@ -82,19 +85,30 @@ class NoteController {
     }
 
     /**
+     * Check if the client is swapping notes (if target and source position data exist)
+     * 
+     * @param {Object} payload 
+     */
+    static async isSwappingNotes(payload) {
+        if (payload.target_row_index == null || 
+            payload.target_column_id == null || 
+            payload.source_row_index == null || 
+            payload.source_column_id == null) {
+            return false
+        }
+
+        return true
+    }
+
+    /**
      * Swap target note with source note
      * 
      * @param {Object} payload 
      * @return void
      */
     static async swapNotes(payload) {
-        const result = NoteValidator.validateSwapNotesRequest(payload)
-
-        if (result === false) {
-            return
-        }
-
         const noteId = payload.note_id
+        
         const targetRowIndex = payload.target_row_index
         const targetColumnId = payload.target_column_id
         
@@ -102,7 +116,7 @@ class NoteController {
         const sourceColumnId = payload.source_column_id
         
         // get note that is not the same as source at target row_index and in target column_id
-        const filter = {
+        let filter = {
             $and: [
                 { _id: { $ne: noteId }},
                 { row_index: targetRowIndex },
@@ -110,13 +124,24 @@ class NoteController {
             ]
         }
 
-        // change target note row_index and column_id to source note row_index and column_id
-        const update = {
+        let update = {
             row_index: sourceRowIndex,
             column_id: sourceColumnId,
         }
 
-        // check if there are any notes on row_index we want to move the note
+        // update note at target position, set the position to the moved note's position
+        await NoteRepository.findOneByFilterAndUpdate(filter, update)
+
+        filter = { 
+            _id: noteId,
+        }
+
+        update = { 
+            row_index: targetRowIndex,
+            column_id: targetColumnId,
+        }
+
+        // update moved note's position to target note position
         await NoteRepository.findOneByFilterAndUpdate(filter, update)
 
         return
