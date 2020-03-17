@@ -11,10 +11,10 @@ const handleClick_deleteCard = (
   columnId
 ) => {
   e.preventDefault();
-  removeCard(cardId, cardIndex, columnId);
+  // removeCard(cardId, cardIndex, columnId);
   socket.emit(
     "delete-note",
-    { card_id: cardId, row_index: cardIndex, column_id: columnId },
+    { note_id: cardId, source_row_index: cardIndex, column_id: columnId },
     res => {
       if (res.status) {
         removeCard(cardId, cardIndex, columnId);
@@ -37,18 +37,18 @@ const handleClick_editCard = (
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
   console.log(cardContent);
-  editCard(cardId, cardIndex, columnId, cardContent);
-  // socket.emit(
-  //   "edit-note",
-  //   { card_id: cardId, row_index: cardIndex, column_id: columnId },
-  //   res => {
-  //     if (res.status) {
-  //       removeCard(cardId, cardIndex, columnId);
-  //     } else {
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
+
+  socket.emit(
+    "update-note",
+    { card_id: cardId, source_row_index: cardIndex, card_content: content },
+    res => {
+      if (res.status) {
+        editCard(cardId, cardIndex, columnId, cardContent);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 
 const Card = ({ card, columnId }) => {
