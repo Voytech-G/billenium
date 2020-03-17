@@ -26,16 +26,18 @@ const handleClick_deleteCard = (
 };
 const handleClick_editCard = (
   e,
-  removeCard,
+  editCard,
   socket,
   setColumns,
   cardId,
   cardIndex,
-  columnId
+  columnId,
+  content
 ) => {
   e.preventDefault();
-  removeCard(cardId, cardIndex, columnId);
-  console.log(e);
+  const cardContent = prompt("Type new text", content);
+  console.log(cardContent);
+  editCard(cardId, cardIndex, columnId, cardContent);
   // socket.emit(
   //   "edit-note",
   //   { card_id: cardId, row_index: cardIndex, column_id: columnId },
@@ -51,7 +53,9 @@ const handleClick_editCard = (
 
 const Card = ({ card, columnId }) => {
   const { id, content, row_index } = card;
-  const { socket, removeCard, setColumns } = useContext(GlobalContext);
+  const { socket, removeCard, setColumns, editCard } = useContext(
+    GlobalContext
+  );
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
@@ -88,12 +92,13 @@ const Card = ({ card, columnId }) => {
                 onClick={e =>
                   handleClick_editCard(
                     e,
-                    removeCard,
+                    editCard,
                     socket,
                     setColumns,
                     id,
                     row_index,
-                    columnId
+                    columnId,
+                    content
                   )
                 }
                 type="submit"

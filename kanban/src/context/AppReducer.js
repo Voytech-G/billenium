@@ -95,7 +95,8 @@ export default (state, action) => {
                   items: [
                     ...column.items.filter(
                       note => note.id !== action.payload.card.id
-                    )
+                    ),
+                    { ...action.payload.card }
                   ]
                 }
               : column
