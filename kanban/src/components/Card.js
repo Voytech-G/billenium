@@ -11,10 +11,10 @@ const handleClick_deleteCard = (
   columnId
 ) => {
   e.preventDefault();
-  removeCard(cardId, cardIndex, columnId);
+  // removeCard(cardId, cardIndex, columnId);
   socket.emit(
     "delete-note",
-    { card_id: cardId, row_index: cardIndex, column_id: columnId },
+    { note_id: cardId, source_row_index: cardIndex, column_id: columnId },
     res => {
       if (res.status) {
         removeCard(cardId, cardIndex, columnId);
@@ -26,32 +26,36 @@ const handleClick_deleteCard = (
 };
 const handleClick_editCard = (
   e,
-  removeCard,
+  editCard,
   socket,
   setColumns,
   cardId,
   cardIndex,
-  columnId
+  columnId,
+  content
 ) => {
   e.preventDefault();
-  removeCard(cardId, cardIndex, columnId);
-  console.log(e);
-  // socket.emit(
-  //   "edit-note",
-  //   { card_id: cardId, row_index: cardIndex, column_id: columnId },
-  //   res => {
-  //     if (res.status) {
-  //       removeCard(cardId, cardIndex, columnId);
-  //     } else {
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
+  const cardContent = prompt("Type new text", content);
+  console.log(cardContent);
+
+  socket.emit(
+    "update-note",
+    { card_id: cardId, card_content: content },
+    res => {
+      if (res.status) {
+        editCard(cardId, cardIndex, columnId, cardContent);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 
 const Card = ({ card, columnId }) => {
   const { id, content, row_index } = card;
-  const { socket, removeCard, setColumns } = useContext(GlobalContext);
+  const { socket, removeCard, setColumns, editCard } = useContext(
+    GlobalContext
+  );
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
@@ -88,12 +92,13 @@ const Card = ({ card, columnId }) => {
                 onClick={e =>
                   handleClick_editCard(
                     e,
-                    removeCard,
+                    editCard,
                     socket,
                     setColumns,
                     id,
                     row_index,
-                    columnId
+                    columnId,
+                    content
                   )
                 }
                 type="submit"

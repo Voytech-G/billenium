@@ -25,7 +25,7 @@ const onDragEnd = (result, columns, moveCard, socket) => {
   );
 
   socket.emit(
-    "update-note",
+    "move-note",
     {
       note_id: card.id,
       content: card.content,
@@ -34,7 +34,7 @@ const onDragEnd = (result, columns, moveCard, socket) => {
       target_column_id: destination.droppableId,
 
       source_row_index: source.index,
-      source_column_id: source.droppableId,
+      source_column_id: source.droppableId
     },
     res => {
       if (!res.status) {

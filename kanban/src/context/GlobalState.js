@@ -56,19 +56,18 @@ export const GlobalProvider = ({ children }) => {
     });
     console.log(card._id);
   }
-  function editCard(card, columnId) {
+  function editCard(cardId, cardIndex, columnId, content) {
     dispatch({
       type: "EDIT_CARD",
       payload: {
         card: {
-          id: card._id,
-          content: card.content,
-          row_index: card.row_index
+          id: cardId,
+          content,
+          row_index: cardIndex
         },
         column_id: columnId
       }
     });
-    console.log(card._id);
   }
   function removeCard(cardId, cardIndex, columnId) {
     dispatch({
@@ -102,6 +101,7 @@ export const GlobalProvider = ({ children }) => {
         addCard,
         setItems,
         removeCard,
+        editCard,
         socket: state.socket,
         columns: state.columns
       }}
