@@ -1,10 +1,9 @@
+require('dotenv').config();
+
 module.exports = {
     connection: {
-        databaseContainerName: 'ds147946',
-        databasePort: '47946',
-        databaseName: 'kanban-variant',
-        username: 'kanban-admin',
-        password: 'kinethicc69',
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
         options: { useNewUrlParser: true },
     },
 }

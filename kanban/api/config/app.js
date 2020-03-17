@@ -1,9 +1,7 @@
+require('dotenv').config();
+
 module.exports = {
-    port: 4000,
+    port: process.env.PORT,
     development: true,
-    logs: {
-        saveSuccessMessages: false,
-        saveInfoMessages: false,
-        saveErrorMessages: true,
-    },
+    logs: process.env.LOGS,
 }

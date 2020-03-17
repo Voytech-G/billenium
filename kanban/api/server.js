@@ -8,6 +8,7 @@ const appConfig = require('./config/app')
 const DatabaseService = require('./service/DatabaseService')
 const ConnectionsHandler = require('./handler/ConnectionsHandler')
 const ServerHandler = require('./handler/ServerHandler')
+require('dotenv').config();
 
 DatabaseService.connectionOpen()
 
@@ -18,9 +19,14 @@ io.use((socket, next) => {
 })
 .on('connection', async socket => {
   ConnectionsHandler.setupConnection(socket)
+  console.log(process.env.PORT)
+  console.log(process.env.DB_USERNAME)
+  console.log(process.env.DB_PASSWORD)
 })
 
 const PORT = process.env.PORT || appConfig.port
 server.listen(PORT, () => {
   ServerHandler.handleListening(PORT)
 })
+
+

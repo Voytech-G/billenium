@@ -37,35 +37,13 @@ class NoteValidator {
         if (payload.content == null) {
             throw new Error(`Note content is required`)
         }
-
-        return
-    }
-
-    /**
-     * Validate request data needed to swap notes with each other
-     * 
-     * @param {Object} payload
-     * @return {Boolean}
-     */
-    static validateSwapNotesRequest(payload) {
-        if (payload.note_id == null) {
-            return 'Note ID is required to swap notes'
+    
+        if (payload.row_index == null) {
+            throw new Error(`Note row index is required`)
         }
-
-        if (payload.target_row_index == null) {
-            return 'Target row index is required to swap notes'
-        }
-
-        if (payload.target_column_id == null) {
-            return 'Target column ID is required to swap notes'
-        }
-
-        if (payload.source_row_index == null) {
-            return 'Source row index is required to swap notes'
-        }
-
-        if (payload.source_column_id == null) {
-            return 'Source column ID is required to swap notes'
+    
+        if (payload.column_id == null) {
+            throw new Error(`Column ID is required`)
         }
 
         return

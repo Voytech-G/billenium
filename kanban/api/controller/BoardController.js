@@ -11,7 +11,23 @@ class BoardController {
      * @param {Function} callback
      * @return void
      */
+
+
+    /**
+     * 
+     * This is a function
+     * Function gets columns and notes from a board
+     * @param {Function} callback 
+     * @return {void}
+     */
+
+
     static async getBoard(callback) {
+
+        /**
+         * @throws Callback status must be true
+         */
+
         try {
             let columns = await ColumnRepository.findAll()
             let notes = await NoteRepository.findAll()

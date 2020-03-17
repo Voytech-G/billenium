@@ -1,7 +1,6 @@
+require('dotenv').config();
+
 module.exports = {
-    ID_LENGTH: 24,
-    repository: {
-        RETURN_NEW_AFTER_UPDATE: true,
-        USE_FIND_AND_MODIFY: true,
-    },
+    ID_LENGTH: process.env.ID_LENGTH,
+    repository: process.env.REPOSITORY,
 }
