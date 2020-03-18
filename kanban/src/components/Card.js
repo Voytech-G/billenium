@@ -14,7 +14,11 @@ const handleClick_deleteCard = (
   // removeCard(cardId, cardIndex, columnId);
   socket.emit(
     "delete-note",
-    { note_id: cardId, source_row_index: cardIndex, column_id: columnId },
+    {
+      note_id: cardId,
+      source_row_index: cardIndex,
+      source_column_id: columnId
+    },
     res => {
       if (res.status) {
         removeCard(cardId, cardIndex, columnId);
