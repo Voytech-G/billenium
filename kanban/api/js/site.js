@@ -19,10 +19,10 @@ window.onload = (function() {
 
     const handleMove = () => {
         socket.emit('move-note', {
-            note_id: '5e71440e404187419c79fcb3',
-            target_row_index: 2,
+            note_id: '5e7272b551979e3accfd9e70',
+            target_row_index: 0,
             target_column_id: column1,
-            source_row_index: 3,
+            source_row_index: 2,
             source_column_id: column1,
         }, handleMoveResponse)
 
@@ -31,9 +31,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-note', {
-            content: '9card',
-            row_index: 1,
-            column_id: column2,
+            content: '3card',
+            row_index: 2,
+            column_id: column1,
         }, handleAddResponse)
 
         return
