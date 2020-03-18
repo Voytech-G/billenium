@@ -175,7 +175,7 @@ class NoteController {
       NoteValidator.validateUpdateRequest(payload);
 
       const noteId = payload.note_id;
-      const content = payload.note_content;
+      const content = payload.content;
 
       const filter = {
         _id: noteId

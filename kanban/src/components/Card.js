@@ -42,17 +42,13 @@ const handleClick_editCard = (
   const cardContent = prompt("Type new text", content);
   console.log(cardContent);
   console.log(cardId);
-  socket.emit(
-    "update-note",
-    { note_id: cardId, note_content: content },
-    res => {
-      if (res.status) {
-        editCard(cardId, cardIndex, columnId, cardContent);
-      } else {
-        alert("Error: server returned false status");
-      }
+  socket.emit("update-note", { note_id: cardId, content: content }, res => {
+    if (res.status) {
+      editCard(cardId, cardIndex, columnId, cardContent);
+    } else {
+      alert("Error: server returned false status");
     }
-  );
+  });
 };
 
 const Card = ({ card, columnId }) => {
