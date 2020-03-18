@@ -58,29 +58,27 @@ class NoteController {
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
 
-            this.moveAllNotesInSourceColumnAboveRowIndexDown(sourceRowIndex, sourceColumnId)
-
-            // this.moveAllNotesInTargetColumnAboveRowIndexUp(targetRowIndex, targetColumnId)
+            await this.moveNotesAboveRowIndexDown(sourceRowIndex, sourceColumnId)
+            await this.moveNotesAboveRowIndexUp(targetRowIndex, targetColumnId, true)
             
+            const filter = { 
+                _id: noteId,
+            }
     
-            // filter = { 
-            //     _id: noteId,
-            // }
+            const update = { 
+                row_index: targetRowIndex,
+                column_id: targetColumnId,
+            }
     
-            // update = { 
-            //     row_index: targetRowIndex,
-            //     column_id: targetColumnId,
-            // }
-    
-            // // update moved note's position to target note position
-            // let updatedNote = await NoteRepository.findOneByFilterAndUpdate(filter, update)
+            // update moved note's position to target note position
+            let updatedNote = await NoteRepository.findOneByFilterAndUpdate(filter, update)
 
-            // NoteValidator.validateUpdateResponse(updatedNote)
+            NoteValidator.validateUpdateResponse(updatedNote)
 
-            // callback({
-            //     status: true,
-            //     message: 'Successfully moved the note',
-            // })
+            callback({
+                status: true,
+                message: 'Successfully moved the note',
+            })
 
             return
         } catch (exception) {
@@ -93,23 +91,57 @@ class NoteController {
         }
     }
 
-    static async moveAllNotesInSourceColumnAboveRowIndexDown(sourceRowIndex, sourceColumnId) {
-        const filter = {
+    /**
+     * Move all notes above row index down (select if includes given row index's note)
+     * 
+     * @param {Number} sourceRowIndex 
+     * @param {String} sourceColumnId 
+     * @param {Boolean} including 
+     */
+    static async moveNotesAboveRowIndexDown(sourceRowIndex, sourceColumnId, including = false) {
+        let filter = {
             row_index: { $gt: sourceRowIndex },
-            column_id: { sourceColumnId },
+            column_id: sourceColumnId,
         }
+
+        // if including flag is true update also the note at given row index, else only the ones above
+        filter.row_index = including == true ? { $gte: sourceRowIndex } : { $gt: sourceRowIndex }
 
         const update = {
             $inc: { row_index: -1 },
         }
 
-        let response = NoteRepository.findManyByFilterAndUpdate(filter, update)
-    
+        let response = await NoteRepository.findManyByFilterAndUpdate(filter, update)
+
         NoteValidator.validateMoveResponse(response)
+
+        return
     }
 
-    static async moveAllNotesInTargetColumnAboveRowIndexUp(targetRowIndex, targetColumnId) {
+    /**
+     * Move all notes above given row index up (select if includes given row index's note)
+     * 
+     * @param {Number} targetRowIndex 
+     * @param {String} targetColumnId 
+     * @param {Boolean} including 
+     */
+    static async moveNotesAboveRowIndexUp(targetRowIndex, targetColumnId, including = false) {
+        let filter = {
+            column_id: targetColumnId,
+        }
 
+        // if including flag is true update also the note at given row index, else only the ones above
+        filter.row_index = including == true ? { $gte: targetRowIndex } : { $gt: targetRowIndex}
+
+        const update = {
+            $inc: { row_index: 1 },
+        }
+
+        let response = await NoteRepository.findManyByFilterAndUpdate(filter, update)
+
+        NoteValidator.validateMoveResponse(response)
+
+        return
     }
 
     /**

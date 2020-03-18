@@ -130,6 +130,12 @@ class NoteValidator {
         if (response == null) {
             throw new Error('No notes moved')
         }
+
+        if (response.ok != 1) {
+            throw new Error('Unknown move operation error')
+        }
+
+        return
     }
 
     /**
