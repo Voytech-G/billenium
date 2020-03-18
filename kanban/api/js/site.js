@@ -41,7 +41,9 @@ window.onload = (function() {
 
     const handleDelete = () => {
         socket.emit('delete-note', {
-            note_id: '5e6e2faf13f52f16d0d6f283',
+            note_id: '5e7272ac51979e3accfd9e6e',
+            source_row_index: 1,
+            source_column_id: column1,
         }, handleDeleteResponse)
 
         return

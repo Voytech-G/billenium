@@ -199,6 +199,12 @@ class NoteController {
             NoteValidator.validateDeleteRequest(payload)
 
             const noteId = payload.note_id
+            const sourceRowIndex = payload.source_row_index
+            const sourceColumnId = payload.source_column_id
+
+            // after weww delete the note we move all notes above it to fill the created gap
+            await this.moveNotesAboveRowIndexDown(sourceRowIndex, sourceColumnId)
+
             const filter = { _id: noteId }
 
             let response = await NoteRepository.deleteOneByFilter(filter)
