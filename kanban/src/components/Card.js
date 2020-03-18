@@ -41,10 +41,10 @@ const handleClick_editCard = (
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
   console.log(cardContent);
-
+  console.log(cardId);
   socket.emit(
     "update-note",
-    { card_id: cardId, card_content: content },
+    { note_id: cardId, card_content: content },
     res => {
       if (res.status) {
         editCard(cardId, cardIndex, columnId, cardContent);
