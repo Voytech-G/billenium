@@ -6,6 +6,11 @@ Przydatne linki:
 
 Trello: https://trello.com/b/cHGDtnAv/variant
 
+Pliczki: https://drive.google.com/drive/folders/1tu4KN2P46dWymX9LUo--Hld5ZK-CIuD5?usp=sharing 
+
+Lista ustaleń: https://docs.google.com/document/d/1Z0csHyy9m-pUa_Q8utujgLlMtqeXh14nQRKeSfKlwwM/edit?usp=sharing 
+
+
 W celu uruchomienia projektu należy mieć zainstalowanego node.js + jego pakiety (npm i)
 Po zainstalowaniu niezbędnych elementów należy:
 1. Uruchomić projekt w środowisku, następnie otworzyć dwa terminale.
