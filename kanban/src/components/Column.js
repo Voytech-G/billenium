@@ -16,23 +16,27 @@ const handleClick_addCard = (
 ) => {
   e.preventDefault();
   // console.log(columnItems.length);
-  const cardContent = prompt("Type task name to add");
-  const newCard = {
-    // _id: "",
-    content: cardContent,
-    row_index: columnItems.length
-  };
+  if (columnItems.length < 3) {
+    const cardContent = prompt("Type task name to add");
+    const newCard = {
+      // _id: "",
+      content: cardContent,
+      row_index: columnItems.length
+    };
 
-  socket.emit("create-note", { ...newCard, column_id: columnId }, res => {
-    if (res.status) {
-      newCard._id = res.payload._id;
-      addCard(newCard, columnId);
-      console.log(res.payload._id);
-      // console.log(res);
-    } else {
-      alert("Error: server returned false status");
-    }
-  });
+    socket.emit("create-note", { ...newCard, column_id: columnId }, res => {
+      if (res.status) {
+        newCard._id = res.payload._id;
+        addCard(newCard, columnId);
+        console.log(res.payload._id);
+        // console.log(res);
+      } else {
+        alert("Error: server returned false status");
+      }
+    });
+  } else {
+    alert("Column must not have more than 3 cards!");
+  }
 };
 
 const Column = ({ column }) => {
