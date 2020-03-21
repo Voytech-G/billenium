@@ -31,7 +31,7 @@ class TaskValidator extends ValidatorAbstract {
      * @return void
      */
     static validateUpdateRequest(payload) {
-        this.checkObjectIDValid(payload.task_id)
+        this.checkTaskObjectIDValid(payload.task_id)
         
         if (payload.content == null) {
             throw new Error('Task content is required')
@@ -47,7 +47,7 @@ class TaskValidator extends ValidatorAbstract {
      * @return void
      */
     static validateMoveRequest(payload) {
-        this.checkObjectIDValid(payload.task_id)
+        this.checkTaskObjectIDValid(payload.task_id)
 
         if (payload.target_row_index == null) {
             throw new Error('Task target row index is required')
@@ -75,7 +75,7 @@ class TaskValidator extends ValidatorAbstract {
      * @return void
      */
     static validateDeleteRequest(payload) {
-        this.checkObjectIDValid(payload.task_id)
+        this.checkTaskObjectIDValid(payload.task_id)
 
         if (payload.source_row_index == null) {
             throw new Error('Task row index is required')
@@ -162,6 +162,18 @@ class TaskValidator extends ValidatorAbstract {
         if (!Array.isArray(response)) {
             throw new Error('Invalid response')
         }
+
+        return
+    }
+
+    /**
+     * Validate task ID
+     * 
+     * @param {string} taskId 
+     * @return void
+     */
+    static checkTaskObjectIDValid(taskId) {
+        this.checkObjectIDValid(taskId, 'task')
 
         return
     }

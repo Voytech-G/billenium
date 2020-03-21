@@ -10,7 +10,7 @@ window.onload = (function() {
 
     const handleUpdate = () => {
         socket.emit('update-task', {
-            task_id: '5e75d68ecdd8b706f44ad574',
+            task_id: '5e760791c3dd0d47a850fa70',
             content: '2card updated xx',
         }, handleUpdateResponse)
 

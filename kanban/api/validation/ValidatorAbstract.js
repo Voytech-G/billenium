@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 class ValidatorAbstract {
     /**
      * Check if given model ID is valid
@@ -9,7 +11,7 @@ class ValidatorAbstract {
             throw new Error(`${capitalize(modelName)} ID is required`)
         }
 
-        if(!(modelId instanceof mongoose.Schema.Types.ObjectId)) {
+        if(!mongoose.Types.ObjectId.isValid(modelId)) {
             throw new Error(`Valid ${modelName} ID is required`)
         }
 
