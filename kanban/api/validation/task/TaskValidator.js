@@ -30,12 +30,10 @@ class TaskValidator {
      * @return void
      */
     static validateUpdateRequest(payload) {
-        if (payload.task_id == null) {
-            throw new Error(`Task ID is required`)
-        }
+        this.checkTaskIDValid(payload.task_id)
         
         if (payload.content == null) {
-            throw new Error(`Task content is required`)
+            throw new Error('Task content is required')
         }
 
         return
@@ -48,9 +46,7 @@ class TaskValidator {
      * @return void
      */
     static validateMoveRequest(payload) {
-        if (payload.task_id == null) {
-            throw new Error('Task ID is required')
-        }
+        this.checkTaskIDValid(payload.task_id)
 
         if (payload.target_row_index == null) {
             throw new Error('Task target row index is required')
@@ -78,12 +74,14 @@ class TaskValidator {
      * @return void
      */
     static validateDeleteRequest(payload) {
-        if (payload.task_id == null) {
-            throw new Error("Task ID is required");
+        this.checkTaskIDValid(payload.task_id)
+
+        if (payload.source_row_index == null) {
+            throw new Error('Task row index is required')
         }
-        
-        if (payload.task_id.length !== taskConfig.ID_LENGTH) {
-            throw new Error("Task ID is invalid");
+
+        if (payload.source_column_id == null) {
+            throw new Error('Task column ID is required')
         }
 
         return
@@ -162,6 +160,23 @@ class TaskValidator {
     static validateGetAllResponse(response) {
         if (!Array.isArray(response)) {
             throw new Error('Invalid response')
+        }
+
+        return
+    }
+
+    /**
+     * Check if given task ID has valid form
+     * 
+     * @param {String} taskId 
+     */
+    static checkTaskIDValid(taskId) {
+        if (taskId == null) {
+            throw new Error('Task ID is required')
+        }
+
+        if(!(taskId instanceof mongoose.Schema.Types.ObjectId)) {
+            throw new Error('Valid task ID is required')
         }
 
         return
