@@ -8,8 +8,8 @@ class TaskRepository {
     /**
      * Create a new task
      * 
-     * @param {String} content 
-     * @param {Number} rowIndex 
+     * @param {String} content
+     * @param {Number} rowIndex
      * @param {String} columnId
      * @return {Object} 
      */
@@ -33,7 +33,7 @@ class TaskRepository {
      * Get one task with specified parameters as filter
      * 
      * @param {Object} filter
-     * @return {Object} 
+     * @return {Object}
      */
     static async findOneByFilter(filter) {
         return await Task.findOne(filter)
@@ -103,7 +103,13 @@ class TaskRepository {
      * @param {string} columnId 
      */
     static async getTasksByColumnId(columnId) {
-        return await Column.findById(columnId).populate('tasks')
+        const response = await Column.findById(columnId).populate('tasks')
+
+        if (response.tasks == null) {
+            throw new Error('An error occured while getting tasks assigned to column')
+        }
+
+        return response.tasks
     }
 
     /**

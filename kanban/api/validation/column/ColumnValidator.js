@@ -52,6 +52,12 @@ class ColumnValidator extends ValidatorAbstract {
         return
     }
 
+    /**
+     * Validate find one column by id response data
+     * 
+     * @param {Object} response
+     * @return {void} 
+     */
     static validateFindByIdResponse(response) {
         if (response == null) {
             throw new Error('Failed assigning created task to the selected column')

@@ -186,7 +186,7 @@ class TaskValidator extends ValidatorAbstract {
      */
     static validateFindByIdResponse(response) {
         if (response == null) {
-            throw new Error('Failed assigning created task to the selected column')
+            throw new Error('Invalid find by ID response')
         }
 
         if (response.length > 1) {

@@ -32,9 +32,7 @@ class ConnectionsHandler {
         })
 
         socket.on('get-board', async callback => {
-            let response = await ColumnRepository.getColumnByTaskId('5e76241ec21db11d9ce5d113')
-
-            // BoardController.getBoard(callback)
+            BoardController.getBoard(callback)
 
             return
         })

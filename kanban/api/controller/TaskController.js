@@ -120,7 +120,7 @@ class TaskController {
         try {
             TaskValidator.validateDeleteRequest(payload)
 
-            TaskService.deleteTask(payload)
+            const response = TaskService.deleteTask(payload)
 
             TaskValidator.validateDeleteResponse(response)
 

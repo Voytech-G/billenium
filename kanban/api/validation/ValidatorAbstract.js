@@ -6,6 +6,7 @@ class ValidatorAbstract {
      * Check if given model ID is valid
      * 
      * @param {String} taskId 
+     * @return {void}
      */
     static checkObjectIDValid(modelId, modelName) {
         if (modelId == null) {

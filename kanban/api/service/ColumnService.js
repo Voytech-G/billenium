@@ -1,6 +1,7 @@
 const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 const TaskValidator = require('../validation/task/TaskValidator')
+const TaskRepository = require('../database/repository/TaskRepository')
 
 class ColumnService {
     static async createColumn(payload) {

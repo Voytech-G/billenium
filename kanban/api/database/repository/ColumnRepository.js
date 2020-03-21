@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Column = require('../model/Column')
 const Task = require('../model/Task')
-const ColumnValidator = require('../../validation/column/ColumnValidator')
 
 class ColumnRepository {
     /**
@@ -46,6 +45,10 @@ class ColumnRepository {
      */
     static async getColumnByTaskId(taskId) {
         let response = await Task.findById(taskId).populate('column')
+
+        if (response.column == null) {
+            throw new Error('Found no column assigned to that task')
+        }
 
         return response.column
     }
