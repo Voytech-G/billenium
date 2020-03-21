@@ -76,7 +76,7 @@ export default (state, action) => {
                   ...column,
                   items: [
                     ...column.items.filter(
-                      note => note.id !== action.payload.card.id
+                      task => task.id !== action.payload.card.id
                     )
                   ]
                 }
@@ -94,7 +94,7 @@ export default (state, action) => {
                   ...column,
                   items: [
                     ...column.items.filter(
-                      note => note.id !== action.payload.card.id
+                      task => task.id !== action.payload.card.id
                     ),
                     { ...action.payload.card }
                   ]

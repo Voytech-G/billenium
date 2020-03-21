@@ -24,7 +24,7 @@ const handleClick_addCard = (
       row_index: columnItems.length
     };
 
-    socket.emit("create-note", { ...newCard, column_id: columnId }, res => {
+    socket.emit("create-task", { ...newCard, column_id: columnId }, res => {
       if (res.status) {
         newCard._id = res.payload._id;
         addCard(newCard, columnId);

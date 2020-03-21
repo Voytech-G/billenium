@@ -34,9 +34,9 @@ const onDragEnd = (result, columns, moveCard, socket) => {
     );
 
     socket.emit(
-      "move-note",
+      "move-task",
       {
-        note_id: card.id,
+        task_id: card.id,
         content: card.content,
 
         target_row_index: destination.index,

@@ -13,9 +13,9 @@ const handleClick_deleteCard = (
   e.preventDefault();
   // removeCard(cardId, cardIndex, columnId);
   socket.emit(
-    "delete-note",
+    "delete-task",
     {
-      note_id: cardId,
+      task_id: cardId,
       source_row_index: cardIndex,
       source_column_id: columnId
     },
@@ -42,7 +42,7 @@ const handleClick_editCard = (
   const cardContent = prompt("Type new text", content);
   console.log(cardContent);
   // console.log(cardId);
-  socket.emit("update-note", { note_id: cardId, content: cardContent }, res => {
+  socket.emit("update-task", { task_id: cardId, content: cardContent }, res => {
     if (res.status) {
       editCard(cardId, cardIndex, columnId, cardContent);
     } else {
