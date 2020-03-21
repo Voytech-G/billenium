@@ -16,3 +16,5 @@ class ValidatorAbstract {
         return
     }
 }
+
+module.exports = ValidatorAbstract
