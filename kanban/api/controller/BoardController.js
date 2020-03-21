@@ -9,7 +9,7 @@ class BoardController {
      * 
      * @param {Object|null} payload
      * @param {Function} callback
-     * @return void
+     * @return {void}
      */
     static async getBoard(callback) {
         try {

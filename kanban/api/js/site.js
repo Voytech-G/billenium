@@ -4,9 +4,11 @@ window.onload = (function() {
     let deleteButton = document.querySelector('.delete-button')
     let getAllButton = document.querySelector('.get-all-button')
     let moveButton = document.querySelector('.move-button')
+    let testButton = document.querySelector('.test-button')
 
-    const column1 = '5e6a939ce5ad082e20db27f9'
-    const column2 = '5e6a947739c8ce2ef4562fcd'
+    const column1 = '5e7617a72c0df71c482647cb'
+    const column2 = '5e7618bef4416f47802498df'
+    const invalidColumn = '5e7618bef4452f47802498df'
 
     const handleUpdate = () => {
         socket.emit('update-task', {
@@ -31,9 +33,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-task', {
-            content: '1card',
+            content: '3task',
             row_index: 0,
-            column_id: column1,
+            column_id: column2,
         }, handleAddResponse)
 
         return
@@ -41,10 +43,16 @@ window.onload = (function() {
 
     const handleDelete = () => {
         socket.emit('delete-task', {
-            task_id: '5e75d68ecdd8b706f44ad574',
-            source_row_index: 1,
-            source_column_id: column1,
+            task_id: '5e762e251aa88357e0e8ef14',
+            source_row_index: 0,
+            source_column_id: column2,
         }, handleDeleteResponse)
+
+        return
+    }
+                                                   
+    const handleTest = () => {
+        socket.emit('get-board', handleTestResponse)
 
         return
     }
@@ -58,6 +66,7 @@ window.onload = (function() {
     deleteButton.addEventListener('click', handleDelete)
     getAllButton.addEventListener('click', handleGetAll)
     moveButton.addEventListener('click', handleMove)
+    testButton.addEventListener('click', handleTest)
     
     const SERVER_URL = 'http://localhost:4000'
     let socket = io(SERVER_URL)
@@ -79,6 +88,10 @@ window.onload = (function() {
     }
 
     const handleMoveResponse = response => {
+        console.log(response)
+    }
+
+    const handleTestResponse = response => {
         console.log(response)
     }
 })

@@ -14,7 +14,7 @@ class ConnectionsService {
      * Add new connection
      * 
      * @param {Object} socket
-     * @return void 
+     * @return {void} 
      */
     addConnection(socket) {
         let connection = new Connection(socket)
@@ -40,7 +40,7 @@ class ConnectionsService {
     /**
      * Show all connected sockets
      * 
-     * @return void
+     * @return {void}
      */
     showConnections() {
         LogService.info('Displaying list of connections')

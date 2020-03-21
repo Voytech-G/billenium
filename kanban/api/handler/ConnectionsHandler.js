@@ -1,6 +1,10 @@
 const TaskController = require('../controller/TaskController')
 const ConnectionsService = require('../service/ConnectionsService') 
 const BoardController = require('../controller/BoardController')
+const ColumnController = require('../controller/ColumnController')
+
+const ColumnRepository = require('../database/repository/ColumnRepository')
+const TaskRepository = require('../database/repository/TaskRepository')
 
 class ConnectionsHandler {
     /**
@@ -14,7 +18,7 @@ class ConnectionsHandler {
      * Setup a socket.io connection, register events
      * 
      * @param {Object} socket
-     * @return void 
+     * @return {void} 
      */
     async setupConnection(socket) {
         console.log(`Socket of ID: ${socket.id} has just connected`);
@@ -27,8 +31,10 @@ class ConnectionsHandler {
             return
         })
 
-        socket.on('get-board', callback => {
-            BoardController.getBoard(callback)
+        socket.on('get-board', async callback => {
+            let response = await ColumnRepository.getColumnByTaskId('5e76241ec21db11d9ce5d113')
+
+            // BoardController.getBoard(callback)
 
             return
         })
@@ -56,13 +62,19 @@ class ConnectionsHandler {
         
             return
         })
+
+        socket.on('create-column', (payload, callback) => {
+            ColumnController.create(payload, callback)
+
+            return
+        })
     }
 
     /**
      * Register new connection
      * 
      * @param {Object} socket 
-     * @return void
+     * @return {void}
      */
     addConnection(socket) {
         // add new socket connection

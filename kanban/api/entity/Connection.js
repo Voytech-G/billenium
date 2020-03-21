@@ -13,7 +13,7 @@ class Connection {
     /**
      * Display data about the connection
      * 
-     * @return void
+     * @return {void}
      */
     show() {
         LogService.info(`Socket.io connection, ID: ${this.id}`)

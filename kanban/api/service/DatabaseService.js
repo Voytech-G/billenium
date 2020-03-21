@@ -15,7 +15,7 @@ class DatabaseService {
     /**
      * Create database connection
      * 
-     * @return void
+     * @return {void}
      */
     async connectionOpen() {
         const DB_CONTAINER_NAME = this.config.connection.databaseContainerName
@@ -49,7 +49,7 @@ class DatabaseService {
     /**
      * Handle database connection created
      * 
-     * @return void 
+     * @return {void} 
      */
     handleConnectionOpened() {
         LogService.success('Created a connection to the database!')
@@ -61,7 +61,7 @@ class DatabaseService {
      * Handle database connection error
      * 
      * @param {string} error
-     * @return void 
+     * @return {void} 
      */
     handleError(error) {
         // if error is not string or is undefined

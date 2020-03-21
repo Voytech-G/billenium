@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Task = require('../model/Task')
+const Column = require('../model/Column')
 const taskConfig = require('../../config/task')
+const ColumnService = require('../../service/ColumnService')
 
 class TaskRepository {
     /**
@@ -16,10 +18,15 @@ class TaskRepository {
             _id: new mongoose.Types.ObjectId(),
             content,
             row_index: rowIndex,
-            column_id: columnId,
+            column: columnId,
         })
 
-        return await newTask.save()
+        const taskId = newTask.id
+        await ColumnService.assignTaskToColumn(columnId, taskId)
+
+        await newTask.save()
+
+        return newTask
     }
 
     /**
@@ -88,6 +95,25 @@ class TaskRepository {
      */
     static async deleteOneByFilter(filter) {
         return await Task.deleteOne(filter)
+    }
+
+    /**
+     * Get all tasks in given column by its ID
+     * 
+     * @param {string} columnId 
+     */
+    static async getTasksByColumnId(columnId) {
+        return await Column.findById(columnId).populate('tasks')
+    }
+
+    /**
+     * Find one task by ID
+     * 
+     * @param {string} taskId
+     * @return {Object} 
+     */
+    static async findById(taskId) {
+        return await Task.findById(taskId)
     }
 }
 
