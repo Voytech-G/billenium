@@ -1,6 +1,7 @@
 const taskConfig = require("../../config/task");
+const ValidatorAbstract = require('../ValidatorAbstract')
 
-class TaskValidator {
+class TaskValidator extends ValidatorAbstract {
     /**
      * Validate create new task request data
      * 
@@ -30,7 +31,7 @@ class TaskValidator {
      * @return void
      */
     static validateUpdateRequest(payload) {
-        this.checkTaskIDValid(payload.task_id)
+        this.checkObjectIDValid(payload.task_id)
         
         if (payload.content == null) {
             throw new Error('Task content is required')
@@ -46,7 +47,7 @@ class TaskValidator {
      * @return void
      */
     static validateMoveRequest(payload) {
-        this.checkTaskIDValid(payload.task_id)
+        this.checkObjectIDValid(payload.task_id)
 
         if (payload.target_row_index == null) {
             throw new Error('Task target row index is required')
@@ -74,7 +75,7 @@ class TaskValidator {
      * @return void
      */
     static validateDeleteRequest(payload) {
-        this.checkTaskIDValid(payload.task_id)
+        this.checkObjectIDValid(payload.task_id)
 
         if (payload.source_row_index == null) {
             throw new Error('Task row index is required')
@@ -160,23 +161,6 @@ class TaskValidator {
     static validateGetAllResponse(response) {
         if (!Array.isArray(response)) {
             throw new Error('Invalid response')
-        }
-
-        return
-    }
-
-    /**
-     * Check if given task ID has valid form
-     * 
-     * @param {String} taskId 
-     */
-    static checkTaskIDValid(taskId) {
-        if (taskId == null) {
-            throw new Error('Task ID is required')
-        }
-
-        if(!(taskId instanceof mongoose.Schema.Types.ObjectId)) {
-            throw new Error('Valid task ID is required')
         }
 
         return
