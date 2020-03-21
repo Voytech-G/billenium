@@ -1,4 +1,4 @@
-const NoteController = require('../controller/NoteController')
+const TaskController = require('../controller/TaskController')
 const ConnectionsService = require('../service/ConnectionsService') 
 const BoardController = require('../controller/BoardController')
 
@@ -33,26 +33,26 @@ class ConnectionsHandler {
             return
         })
 
-        socket.on('create-note', (payload, callback) => {
-            NoteController.create(payload, callback)
+        socket.on('create-task', (payload, callback) => {
+            TaskController.create(payload, callback)
 
             return
         })
 
-        socket.on('update-note', (payload, callback) => {
-            NoteController.update(payload, callback)
+        socket.on('update-task', (payload, callback) => {
+            TaskController.update(payload, callback)
         
             return
         })
 
-        socket.on('move-note', (payload, callback) => {
-            NoteController.move(payload, callback)
+        socket.on('move-task', (payload, callback) => {
+            TaskController.move(payload, callback)
 
             return
         })
 
-        socket.on('delete-note', (payload, callback) => {
-            NoteController.delete(payload, callback)
+        socket.on('delete-task', (payload, callback) => {
+            TaskController.delete(payload, callback)
         
             return
         })

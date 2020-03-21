@@ -1,15 +1,15 @@
-const noteConfig = require("../../config/note");
+const taskConfig = require("../../config/task");
 
-class NoteValidator {
+class TaskValidator {
     /**
-     * Validate create new note request data
+     * Validate create new task request data
      * 
      * @param {Object} payload
      * @return void
      */
     static validateCreateRequest(payload) {
         if (payload.content == null) {
-            throw new Error(`Note content is required`)
+            throw new Error(`Task content is required`)
         }
     
         if (payload.row_index == null) {
@@ -24,80 +24,80 @@ class NoteValidator {
     }
 
     /**
-     * Validate update note request data
+     * Validate update task request data
      * 
      * @param {Object} payload 
      * @return void
      */
     static validateUpdateRequest(payload) {
-        if (payload.note_id == null) {
-            throw new Error(`Note ID is required`)
+        if (payload.task_id == null) {
+            throw new Error(`Task ID is required`)
         }
         
         if (payload.content == null) {
-            throw new Error(`Note content is required`)
+            throw new Error(`Task content is required`)
         }
 
         return
     }
 
     /**
-     * Validate move note request data
+     * Validate move Task request data
      * 
      * @param {Object} payload 
      * @return void
      */
     static validateMoveRequest(payload) {
-        if (payload.note_id == null) {
-            throw new Error('Note ID is required')
+        if (payload.task_id == null) {
+            throw new Error('Task ID is required')
         }
 
         if (payload.target_row_index == null) {
-            throw new Error('Note target row index is required')
+            throw new Error('Task target row index is required')
         }
 
         if (payload.target_column_id == null) {
-            throw new Error('Note target column ID is required')
+            throw new Error('Task target column ID is required')
         }
 
         if (payload.source_row_index == null) {
-            throw new Error('Note source row index is required')
+            throw new Error('Task source row index is required')
         }
 
         if (payload.source_column_id == null) {
-            throw new Error('Note source column ID is required')
+            throw new Error('Task source column ID is required')
         }
 
         return
     }
 
     /**
-     * Validate delete note request data
+     * Validate delete task request data
      * 
      * @param {Object} payload 
      * @return void
      */
     static validateDeleteRequest(payload) {
-        if (payload.note_id == null) {
-            throw new Error("Note ID is required");
+        if (payload.task_id == null) {
+            throw new Error("Task ID is required");
         }
         
-        if (payload.note_id.length !== noteConfig.ID_LENGTH) {
-            throw new Error("Note ID is invalid");
+        if (payload.task_id.length !== taskConfig.ID_LENGTH) {
+            throw new Error("Task ID is invalid");
         }
 
         return
     }
 
     /**
-     * Validate create new note response data
+     * Validate create new task response data
      * 
      * @param {String} response 
      * @return void
      */
     static validateCreateResponse(response) {
         if (response == null) {
-            throw new Error('It seems like the note has not been created')
+            throw new Error('It seems like the task has not been created')
         }
     
         if (!(response instanceof Object)) {
@@ -108,27 +108,27 @@ class NoteValidator {
     }
 
     /**
-     * Validate update note response data
+     * Validate update task response data
      * 
      * @param {String} response 
      * @return void
      */
     static validateUpdateResponse(response) {
         if (response == null) {
-            throw new Error('No notes updated')
+            throw new Error('No tasks updated')
         }
 
         return
     }
 
     /**
-     * Validate move note response data
+     * Validate move task response data
      * 
      * @param {Object} response 
      */
     static validateMoveResponse(response) {
         if (response == null) {
-            throw new Error('No notes moved')
+            throw new Error('No tasks moved')
         }
 
         if (response.ok != 1) {
@@ -139,22 +139,22 @@ class NoteValidator {
     }
 
     /**
-     * Validate delete note response data
+     * Validate delete task response data
      * 
      * @param {Object} response 
      * @return void
      */
     static validateDeleteResponse(response) {
-        // check if number of deleted notes is exactly one
+        // check if number of deleted tasks is exactly one
         if (response.deletedCount !== 1) {
-            throw new Error('Found no notes of given ID')
+            throw new Error('Found no tasks of given ID')
         }
 
         return
     }
 
     /**
-     * Validate get all notes response data
+     * Validate get all tasks response data
      * 
      * @param {Array} response 
      * @return void
@@ -168,4 +168,4 @@ class NoteValidator {
     }
 }
 
-module.exports = NoteValidator
+module.exports = TaskValidator

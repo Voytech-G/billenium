@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-const Note = require('../model/Note')
-const noteConfig = require('../../config/note')
+const Task = require('../model/Task')
+const taskConfig = require('../../config/task')
 
-class NoteRepository {
+class TaskRepository {
     /**
-     * Create a new note
+     * Create a new task
      * 
      * @param {String} content 
      * @param {Number} rowIndex 
@@ -12,47 +12,47 @@ class NoteRepository {
      * @return {Object} 
      */
     static async create(content, rowIndex, columnId) {
-        const newNote = new Note({
+        const newTask = new Task({
             _id: new mongoose.Types.ObjectId(),
             content,
             row_index: rowIndex,
             column_id: columnId,
         })
 
-        return await newNote.save()
+        return await newTask.save()
     }
 
     /**
-     * Get one note with specified parameters as filter
+     * Get one task with specified parameters as filter
      * 
      * @param {Object} filter
      * @return {Object} 
      */
     static async findOneByFilter(filter) {
-        return await Note.findOne(filter)
+        return await Task.findOne(filter)
     }
 
     /**
-     * Find many notes with specified parameters as filter
+     * Find many tasks with specified parameters as filter
      * 
      * @param {Object} filter 
      * @return {Object}
      */
     static async findManyByFilter(filter) {
-        return await Note.find(filter)
+        return await Task.find(filter)
     }
 
     /**
-     * Get all notes (filter not specified, returns all of them)
+     * Get all tasks (filter not specified, returns all of them)
      * 
      * @return {Array}
      */
     static async findAll() {
-        return await Note.find({})
+        return await Task.find({})
     }
 
     /**
-     * Find one note and update it, in case more than one note 
+     * Find one task and update it, in case more than one task 
      * passes the filter only the first one is updated
      * 
      * @param {Object} filter 
@@ -60,14 +60,14 @@ class NoteRepository {
      * @return {Object}
      */
     static async findOneByFilterAndUpdate(filter, update) {
-        return await Note.findOneAndUpdate(filter, update, {
-            new: noteConfig.repository.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: noteConfig.repository.USE_FIND_AND_MODIFY,
+        return await Task.findOneAndUpdate(filter, update, {
+            new: taskConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
         })
     }
 
     /**
-     * Find many notes with given filter, update all, response contains
+     * Find many tasks with given filter, update all, response contains
      * 'n' field with number of matched documents and 'nModified' field with
      * number of documents modified
      * 
@@ -76,19 +76,19 @@ class NoteRepository {
      * @return {Object} 
      */
     static async findManyByFilterAndUpdate(filter, update) {
-        return await Note.updateMany(filter, update)
+        return await Task.updateMany(filter, update)
     }
 
     /**
-     * Delete one note found by parameters specified in filter. If more than one note 
+     * Delete one task found by parameters specified in filter. If more than one task 
      * passes the filter only one of those is removed
      * 
      * @param {Object} filter
      * @return {Object} 
      */
     static async deleteOneByFilter(filter) {
-        return await Note.deleteOne(filter)
+        return await Task.deleteOne(filter)
     }
 }
 
-module.exports = NoteRepository
+module.exports = TaskRepository

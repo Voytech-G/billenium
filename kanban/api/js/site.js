@@ -9,17 +9,17 @@ window.onload = (function() {
     const column2 = '5e6a947739c8ce2ef4562fcd'
 
     const handleUpdate = () => {
-        socket.emit('update-note', {
-            note_id: '5e714418555f8f30a4ed742d',
-            content: '2card updated',
+        socket.emit('update-task', {
+            task_id: '5e75d68ecdd8b706f44ad574',
+            content: '2card updated xx',
         }, handleUpdateResponse)
 
         return
     }
 
     const handleMove = () => {
-        socket.emit('move-note', {
-            note_id: '5e7272b551979e3accfd9e70',
+        socket.emit('move-task', {
+            task_id: '5e7272b551979e3accfd9e70',
             target_row_index: 0,
             target_column_id: column1,
             source_row_index: 2,
@@ -30,9 +30,9 @@ window.onload = (function() {
     }
 
     const handleAdd = () => {
-        socket.emit('create-note', {
-            content: '3card',
-            row_index: 2,
+        socket.emit('create-task', {
+            content: '1card',
+            row_index: 0,
             column_id: column1,
         }, handleAddResponse)
 
@@ -40,8 +40,8 @@ window.onload = (function() {
     }
 
     const handleDelete = () => {
-        socket.emit('delete-note', {
-            note_id: '5e7272ac51979e3accfd9e6e',
+        socket.emit('delete-task', {
+            task_id: '5e75d68ecdd8b706f44ad574',
             source_row_index: 1,
             source_column_id: column1,
         }, handleDeleteResponse)
