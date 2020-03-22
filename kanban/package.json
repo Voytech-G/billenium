@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "concurrently": "^5.1.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.3",
     "react": "^16.13.0",
@@ -22,6 +23,7 @@
     "eject": "react-scripts eject",
     "run_server": "node api/server.js",
     "run_npm": "npm start",
+    "run_npm_i": "npm i",
     "kanban": "concurrently --kill-others \"npm run run_server\" \"npm run run_npm\""
   },
   "eslintConfig": {
