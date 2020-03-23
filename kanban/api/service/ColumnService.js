@@ -4,6 +4,12 @@ const TaskValidator = require('../validation/task/TaskValidator')
 const TaskRepository = require('../database/repository/TaskRepository')
 
 class ColumnService {
+    /**
+     * Create column
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
     static async createColumn(payload) {
         const name = payload.name
         const boardIndex = payload.board_index
@@ -16,13 +22,13 @@ class ColumnService {
     /**
      * Find the target column for task and assign the task to it
      * 
-     * @param {string} columnId 
+     * @param {string} columnId
      * @param {Object} taskId
      * @return {void}
      */
     static async assignTaskToColumn(columnId, taskId) {
         const targetColumn = await ColumnRepository.findById(columnId)
-
+        
         ColumnValidator.validateFindByIdResponse(targetColumn)
 
         const targetTask = await TaskRepository.findById(taskId)
