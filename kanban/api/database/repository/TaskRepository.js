@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const Task = require('../model/Task')
 const Column = require('../model/Column')
 const taskConfig = require('../../config/task')
-const ColumnService = require('../../service/ColumnService')
 
 class TaskRepository {
     /**
@@ -20,9 +19,6 @@ class TaskRepository {
             row_index: rowIndex,
             column: columnId,
         })
-
-        const taskId = newTask.id
-        await ColumnService.assignTaskToColumn(columnId, taskId)
 
         await newTask.save()
 

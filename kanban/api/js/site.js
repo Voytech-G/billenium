@@ -52,7 +52,10 @@ window.onload = (function() {
     }
                                                    
     const handleTest = () => {
-        socket.emit('get-board', handleTestResponse)
+        socket.emit('create-column', {
+            name: 'column4 test',
+            board_index: 3,
+        }, handleTestResponse)
 
         return
     }

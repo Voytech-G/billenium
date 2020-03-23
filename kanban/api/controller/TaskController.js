@@ -1,6 +1,7 @@
 const TaskValidator = require('../validation/task/TaskValidator')
 const TaskRepository = require('../database/repository/TaskRepository')
 const TaskService = require('../service/TaskService')
+const ColumnService = require('../service/ColumnService')
 
 class TaskController {
     /**
@@ -120,7 +121,7 @@ class TaskController {
         try {
             TaskValidator.validateDeleteRequest(payload)
 
-            const response = TaskService.deleteTask(payload)
+            const response = await TaskService.deleteTask(payload)
 
             TaskValidator.validateDeleteResponse(response)
 

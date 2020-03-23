@@ -1,4 +1,4 @@
-const taskConfig = require("../../config/task");
+// const taskConfig = require("../../config/task");
 const ValidatorAbstract = require('../ValidatorAbstract')
 
 class TaskValidator extends ValidatorAbstract {

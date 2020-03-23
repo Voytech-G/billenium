@@ -12,14 +12,11 @@ const App = () => {
 
   useEffect(() => {
     socket.emit("get-board", data => {
-      const { tasks } = data.payload;
-      // console.log(data);
       const columnsWithItems = data.payload.columns.map(column => ({
         id: column._id,
         name: column.name,
         board_index: column.board_index,
-        items: tasks
-          .filter(task => task.column_id === column._id)
+        items: column.tasks
           .map(task => ({
             id: task._id,
             content: task.content,

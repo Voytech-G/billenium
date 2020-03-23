@@ -1,4 +1,5 @@
 const ColumnService = require('../service/ColumnService')
+const ColumnValidator = require('../validation/column/ColumnValidator')
 
 class ColumnController {
     /**
@@ -12,14 +13,14 @@ class ColumnController {
         try {
             ColumnValidator.validateCreateRequest(payload)
 
-            const task = await ColumnService.createColumn(payload)
+            const column = await ColumnService.createColumn(payload)
 
             ColumnValidator.validateCreateResponse(column)
 
             callback({
                 status: true,
                 message: 'Successfully created a new column',
-                payload: task,
+                payload: column,
             })
 
             return

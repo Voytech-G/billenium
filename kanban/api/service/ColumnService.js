@@ -30,7 +30,7 @@ class ColumnService {
         const targetColumn = await ColumnRepository.findById(columnId)
         
         ColumnValidator.validateFindByIdResponse(targetColumn)
-
+        
         const targetTask = await TaskRepository.findById(taskId)
 
         TaskValidator.validateFindByIdResponse(targetTask)

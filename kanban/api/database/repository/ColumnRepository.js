@@ -9,7 +9,7 @@ class ColumnRepository {
      * @return {Array}
      */
     static async findAll() {
-        return await Column.find({})
+        return await Column.find({}).populate('tasks')
     }
 
     /**

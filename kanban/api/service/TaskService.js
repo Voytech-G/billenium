@@ -16,6 +16,9 @@ class TaskService {
 
         const task = await TaskRepository.create(content, rowIndex, columnId)
 
+        const taskId = task.id
+        await ColumnService.assignTaskToColumn(columnId, taskId)
+
         return task
     }
 
@@ -35,8 +38,13 @@ class TaskService {
         const sourceRowIndex = payload.source_row_index
         const sourceColumnId = payload.source_column_id
 
-        await ColumnService.unassignTaskFromColumn(taskId)
-        await ColumnService.assignTaskToColumn(targetColumnId, taskId)
+        console.log(taskId, targetColumnId, targetRowIndex, sourceRowIndex, sourceColumnId)
+
+        // in case target column is not the same as source column we switch them
+        if (targetColumnId !== sourceColumnId) {
+            await ColumnService.unassignTaskFromColumn(taskId)
+            await ColumnService.assignTaskToColumn(targetColumnId, taskId)
+        }
 
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
         await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
@@ -122,9 +130,9 @@ class TaskService {
         const sourceRowIndex = payload.source_row_index
         const sourceColumnId = payload.source_column_id
 
-        ColumnService.unassignTaskFromColumn(taskId)
+        await ColumnService.unassignTaskFromColumn(taskId)
 
-        // after weww delete the task we move all tasks above it to fill the created gap
+        // after we delete the task we move all tasks above it to fill the created gap
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
 
         const filter = { _id: taskId }
