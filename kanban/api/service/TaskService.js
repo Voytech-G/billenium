@@ -38,24 +38,24 @@ class TaskService {
         const sourceRowIndex = payload.source_row_index
         const sourceColumnId = payload.source_column_id
 
-        console.log(taskId, targetColumnId, targetRowIndex, sourceRowIndex, sourceColumnId)
-
         // in case target column is not the same as source column we switch them
         if (targetColumnId !== sourceColumnId) {
             await ColumnService.unassignTaskFromColumn(taskId)
             await ColumnService.assignTaskToColumn(targetColumnId, taskId)
         }
 
+        // adjust all tasks in the same column
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
         await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
 
+        // update the moved task (its position)
         const filter = { 
             _id: taskId,
         }
 
         const update = { 
             row_index: targetRowIndex,
-            column_id: targetColumnId,
+            column: targetColumnId,
         }
 
         // update moved task's position to target task position
@@ -76,11 +76,11 @@ class TaskService {
     static async moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId, including = false) {
         let filter = {
             row_index: { $gt: sourceRowIndex },
-            column_id: sourceColumnId,
+            column: sourceColumnId,
         }
 
         // if including flag is true update also the task at given row index, else only the ones above
-        filter.row_index = including == true ? { $gte: sourceRowIndex } : { $gt: sourceRowIndex }
+        filter.row_index = including === true ? { $gte: sourceRowIndex } : { $gt: sourceRowIndex }
 
         const update = {
             $inc: { row_index: -1 },
@@ -102,11 +102,11 @@ class TaskService {
      */
     static async moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, including = false) {
         let filter = {
-            column_id: targetColumnId,
+            column: targetColumnId,
         }
 
         // if including flag is true update also the task at given row index, else only the ones above
-        filter.row_index = including == true ? { $gte: targetRowIndex } : { $gt: targetRowIndex }
+        filter.row_index = including === true ? { $gte: targetRowIndex } : { $gt: targetRowIndex }
 
         const update = {
             $inc: { row_index: 1 },

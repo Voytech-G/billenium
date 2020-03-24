@@ -47,7 +47,7 @@ class TaskController {
         try {
             TaskValidator.validateMoveRequest(payload)
 
-            const movedTask = TaskService.moveTask(payload)
+            const movedTask = await TaskService.moveTask(payload)
 
             TaskValidator.validateUpdateResponse(movedTask)
 
