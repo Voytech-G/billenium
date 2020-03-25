@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 const Task = require('../model/Task')
+const Column = require('../model/Column')
 const taskConfig = require('../../config/task')
 
 class TaskRepository {
     /**
      * Create a new task
      * 
-     * @param {String} content 
-     * @param {Number} rowIndex 
+     * @param {String} content
+     * @param {Number} rowIndex
      * @param {String} columnId
      * @return {Object} 
      */
@@ -16,17 +17,19 @@ class TaskRepository {
             _id: new mongoose.Types.ObjectId(),
             content,
             row_index: rowIndex,
-            column_id: columnId,
+            column: columnId,
         })
 
-        return await newTask.save()
+        await newTask.save()
+
+        return newTask
     }
 
     /**
      * Get one task with specified parameters as filter
      * 
      * @param {Object} filter
-     * @return {Object} 
+     * @return {Object}
      */
     static async findOneByFilter(filter) {
         return await Task.findOne(filter)
@@ -80,6 +83,26 @@ class TaskRepository {
     }
 
     /**
+     * Find all tasks matching filter and remove them
+     * 
+     * @param {Object} filter 
+     * @return {Object} // data about deleted data (deletedCount etc)
+     */
+    static async findManyByFilterAndRemove(filter) {
+        return await Task.remove(filter)
+    }
+
+    /**
+     * Find one task by filter and remove it
+     * 
+     * @param {Object} filter
+     * @return {Object} // removed task 
+     */
+    static async findOneByFilterAndRemove(filter) {
+        return await Task.findOneAndRemove(filter)
+    }
+
+    /**
      * Delete one task found by parameters specified in filter. If more than one task 
      * passes the filter only one of those is removed
      * 
@@ -88,6 +111,31 @@ class TaskRepository {
      */
     static async deleteOneByFilter(filter) {
         return await Task.deleteOne(filter)
+    }
+
+    /**
+     * Get all tasks in given column by its ID
+     * 
+     * @param {string} columnId 
+     */
+    static async getTasksByColumnId(columnId) {
+        const response = await Column.findById(columnId).populate('tasks')
+
+        if (response.tasks == null) {
+            throw new Error('An error occured while getting tasks assigned to column')
+        }
+
+        return response.tasks
+    }
+
+    /**
+     * Find one task by ID
+     * 
+     * @param {string} taskId
+     * @return {Object} 
+     */
+    static async findById(taskId) {
+        return await Task.findById(taskId)
     }
 }
 

@@ -1,7 +1,5 @@
 const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
-const TaskValidator = require('../validation/task/TaskValidator')
-const TaskRepository = require('../database/repository/TaskRepository')
 
 class BoardController {
     /**
@@ -9,21 +7,18 @@ class BoardController {
      * 
      * @param {Object|null} payload
      * @param {Function} callback
-     * @return void
+     * @return {void}
      */
     static async getBoard(callback) {
         try {
             let columns = await ColumnRepository.findAll()
-            let tasks = await TaskRepository.findAll()
         
             ColumnValidator.validateGetAllResponse(columns)
-            TaskValidator.validateGetAllResponse(tasks)
         
             callback({
                 status: true,
                 payload: {
                     columns,
-                    tasks
                 }
             })
 
@@ -31,7 +26,7 @@ class BoardController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `An error occured while getting list of tasks: ${exception.message}`
+                message: `An error occured while getting the board: ${exception.message}`
             })
 
             return

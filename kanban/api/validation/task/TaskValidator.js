@@ -1,4 +1,4 @@
-const taskConfig = require("../../config/task");
+// const taskConfig = require("../../config/task");
 const ValidatorAbstract = require('../ValidatorAbstract')
 
 class TaskValidator extends ValidatorAbstract {
@@ -6,7 +6,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate create new task request data
      * 
      * @param {Object} payload
-     * @return void
+     * @return {void}
      */
     static validateCreateRequest(payload) {
         if (payload.content == null) {
@@ -28,7 +28,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate update task request data
      * 
      * @param {Object} payload 
-     * @return void
+     * @return {void}
      */
     static validateUpdateRequest(payload) {
         this.checkTaskObjectIDValid(payload.task_id)
@@ -44,7 +44,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate move Task request data
      * 
      * @param {Object} payload 
-     * @return void
+     * @return {void}
      */
     static validateMoveRequest(payload) {
         this.checkTaskObjectIDValid(payload.task_id)
@@ -72,7 +72,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate delete task request data
      * 
      * @param {Object} payload 
-     * @return void
+     * @return {void}
      */
     static validateDeleteRequest(payload) {
         this.checkTaskObjectIDValid(payload.task_id)
@@ -92,7 +92,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate create new task response data
      * 
      * @param {String} response 
-     * @return void
+     * @return {void}
      */
     static validateCreateResponse(response) {
         if (response == null) {
@@ -110,7 +110,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate update task response data
      * 
      * @param {String} response 
-     * @return void
+     * @return {void}
      */
     static validateUpdateResponse(response) {
         if (response == null) {
@@ -141,7 +141,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate delete task response data
      * 
      * @param {Object} response 
-     * @return void
+     * @return {void}
      */
     static validateDeleteResponse(response) {
         // check if number of deleted tasks is exactly one
@@ -156,7 +156,7 @@ class TaskValidator extends ValidatorAbstract {
      * Validate get all tasks response data
      * 
      * @param {Array} response 
-     * @return void
+     * @return {void}
      */
     static validateGetAllResponse(response) {
         if (!Array.isArray(response)) {
@@ -167,13 +167,31 @@ class TaskValidator extends ValidatorAbstract {
     }
 
     /**
-     * Validate task ID
+     * Check if given task ID is valid mongoose object ID
      * 
      * @param {string} taskId 
-     * @return void
+     * @return {void}
      */
     static checkTaskObjectIDValid(taskId) {
         this.checkObjectIDValid(taskId, 'task')
+
+        return
+    }
+
+    /**
+     * Validate find by ID response data
+     * 
+     * @param {Object} response 
+     * @return {void}
+     */
+    static validateFindByIdResponse(response) {
+        if (response == null) {
+            throw new Error('Invalid find by ID response')
+        }
+
+        if (response.length > 1) {
+            throw new Error('Found more than 1 column of this ID')
+        }
 
         return
     }
