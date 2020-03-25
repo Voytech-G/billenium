@@ -13,10 +13,38 @@ class ColumnService {
     static async createColumn(payload) {
         const name = payload.name
         const boardIndex = payload.board_index
+        const maxTasks = payload.max_tasks
 
-        const column = await ColumnRepository.create(name, boardIndex)
+        const column = await ColumnRepository.create(name, boardIndex, maxTasks)
 
         return column
+    }
+
+    /**
+     * Update column
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async updateColumn(payload) {
+        const columnId = payload.column_id
+        const name = payload.name
+        const boardIndex = payload.board_index
+        const maxTasks = payload.max_tasks
+
+        const filter = {
+            _id: columnId,
+        }
+
+        const update = {
+            name: name,
+            board_index: boardIndex,
+            max_tasks: maxTasks,
+        }
+
+        const response = await ColumnRepository.findByFilterAndUpdate(filter, update)
+
+        return response
     }
 
     /**

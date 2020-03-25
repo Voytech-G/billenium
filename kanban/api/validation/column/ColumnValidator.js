@@ -20,6 +20,10 @@ class ColumnValidator extends ValidatorAbstract {
             throw new Error('Column board index has to be a number')
         }
 
+        if (request.max_tasks == null) {
+            throw new Error('Column max tasks number is required')
+        }
+
         return
     }
 
@@ -32,6 +36,46 @@ class ColumnValidator extends ValidatorAbstract {
     static validateCreateResponse(column) {
         if (typeof column != 'object') {
             throw new Error('Create column error occured')
+        }
+
+        return
+    }
+
+    /**
+     * Validate update column request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateUpdateRequest(payload) {
+        if (payload.column_id == null) {
+            throw new Error('Column ID is required')
+        }
+
+        if (payload.name == null) {
+            throw new Error('Column name is required')
+        }
+
+        if (payload.board_index == null) {
+            throw new Error('Column board index is required')
+        }
+
+        if (payload.max_tasks == null) {
+            throw new Error('Column max tasks number is required')
+        }
+
+        return
+    }
+
+    /**
+     * Validate update column response data
+     * 
+     * @param {Object} response 
+     * @return {void}
+     */
+    static validateUpdateResponse(response) {
+        if (response.ok !== 1) {
+            throw new Error('An error occured while updating the column')
         }
 
         return

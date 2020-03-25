@@ -66,6 +66,12 @@ class ConnectionsHandler {
 
             return
         })
+
+        socket.on('update-column', (payload, callback) => {
+            ColumnController.update(payload, callback)
+
+            return
+        })
     }
 
     /**

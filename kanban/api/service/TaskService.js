@@ -120,6 +120,27 @@ class TaskService {
     }
 
     /**
+     * Update task
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async updateTask(payload) {
+        const taskId = payload.task_id
+        const content = payload.content
+
+        const filter = {
+            _id: taskId,
+        }
+
+        const update = { 
+            content, 
+        }
+
+        return await TaskRepository.findOneByFilterAndUpdate(filter, update)
+    }
+
+    /**
      * Delete one task, unassign it from column it was in
      * 
      * @param {Object} payload

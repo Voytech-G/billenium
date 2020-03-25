@@ -78,18 +78,7 @@ class TaskController {
         try {
             TaskValidator.validateUpdateRequest(payload)
 
-            const taskId = payload.task_id
-            const content = payload.content
-
-            const filter = {
-                _id: taskId,
-            }
-
-            const update = { 
-                content, 
-            }
-
-            let task = await TaskRepository.findOneByFilterAndUpdate(filter, update)
+            const task = TaskService.updateTask(payload)
 
             TaskValidator.validateUpdateResponse(task)
 

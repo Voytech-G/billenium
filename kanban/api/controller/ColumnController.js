@@ -34,8 +34,35 @@ class ColumnController {
         }
     }
 
-    update(payload) {
-        console.log(payload)
+    /**
+     * Update column
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback
+     * @return {void} 
+     */
+    static async update(payload, callback) {
+        try {
+            ColumnValidator.validateUpdateRequest(payload)
+    
+            const response = await ColumnService.updateColumn(payload)
+    
+            ColumnValidator.validateUpdateResponse(response)
+    
+            callback({
+                status: true,
+                message: 'Successfully updated the column',
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `Failed to update the column: ${exception.message}`
+            })
+
+            return
+        }
     }
 
     delete(payload) {

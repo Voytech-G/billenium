@@ -52,10 +52,18 @@ window.onload = (function() {
     }
                                                    
     const handleTest = () => {
-        socket.emit('create-column', {
-            name: 'column4 test',
-            board_index: 3,
+        socket.emit('update-column', {
+            column_id: '5e7bb51889e1e430acd9ead3',
+            name: 'col1 update',
+            board_index: 0,
+            max_tasks: 15,
         }, handleTestResponse)
+
+        // socket.emit('create-column', {
+        //     name: 'col3',
+        //     board_index: 2,
+        //     max_tasks: 3,
+        // }, handleTestResponse)
 
         return
     }

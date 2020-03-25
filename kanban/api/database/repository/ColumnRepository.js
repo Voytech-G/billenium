@@ -27,11 +27,12 @@ class ColumnRepository {
      * 
      * @return {Object} 
      */
-    static async create(name, boardIndex) {
+    static async create(name, boardIndex, maxTasks) {
         const newColumn = new Column({
             _id: new mongoose.Types.ObjectId(),
             name: name,
             board_index: boardIndex,
+            max_tasks: maxTasks,
         })
 
         return await newColumn.save()
@@ -51,6 +52,17 @@ class ColumnRepository {
         }
 
         return response.column
+    }
+
+    /**
+     * Get columns by filter and update
+     * 
+     * @param {Object} filter 
+     * @param {Object} update 
+     * @return {Object}
+     */
+    static async findByFilterAndUpdate(filter, update) {
+        return await Column.updateMany(filter, update)
     }
 }
 
