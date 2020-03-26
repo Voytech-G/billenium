@@ -60,10 +60,14 @@ window.onload = (function() {
         //     max_tasks: 15,
         // }, handleTestResponse)
 
-        socket.emit('create-column', {
-            name: 'col4',
-            board_index: 3,
-            max_tasks: 25,
+        // socket.emit('create-column', {
+        //     name: 'col4',
+        //     board_index: 3,
+        //     max_tasks: 25,
+        // }, handleTestResponse)
+
+        socket.emit('get-column', {
+            column_id: '5e7cfae29e573044643817b4',
         }, handleTestResponse)
 
         return

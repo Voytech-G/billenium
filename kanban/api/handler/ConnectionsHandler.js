@@ -78,6 +78,10 @@ class ConnectionsHandler {
 
             return
         })
+
+        socket.on('get-column', (payload, callback) => {
+            ColumnController.getOne(payload, callback)
+        })
     }
 
     /**
