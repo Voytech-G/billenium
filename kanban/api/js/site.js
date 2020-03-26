@@ -1,11 +1,11 @@
 window.onload = (function() {
     let addButton = document.querySelector('.add-button')
     let updateButton = document.querySelector('.update-button')
-    let deleteButton = document.querySelector('.delete-button')
+    let removeButton = document.querySelector('.remove-button')
     let getAllButton = document.querySelector('.get-all-button')
     let moveButton = document.querySelector('.move-button')
     let testButton = document.querySelector('.test-button')
-    let deleteColumnButton = document.querySelector('.delete-column-button')
+    let removeColumnButton = document.querySelector('.remove-column-button')
 
     const column1 = '5e7617a72c0df71c482647cb'
     const column2 = '5e7618bef4416f47802498df'
@@ -42,12 +42,12 @@ window.onload = (function() {
         return
     }
 
-    const handleDelete = () => {
-        socket.emit('delete-task', {
+    const handleRemove = () => {
+        socket.emit('remove-task', {
             task_id: '5e762e251aa88357e0e8ef14',
             source_row_index: 0,
             source_column_id: column2,
-        }, handleDeleteResponse)
+        }, handleRemoveResponse)
 
         return
     }
@@ -73,19 +73,19 @@ window.onload = (function() {
         socket.emit('get-board', handleGetAllResponse)
     }
 
-    const handleDeleteColumn = () => {
-        socket.emit('delete-column', {
-            column_id: '5e7d0bbd460818168cb35ab9'
-        }, handleDeleteColumnResponse)
+    const handleRemoveColumn = () => {
+        socket.emit('remove-column', {
+            column_id: '5e7d1316d840e661301bdea8'
+        }, handleRemoveColumnResponse)
     }
 
     addButton.addEventListener('click', handleAdd)
     updateButton.addEventListener('click', handleUpdate)
-    deleteButton.addEventListener('click', handleDelete)
+    removeButton.addEventListener('click', handleRemove)
     getAllButton.addEventListener('click', handleGetAll)
     moveButton.addEventListener('click', handleMove)
     testButton.addEventListener('click', handleTest)
-    deleteColumnButton.addEventListener('click', handleDeleteColumn)
+    removeColumnButton.addEventListener('click', handleRemoveColumn)
 
     
     const SERVER_URL = 'http://localhost:4000'
@@ -99,7 +99,7 @@ window.onload = (function() {
         console.log(response)
     }
 
-    const handleDeleteResponse = response => {
+    const handleRemoveResponse = response => {
         console.log(response)
     }
 
@@ -115,7 +115,7 @@ window.onload = (function() {
         console.log(response)
     }
 
-    const handleDeleteColumnResponse = response => {
+    const handleRemoveColumnResponse = response => {
         console.log(response)
     }
 })

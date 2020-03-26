@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { GlobalContext } from "../context/GlobalState";
-const handleClick_deleteCard = (
+const handleClick_removeCard = (
   e,
   removeCard,
   socket,
@@ -13,7 +13,7 @@ const handleClick_deleteCard = (
   e.preventDefault();
   // removeCard(cardId, cardIndex, columnId);
   socket.emit(
-    "delete-task",
+    "remove-task",
     {
       task_id: cardId,
       source_row_index: cardIndex,
@@ -108,7 +108,7 @@ const Card = ({ card, columnId }) => {
               <button
                 style={{}}
                 onClick={e =>
-                  handleClick_deleteCard(
+                  handleClick_removeCard(
                     e,
                     removeCard,
                     socket,

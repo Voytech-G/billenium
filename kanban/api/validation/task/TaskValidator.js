@@ -69,12 +69,12 @@ class TaskValidator extends ValidatorAbstract {
     }
 
     /**
-     * Validate delete task request data
+     * Validate remove task request data
      * 
      * @param {Object} payload 
      * @return {void}
      */
-    static validateDeleteRequest(payload) {
+    static validateRemoveRequest(payload) {
         this.checkTaskObjectIDValid(payload.task_id)
 
         if (payload.source_row_index == null) {
@@ -143,7 +143,7 @@ class TaskValidator extends ValidatorAbstract {
      * @param {Object} response 
      * @return {void}
      */
-    static validateDeleteResponse(response) {
+    static validateRemoveResponse(response) {
         // check if number of deleted tasks is exactly one
         if (response.deletedCount !== 1) {
             throw new Error('Found no tasks of given ID')

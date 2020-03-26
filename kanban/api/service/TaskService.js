@@ -141,24 +141,24 @@ class TaskService {
     }
 
     /**
-     * Delete one task, unassign it from column it was in
+     * Remove one task, unassign it from column it was in
      * 
      * @param {Object} payload
      * @return {Object} 
      */
-    static async deleteTask(payload) {
+    static async removeTask(payload) {
         const taskId = payload.task_id
         const sourceRowIndex = payload.source_row_index
         const sourceColumnId = payload.source_column_id
 
         await ColumnService.unassignTaskFromColumn(taskId)
 
-        // after we delete the task we move all tasks above it to fill the created gap
+        // after we remove the task we move all tasks above it to fill the created gap
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
 
         const filter = { _id: taskId }
 
-        return await TaskRepository.deleteOneByFilter(filter)
+        return await TaskRepository.removeOneByFilter(filter)
     }
 }
 

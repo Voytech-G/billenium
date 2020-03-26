@@ -129,19 +129,19 @@ class ColumnValidator extends ValidatorAbstract {
 
     }
        
-    static validateDeleteRequest(payload) {
+    static validateRemoveRequest(payload) {
         if (payload.column_id == null) {
             throw new Error('Column ID is required')
         } return
     }
 
-    static validateDeleteResponse(response) {
+    static validateRemoveResponse(response) {
         if (response == null) {
-            throw new Error('Invalid delete response')
+            throw new Error('Invalid remove response')
         }
 
         if (!(response instanceof Object)) {
-            throw new Error('Invalid delete response')
+            throw new Error('Invalid remove response')
         }
 
         return
