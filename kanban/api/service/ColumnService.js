@@ -42,9 +42,9 @@ class ColumnService {
             max_tasks: maxTasks,
         }
 
-        const response = await ColumnRepository.findByFilterAndUpdate(filter, update)
+        const column = await ColumnRepository.findOneByFilterAndUpdate(filter, update)
 
-        return response
+        return column
     }
 
     /**

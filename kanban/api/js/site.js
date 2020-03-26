@@ -54,7 +54,7 @@ window.onload = (function() {
     const handleTest = () => {
         socket.emit('update-column', {
             column_id: '5e7bb51889e1e430acd9ead3',
-            name: 'col1 update',
+            name: 'col1 update update update pls',
             board_index: 0,
             max_tasks: 15,
         }, handleTestResponse)

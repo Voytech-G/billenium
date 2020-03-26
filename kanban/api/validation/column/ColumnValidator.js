@@ -74,8 +74,12 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateUpdateResponse(response) {
-        if (response.ok !== 1) {
-            throw new Error('An error occured while updating the column')
+        if (response == null) {
+            throw new Error('Invalid update response')
+        }
+
+        if (!(response instanceof Object)) {
+            throw new Error('Invalid update response')
         }
 
         return

@@ -45,13 +45,14 @@ class ColumnController {
         try {
             ColumnValidator.validateUpdateRequest(payload)
     
-            const response = await ColumnService.updateColumn(payload)
-    
-            ColumnValidator.validateUpdateResponse(response)
+            const column = await ColumnService.updateColumn(payload)
+
+            ColumnValidator.validateUpdateResponse(column)
     
             callback({
                 status: true,
                 message: 'Successfully updated the column',
+                column: column,
             })
 
             return

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Column = require('../model/Column')
 const Task = require('../model/Task')
+const columnConfig = require('../../config/column')
 
 class ColumnRepository {
     /**
@@ -63,6 +64,20 @@ class ColumnRepository {
      */
     static async findByFilterAndUpdate(filter, update) {
         return await Column.updateMany(filter, update)
+    }
+
+    /**
+     * Find one column and update it, return updated column
+     * 
+     * @param {Object} filter 
+     * @param {Object} update
+     * @return {Object}
+     */
+    static async findOneByFilterAndUpdate(filter, update) {
+        return await Column.findOneAndUpdate(filter, update, {
+            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
 }
 
