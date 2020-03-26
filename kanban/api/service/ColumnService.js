@@ -93,7 +93,25 @@ class ColumnService {
     static async deleteColumn(payload) {
         const columnId = payload.column_id
 
+        await this.removeTasksAssignedToColumn(columnId)
+
         return await ColumnRepository.findOneByIdAndRemove(columnId)
+    }
+
+    /**
+     * Remove all tasks that are 
+     * 
+     * @param {Number} columnId 
+     * @return {void}
+     */
+    static async removeTasksAssignedToColumn(columnId) {
+        const filter = {
+            column: columnId,
+        }
+    
+        await TaskRepository.findManyByFilterAndRemove(filter)
+
+        return
     }
 }
 

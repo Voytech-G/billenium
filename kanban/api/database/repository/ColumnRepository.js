@@ -112,7 +112,9 @@ class ColumnRepository {
      * @return {Object} // removed column data
      */
     static async findOneByIdAndRemove(columnId) {
-        return await Column.findByIdAndRemove(columnId)
+        return await Column.findByIdAndRemove(columnId, {
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
 }
 

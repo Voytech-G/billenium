@@ -63,7 +63,7 @@ window.onload = (function() {
         socket.emit('create-column', {
             name: 'col4',
             board_index: 3,
-            max_tasks: 3,
+            max_tasks: 25,
         }, handleTestResponse)
 
         return
@@ -75,7 +75,7 @@ window.onload = (function() {
 
     const handleDeleteColumn = () => {
         socket.emit('delete-column', {
-            column_id: '5e7d085fea66ea1edce1edb8'
+            column_id: '5e7d0bbd460818168cb35ab9'
         }, handleDeleteColumnResponse)
     }
 
