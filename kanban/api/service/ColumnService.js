@@ -82,6 +82,16 @@ class ColumnService {
 
         await column.save()
     }
+
+    static async deleteColumn(payload) {
+        const columnId = payload.column_id
+
+        // after we delete the task we move all tasks above it to fill the created gap
+
+        const filter = { _id: columnId }
+
+        return await ColumnRepository.deleteOneByFilter(filter)
+    }
 }
 
 module.exports = ColumnService

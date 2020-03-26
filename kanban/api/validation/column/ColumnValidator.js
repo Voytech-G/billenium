@@ -127,6 +127,23 @@ class ColumnValidator extends ValidatorAbstract {
     static checkColumnObjectIDValid(columnId) {
         this.checkObjectIDValid(columnId, 'column')
 
+    }
+       
+    static validateDeleteRequest(payload) {
+        if (payload.column_id == null) {
+            throw new Error('Column ID is required')
+        } return
+    }
+
+    static validateDeleteResponse(response) {
+        if (response == null) {
+            throw new Error('Invalid delete response')
+        }
+
+        if (!(response instanceof Object)) {
+            throw new Error('Invalid delete response')
+        }
+
         return
     }
 }

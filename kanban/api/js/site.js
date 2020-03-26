@@ -5,6 +5,7 @@ window.onload = (function() {
     let getAllButton = document.querySelector('.get-all-button')
     let moveButton = document.querySelector('.move-button')
     let testButton = document.querySelector('.test-button')
+    let deleteColumnButton = document.querySelector('.delete-column-button')
 
     const column1 = '5e7617a72c0df71c482647cb'
     const column2 = '5e7618bef4416f47802498df'
@@ -72,12 +73,20 @@ window.onload = (function() {
         socket.emit('get-board', handleGetAllResponse)
     }
 
+    const handleDeleteColumn = () => {
+        socket.emit('delete-column', {
+            column_id: '5e7bb51889e1e430acd9ead3'
+        }, handleDeleteColumnResponse)
+    }
+
     addButton.addEventListener('click', handleAdd)
     updateButton.addEventListener('click', handleUpdate)
     deleteButton.addEventListener('click', handleDelete)
     getAllButton.addEventListener('click', handleGetAll)
     moveButton.addEventListener('click', handleMove)
     testButton.addEventListener('click', handleTest)
+    deleteColumnButton.addEventListener('click', handleDeleteColumn)
+
     
     const SERVER_URL = 'http://localhost:4000'
     let socket = io(SERVER_URL)
@@ -103,6 +112,10 @@ window.onload = (function() {
     }
 
     const handleTestResponse = response => {
+        console.log(response)
+    }
+
+    const handleDeleteColumnResponse = response => {
         console.log(response)
     }
 })

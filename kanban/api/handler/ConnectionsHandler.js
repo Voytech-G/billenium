@@ -72,6 +72,12 @@ class ConnectionsHandler {
 
             return
         })
+
+        socket.on('delete-column', (payload, callback) => {
+            ColumnController.delete(payload, callback)
+
+            return
+        })
     }
 
     /**
