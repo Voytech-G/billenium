@@ -55,8 +55,8 @@ class ConnectionsHandler {
             return
         })
 
-        socket.on('delete-task', (payload, callback) => {
-            TaskController.delete(payload, callback)
+        socket.on('remove-task', (payload, callback) => {
+            TaskController.remove(payload, callback)
         
             return
         })
@@ -73,8 +73,8 @@ class ConnectionsHandler {
             return
         })
 
-        socket.on('delete-column', (payload, callback) => {
-            ColumnController.delete(payload, callback)
+        socket.on('remove-column', (payload, callback) => {
+            ColumnController.remove(payload, callback)
 
             return
         })

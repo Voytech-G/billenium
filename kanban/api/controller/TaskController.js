@@ -100,30 +100,30 @@ class TaskController {
     }
 
     /**
-     * Delete a task
+     * Remove a task
      * 
      * @param {Object} payload 
      * @param {Function} callback
      * @return {void}
      */
-    static async delete(payload, callback) {
+    static async remove(payload, callback) {
         try {
-            TaskValidator.validateDeleteRequest(payload)
+            TaskValidator.validateRemoveRequest(payload)
 
-            const response = await TaskService.deleteTask(payload)
+            const response = await TaskService.removeTask(payload)
 
-            TaskValidator.validateDeleteResponse(response)
+            TaskValidator.validateRemoveResponse(response)
 
             callback({
                 status: true,
-                message: `Successfully deleted the task`
+                message: `Successfully removed the task`
             })
 
             return
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to delete task: ${exception.message}`
+                message: `Failed to remove task: ${exception.message}`
             })
 
             return

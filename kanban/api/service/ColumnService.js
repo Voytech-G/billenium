@@ -85,12 +85,12 @@ class ColumnService {
     }
 
     /**
-     * Delete one column by ID
+     * Remove one column by ID
      * 
      * @param {Object} payload
-     * @return {Object} // data about the deleted column 
+     * @return {Object} // data about the removed column 
      */
-    static async deleteColumn(payload) {
+    static async removeColumn(payload) {
         const columnId = payload.column_id
 
         await this.removeTasksAssignedToColumn(columnId)

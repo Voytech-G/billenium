@@ -87,7 +87,7 @@ class ColumnRepository {
      * Find all columns matching filter and remove them
      * 
      * @param {Object} filter 
-     * @return {Object} // data about the delete transaction (number of removed entities etc)
+     * @return {Object} // data about the remove transaction (number of removed entities etc)
      */
     static async findManyByFilterAndRemove(filter) {
         return await Column.remove(filter)
