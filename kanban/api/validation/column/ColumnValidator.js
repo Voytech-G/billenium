@@ -20,6 +20,10 @@ class ColumnValidator extends ValidatorAbstract {
             throw new Error('Column board index has to be a number')
         }
 
+        if (request.max_tasks == null) {
+            throw new Error('Column max tasks number is required')
+        }
+
         return
     }
 
@@ -32,6 +36,50 @@ class ColumnValidator extends ValidatorAbstract {
     static validateCreateResponse(column) {
         if (typeof column != 'object') {
             throw new Error('Create column error occured')
+        }
+
+        return
+    }
+
+    /**
+     * Validate update column request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateUpdateRequest(payload) {
+        if (payload.column_id == null) {
+            throw new Error('Column ID is required')
+        }
+
+        if (payload.name == null) {
+            throw new Error('Column name is required')
+        }
+
+        if (payload.board_index == null) {
+            throw new Error('Column board index is required')
+        }
+
+        if (payload.max_tasks == null) {
+            throw new Error('Column max tasks number is required')
+        }
+
+        return
+    }
+
+    /**
+     * Validate update column response data
+     * 
+     * @param {Object} response 
+     * @return {void}
+     */
+    static validateUpdateResponse(response) {
+        if (response == null) {
+            throw new Error('Invalid update response')
+        }
+
+        if (!(response instanceof Object)) {
+            throw new Error('Invalid update response')
         }
 
         return
@@ -78,6 +126,52 @@ class ColumnValidator extends ValidatorAbstract {
      */
     static checkColumnObjectIDValid(columnId) {
         this.checkObjectIDValid(columnId, 'column')
+
+        return
+    }
+       
+    /**
+     * Validate remove request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateRemoveRequest(payload) {
+        if (payload.column_id == null) {
+            throw new Error('Column ID is required')
+        } 
+        
+        return
+    }
+
+    /**
+     * Validate remove response data
+     * 
+     * @param {Object} response
+     * @return {void} 
+     */
+    static validateRemoveResponse(response) {
+        if (response == null) {
+            throw new Error('Invalid remove response')
+        }
+
+        if (!(response instanceof Object)) {
+            throw new Error('Invalid remove response')
+        }
+
+        return
+    }
+
+    /**
+     * Validate get one request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateGetOneRequest(payload) {
+        if (payload.column_id == null) {
+            throw new Error('Column ID is required')
+        }
 
         return
     }

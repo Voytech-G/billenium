@@ -86,7 +86,7 @@ class TaskRepository {
      * Find all tasks matching filter and remove them
      * 
      * @param {Object} filter 
-     * @return {Object} // data about deleted data (deletedCount etc)
+     * @return {Object} // data about removed data (deletedCount etc)
      */
     static async findManyByFilterAndRemove(filter) {
         return await Task.remove(filter)
@@ -103,13 +103,13 @@ class TaskRepository {
     }
 
     /**
-     * Delete one task found by parameters specified in filter. If more than one task 
+     * Remove one task found by parameters specified in filter. If more than one task 
      * passes the filter only one of those is removed
      * 
      * @param {Object} filter
      * @return {Object} 
      */
-    static async deleteOneByFilter(filter) {
+    static async removeOneByFilter(filter) {
         return await Task.deleteOne(filter)
     }
 

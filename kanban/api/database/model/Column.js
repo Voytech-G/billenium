@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const TaskRepository = require('../repository/TaskRepository')
 
 const ColumnSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -8,18 +7,10 @@ const ColumnSchema = new mongoose.Schema({
   tasks: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
   ],
+  max_tasks: { type: Number, required: true },
   // project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' } // project to which the column is assigned
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
-
-// ColumnSchema.pre('remove', async next => {
-//   const filter = {
-//     column: this._id,
-//   }
-
-//   await TaskRepository.findManyByFilterAndRemove(filter)
-//   next()
-// })
 
 module.exports = mongoose.model("Column", ColumnSchema);

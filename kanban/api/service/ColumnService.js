@@ -13,8 +13,36 @@ class ColumnService {
     static async createColumn(payload) {
         const name = payload.name
         const boardIndex = payload.board_index
+        const maxTasks = payload.max_tasks
 
-        const column = await ColumnRepository.create(name, boardIndex)
+        const column = await ColumnRepository.create(name, boardIndex, maxTasks)
+
+        return column
+    }
+
+    /**
+     * Update column
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async updateColumn(payload) {
+        const columnId = payload.column_id
+        const name = payload.name
+        const boardIndex = payload.board_index
+        const maxTasks = payload.max_tasks
+
+        const filter = {
+            _id: columnId,
+        }
+
+        const update = {
+            name: name,
+            board_index: boardIndex,
+            max_tasks: maxTasks,
+        }
+
+        const column = await ColumnRepository.findOneByFilterAndUpdate(filter, update)
 
         return column
     }
@@ -35,6 +63,7 @@ class ColumnService {
 
         TaskValidator.validateFindByIdResponse(targetTask)
 
+        // add task to target column tasks collection
         targetColumn.tasks.push(targetTask)
 
         await targetColumn.save()
@@ -53,6 +82,48 @@ class ColumnService {
         column.tasks.pull(taskId)
 
         await column.save()
+    }
+
+    /**
+     * Remove one column by ID
+     * 
+     * @param {Object} payload
+     * @return {Object} // data about the removed column 
+     */
+    static async removeColumn(payload) {
+        const columnId = payload.column_id
+
+        await this.removeTasksAssignedToColumn(columnId)
+
+        return await ColumnRepository.findOneByIdAndRemove(columnId)
+    }
+
+    /**
+     * Remove all tasks that are 
+     * 
+     * @param {Number} columnId 
+     * @return {void}
+     */
+    static async removeTasksAssignedToColumn(columnId) {
+        const filter = {
+            column: columnId,
+        }
+    
+        await TaskRepository.findManyByFilterAndRemove(filter)
+
+        return
+    }
+
+    /**
+     * Get one column data
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async getOne(payload) {
+        const columnId = payload.column_id
+        
+        return await ColumnRepository.findByIdAndPopulate(columnId, 'tasks')
     }
 }
 
