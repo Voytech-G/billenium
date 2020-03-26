@@ -14,13 +14,23 @@ class ColumnRepository {
     }
 
     /**
-     * Find column by id
+     * Find column by ID
      * 
      * @param {Object} columnId 
      * @return {void}
      */
     static async findById(columnId) {
         return await Column.findById(columnId)
+    }
+
+     /**
+     * Find column by ID and populate given field
+     * 
+     * @param {Object} columnId 
+     * @return {void}
+     */
+    static async findByIdAndPopulate(columnId, populateField = null) {
+        return Column.findById(columnId).populate(populateField)
     }
 
     /**

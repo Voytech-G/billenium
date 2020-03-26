@@ -113,6 +113,18 @@ class ColumnService {
 
         return
     }
+
+    /**
+     * Get one column data
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async getOne(payload) {
+        const columnId = payload.column_id
+        
+        return await ColumnRepository.findByIdAndPopulate(columnId, 'tasks')
+    }
 }
 
 module.exports = ColumnService

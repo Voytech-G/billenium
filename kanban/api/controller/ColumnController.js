@@ -97,6 +97,34 @@ class ColumnController {
             return
         }
     }
+
+    /**
+     * Get data of one column
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback 
+     */
+    static async getOne(payload, callback) {
+        try {
+            ColumnValidator.validateGetOneRequest(payload)
+    
+            const column = await ColumnService.getOne(payload)
+    
+            callback({
+                status: true,
+                payload: column.populate('tasks'),
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `Failed to get one column: ${exception.message}`
+            })
+
+            return
+        }
+    }
 }
 
 module.exports = ColumnController

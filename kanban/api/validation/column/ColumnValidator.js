@@ -127,14 +127,29 @@ class ColumnValidator extends ValidatorAbstract {
     static checkColumnObjectIDValid(columnId) {
         this.checkObjectIDValid(columnId, 'column')
 
+        return
     }
        
+    /**
+     * Validate remove request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
     static validateRemoveRequest(payload) {
         if (payload.column_id == null) {
             throw new Error('Column ID is required')
-        } return
+        } 
+        
+        return
     }
 
+    /**
+     * Validate remove response data
+     * 
+     * @param {Object} response
+     * @return {void} 
+     */
     static validateRemoveResponse(response) {
         if (response == null) {
             throw new Error('Invalid remove response')
@@ -142,6 +157,20 @@ class ColumnValidator extends ValidatorAbstract {
 
         if (!(response instanceof Object)) {
             throw new Error('Invalid remove response')
+        }
+
+        return
+    }
+
+    /**
+     * Validate get one request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateGetOneRequest(payload) {
+        if (payload.column_id == null) {
+            throw new Error('Column ID is required')
         }
 
         return
