@@ -63,6 +63,7 @@ class ColumnService {
 
         TaskValidator.validateFindByIdResponse(targetTask)
 
+        // add task to target column tasks collection
         targetColumn.tasks.push(targetTask)
 
         await targetColumn.save()
@@ -83,14 +84,16 @@ class ColumnService {
         await column.save()
     }
 
+    /**
+     * Delete one column by ID
+     * 
+     * @param {Object} payload
+     * @return {Object} // data about the deleted column 
+     */
     static async deleteColumn(payload) {
         const columnId = payload.column_id
 
-        // after we delete the task we move all tasks above it to fill the created gap
-
-        const filter = { _id: columnId }
-
-        return await ColumnRepository.deleteOneByFilter(filter)
+        return await ColumnRepository.findOneByIdAndRemove(columnId)
     }
 }
 

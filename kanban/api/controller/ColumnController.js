@@ -66,6 +66,13 @@ class ColumnController {
         }
     }
     
+    /**
+     * Delete a column
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback
+     * @return {void} 
+     */
     static async delete(payload, callback) {
         try {
             ColumnValidator.validateDeleteRequest(payload)
@@ -83,7 +90,7 @@ class ColumnController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to delete column: ${exception.message}`
+                message: `Failed to delete the column: ${exception.message}`
             })
 
             return

@@ -26,6 +26,9 @@ class ColumnRepository {
     /**
      * Create a new column
      * 
+     * @param {String} name
+     * @param {Number} boardIndex
+     * @param {Number} maxTasks
      * @return {Object} 
      */
     static async create(name, boardIndex, maxTasks) {
@@ -84,29 +87,32 @@ class ColumnRepository {
      * Find all columns matching filter and remove them
      * 
      * @param {Object} filter 
-     * @return {Object} // data about deleted data
+     * @return {Object} // data about the delete transaction (number of removed entities etc)
      */
     static async findManyByFilterAndRemove(filter) {
         return await Column.remove(filter)
     }
+
     /**
-     * Find one task by filter and remove it
+     * Find one column by filter and remove it
      * 
      * @param {Object} filter
-     * @return {Object} // removed column 
+     * @return {Object} // removed column data
      */
     static async findOneByFilterAndRemove(filter) {
-        return await Column.findOneAndRemove(filter)
+        return await Column.findOneAndRemove(filter, {
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
+
     /**
-     * Delete one task found by parameters specified in filter. If more than one task 
-     * passes the filter only one of those is removed
+     * Find one column by ID and remove it
      * 
-     * @param {Object} filter
-     * @return {Object} //removed column
+     * @param {Number} columnId 
+     * @return {Object} // removed column data
      */
-    static async deleteOneByFilter(filter) {
-        return await Column.deleteOne(filter)
+    static async findOneByIdAndRemove(columnId) {
+        return await Column.findByIdAndRemove(columnId)
     }
 }
 
