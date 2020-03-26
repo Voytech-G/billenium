@@ -77,13 +77,14 @@ class ColumnController {
         try {
             ColumnValidator.validateDeleteRequest(payload)
 
-            const response = await ColumnService.deleteColumn(payload)
+            const column = await ColumnService.deleteColumn(payload)
 
-            ColumnValidator.validateDeleteResponse(response)
+            ColumnValidator.validateDeleteResponse(column)
 
             callback({
                 status: true,
-                message: `Successfully deleted the column`
+                message: `Successfully deleted the column`,
+                payload: column,
             })
 
             return

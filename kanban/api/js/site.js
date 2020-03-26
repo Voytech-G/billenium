@@ -54,15 +54,15 @@ window.onload = (function() {
                                                    
     const handleTest = () => {
         // socket.emit('update-column', {
-        //     column_id: '5e7bb51889e1e430acd9ead3',
+        //     column_id: '5e7d073d2c5bc5316893611c',
         //     name: 'col1 update update update pls',
-        //     board_index: 0,
+        //     board_index: 3,
         //     max_tasks: 15,
         // }, handleTestResponse)
 
         socket.emit('create-column', {
-            name: 'col5',
-            board_index: 4,
+            name: 'col4',
+            board_index: 3,
             max_tasks: 3,
         }, handleTestResponse)
 
@@ -75,7 +75,7 @@ window.onload = (function() {
 
     const handleDeleteColumn = () => {
         socket.emit('delete-column', {
-            column_id: '5e7cfaf39e573044643817b5'
+            column_id: '5e7d085fea66ea1edce1edb8'
         }, handleDeleteColumnResponse)
     }
 
