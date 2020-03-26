@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const TaskRepository = require('../repository/TaskRepository')
 
 const ColumnSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -13,14 +12,5 @@ const ColumnSchema = new mongoose.Schema({
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
-
-// ColumnSchema.pre('remove', async next => {
-//   const filter = {
-//     column: this._id,
-//   }
-
-//   await TaskRepository.findManyByFilterAndRemove(filter)
-//   next()
-// })
 
 module.exports = mongoose.model("Column", ColumnSchema);

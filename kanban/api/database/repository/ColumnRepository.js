@@ -26,6 +26,9 @@ class ColumnRepository {
     /**
      * Create a new column
      * 
+     * @param {String} name
+     * @param {Number} boardIndex
+     * @param {Number} maxTasks
      * @return {Object} 
      */
     static async create(name, boardIndex, maxTasks) {
@@ -76,6 +79,40 @@ class ColumnRepository {
     static async findOneByFilterAndUpdate(filter, update) {
         return await Column.findOneAndUpdate(filter, update, {
             new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
+    }
+
+    /**
+     * Find all columns matching filter and remove them
+     * 
+     * @param {Object} filter 
+     * @return {Object} // data about the delete transaction (number of removed entities etc)
+     */
+    static async findManyByFilterAndRemove(filter) {
+        return await Column.remove(filter)
+    }
+
+    /**
+     * Find one column by filter and remove it
+     * 
+     * @param {Object} filter
+     * @return {Object} // removed column data
+     */
+    static async findOneByFilterAndRemove(filter) {
+        return await Column.findOneAndRemove(filter, {
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
+    }
+
+    /**
+     * Find one column by ID and remove it
+     * 
+     * @param {Number} columnId 
+     * @return {Object} // removed column data
+     */
+    static async findOneByIdAndRemove(columnId) {
+        return await Column.findByIdAndRemove(columnId, {
             useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
         })
     }

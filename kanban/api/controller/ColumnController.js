@@ -65,9 +65,37 @@ class ColumnController {
             return
         }
     }
+    
+    /**
+     * Delete a column
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback
+     * @return {void} 
+     */
+    static async delete(payload, callback) {
+        try {
+            ColumnValidator.validateDeleteRequest(payload)
 
-    delete(payload) {
-        console.log(payload)
+            const column = await ColumnService.deleteColumn(payload)
+
+            ColumnValidator.validateDeleteResponse(column)
+
+            callback({
+                status: true,
+                message: `Successfully deleted the column`,
+                payload: column,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `Failed to delete the column: ${exception.message}`
+            })
+
+            return
+        }
     }
 }
 
