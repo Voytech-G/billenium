@@ -101,11 +101,45 @@ class ColumnService {
     
         const column = await ColumnRepository.findOneByIdAndRemove(columnId)
         
+        // move all columns on the right from removed column to the left so the gap is filled
         const boardIndex = column.board_index
-        
-        this.moveNextColumnsLeft(boardIndex)
+        await this.moveNextColumnsLeft(boardIndex)
 
         return column
+    }
+
+    /**
+     * Move all columns to the right of given board index to the left
+     * 
+     * @param {Number} boardIndex
+     * @return {void} 
+     */
+    static async moveNextColumnsLeft(boardIndex) {
+        const update = {
+            $inc: { board_index: -1 }
+        }
+
+        await this.changeColumnsBoardIndexes(update, boardIndex)
+        
+        return
+    }
+
+    /**
+     * Change all columns board indexes to the right of the given board index with given filter
+     * 
+     * @param {Object} update 
+     * @param {Number} boardIndex 
+     * @param {Boolean} including
+     * @return {void} 
+     */
+    static async changeColumnsBoardIndexes(update, boardIndex, including = false) {
+        const filter = {
+            board_index: including === true ? { $gte: boardIndex } : { $gt: boardIndex }
+        }
+
+        await ColumnRepository.findManyByFilterAndUpdate(filter, update)
+
+        return
     }
 
     /**
