@@ -2,6 +2,7 @@ const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 const TaskValidator = require('../validation/task/TaskValidator')
 const TaskRepository = require('../database/repository/TaskRepository')
+const columnConfig = require('../config/column')
 
 class ColumnService {
     /**
@@ -93,9 +94,18 @@ class ColumnService {
     static async removeColumn(payload) {
         const columnId = payload.column_id
 
-        await this.removeTasksAssignedToColumn(columnId)
+        // check if we want to remove tasks assigned to column when column is deleted
+        if (columnConfig.REMOVE_TASKS_ON_COLUMN_DELETE) {
+            await this.removeTasksAssignedToColumn(columnId)
+        }
+    
+        const column = await ColumnRepository.findOneByIdAndRemove(columnId)
+        
+        const boardIndex = column.board_index
+        
+        this.moveNextColumnsLeft(boardIndex)
 
-        return await ColumnRepository.findOneByIdAndRemove(columnId)
+        return column
     }
 
     /**
