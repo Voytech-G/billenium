@@ -10,6 +10,8 @@ Pliczki: https://drive.google.com/drive/folders/1tu4KN2P46dWymX9LUo--Hld5ZK-CIuD
 
 Lista ustaleń: https://docs.google.com/document/d/1Z0csHyy9m-pUa_Q8utujgLlMtqeXh14nQRKeSfKlwwM/edit?usp=sharing 
 
+Tablica od prowadzącego: https://miro.com/app/board/o9J_kvboRWI=/
+
 
 W celu uruchomienia projektu należy mieć zainstalowanego node.js + jego pakiety (npm i)
 Po zainstalowaniu niezbędnych elementów należy:
