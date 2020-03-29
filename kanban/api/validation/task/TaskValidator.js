@@ -89,6 +89,18 @@ class TaskValidator extends ValidatorAbstract {
     }
 
     /**
+     * Validate get one task request data
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateGetOneRequest(payload) {
+        this.checkTaskObjectIDValid(payload.task_id)
+
+        return
+    }
+
+    /**
      * Validate create new task response data
      * 
      * @param {String} response 

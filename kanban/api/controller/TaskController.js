@@ -129,6 +129,34 @@ class TaskController {
             return
         }
     }
+
+    /**
+     * Get data about one task by given task ID
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback 
+     */
+    static async getOne(payload, callback) {
+        try {
+            TaskValidator.validateGetOneRequest(payload)
+    
+            const task = await TaskService.getOne(payload)
+
+            callback({
+                status: true,
+                payload: task,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `Failed to get one task: ${exception.message}`,
+            })
+
+            return
+        }
+    }
 }
 
 module.exports = TaskController

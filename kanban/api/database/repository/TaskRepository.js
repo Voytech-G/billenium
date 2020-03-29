@@ -135,7 +135,32 @@ class TaskRepository {
      * @return {Object} 
      */
     static async findById(taskId) {
-        return await Task.findById(taskId)
+        const task = await Task.findById(taskId)
+
+        if (task == null) {
+            throw new Error('Found no task of given ID.')
+        }
+
+        return task
+    }
+
+    /**
+     * Get one task by given task ID, populate given field
+     * 
+     * @param {String} taskId 
+     * @param {Array} populateFields
+     * @return {Object}
+     */
+    static async findByIdAndPopulate(taskId, populateFields) {
+        let task = await Task.findById(taskId)
+
+        if (task == null) {
+            throw new Error('Found no task of given ID.')
+        }
+
+        // need to call execPopulate() method as populating previously retrieved document needs 
+        // that method to get called
+        return await task.populate(populateFields).execPopulate()
     }
 }
 

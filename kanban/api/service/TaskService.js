@@ -164,6 +164,18 @@ class TaskService {
 
         return await TaskRepository.removeOneByFilter(filter)
     }
+
+    /**
+     * Get one task by task ID
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async getOne(payload) {
+        const taskId = payload.task_id
+
+        return await TaskRepository.findByIdAndPopulate(taskId, ['column'])
+    }
 }
 
 module.exports = TaskService
