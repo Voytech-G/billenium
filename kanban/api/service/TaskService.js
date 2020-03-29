@@ -59,10 +59,7 @@ class TaskService {
         }
 
         // update moved task's position to target task position
-        let updatedTask = await TaskRepository.findOneByFilterAndUpdate(filter, update)
-        TaskValidator.validateUpdateResponse(updatedTask)
-
-        return updatedTask
+        return await TaskRepository.findOneByFilterAndUpdate(filter, update)
     }
 
      /**
@@ -117,10 +114,7 @@ class TaskService {
 
         filter.row_index = including === true ? { $gte: rowIndex } : { $gt: rowIndex }
 
-        const response = await TaskRepository.findManyByFilterAndUpdate(filter, update)
-        TaskValidator.validateMoveResponse(response)
-
-        return
+        return await TaskRepository.findManyByFilterAndUpdate(filter, update)
     }
 
     /**
@@ -160,9 +154,7 @@ class TaskService {
         // after we remove the task we move all tasks above it to fill the created gap
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
 
-        const filter = { _id: taskId }
-
-        return await TaskRepository.removeOneByFilter(filter)
+        return await TaskRepository.findByIdAndRemove(taskId)
     }
 
     /**

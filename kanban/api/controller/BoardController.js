@@ -1,4 +1,3 @@
-const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 
 class BoardController {
@@ -12,8 +11,6 @@ class BoardController {
     static async getBoard(callback) {
         try {
             let columns = await ColumnRepository.findAll()
-        
-            ColumnValidator.validateGetAllResponse(columns)
         
             callback({
                 status: true,

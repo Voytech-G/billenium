@@ -101,84 +101,6 @@ class TaskValidator extends ValidatorAbstract {
     }
 
     /**
-     * Validate create new task response data
-     * 
-     * @param {String} response 
-     * @return {void}
-     */
-    static validateCreateResponse(response) {
-        if (response == null) {
-            throw new Error('It seems like the task has not been created')
-        }
-    
-        if (!(response instanceof Object)) {
-            throw new Error('Invalid response')
-        }
-
-        return
-    }
-
-    /**
-     * Validate update task response data
-     * 
-     * @param {String} response 
-     * @return {void}
-     */
-    static validateUpdateResponse(response) {
-        if (response == null) {
-            throw new Error('No tasks updated')
-        }
-
-        return
-    }
-
-    /**
-     * Validate move task response data
-     * 
-     * @param {Object} response 
-     */
-    static validateMoveResponse(response) {
-        if (response == null) {
-            throw new Error('No tasks moved')
-        }
-
-        if (response.ok != 1) {
-            throw new Error('Unknown move operation error')
-        }
-
-        return
-    }
-
-    /**
-     * Validate delete task response data
-     * 
-     * @param {Object} response 
-     * @return {void}
-     */
-    static validateRemoveResponse(response) {
-        // check if number of deleted tasks is exactly one
-        if (response.deletedCount !== 1) {
-            throw new Error('Found no tasks of given ID')
-        }
-
-        return
-    }
-
-    /**
-     * Validate get all tasks response data
-     * 
-     * @param {Array} response 
-     * @return {void}
-     */
-    static validateGetAllResponse(response) {
-        if (!Array.isArray(response)) {
-            throw new Error('Invalid response')
-        }
-
-        return
-    }
-
-    /**
      * Check if given task ID is valid mongoose object ID
      * 
      * @param {string} taskId 
@@ -186,24 +108,6 @@ class TaskValidator extends ValidatorAbstract {
      */
     static checkTaskObjectIDValid(taskId) {
         this.checkObjectIDValid(taskId, 'task')
-
-        return
-    }
-
-    /**
-     * Validate find by ID response data
-     * 
-     * @param {Object} response 
-     * @return {void}
-     */
-    static validateFindByIdResponse(response) {
-        if (response == null) {
-            throw new Error('Invalid find by ID response')
-        }
-
-        if (response.length > 1) {
-            throw new Error('Found more than 1 column of this ID')
-        }
 
         return
     }
