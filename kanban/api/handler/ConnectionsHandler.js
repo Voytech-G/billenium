@@ -3,9 +3,6 @@ const ConnectionsService = require('../service/ConnectionsService')
 const BoardController = require('../controller/BoardController')
 const ColumnController = require('../controller/ColumnController')
 
-const ColumnRepository = require('../database/repository/ColumnRepository')
-const TaskRepository = require('../database/repository/TaskRepository')
-
 class ConnectionsHandler {
     /**
      * ConnectionsHandler constructor
