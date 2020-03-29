@@ -16,9 +16,7 @@ class ColumnService {
         const boardIndex = payload.board_index
         const maxTasks = payload.max_tasks
 
-        const column = await ColumnRepository.create(name, boardIndex, maxTasks)
-
-        return column
+        return await ColumnRepository.create(name, boardIndex, maxTasks)
     }
 
     /**
@@ -43,9 +41,7 @@ class ColumnService {
             max_tasks: maxTasks,
         }
 
-        const column = await ColumnRepository.findOneByFilterAndUpdate(filter, update)
-
-        return column
+        return await ColumnRepository.findOneByFilterAndUpdate(filter, update)
     }
 
     /**
@@ -58,11 +54,15 @@ class ColumnService {
     static async assignTaskToColumn(columnId, taskId) {
         const targetColumn = await ColumnRepository.findById(columnId)
         
-        ColumnValidator.validateFindByIdResponse(targetColumn)
+        if (targetColumn == null) {
+            throw new Error('Found no target column in\'move\' operation.')
+        }
         
         const targetTask = await TaskRepository.findById(taskId)
 
-        TaskValidator.validateFindByIdResponse(targetTask)
+        if (targetTask == null) {
+            throw new Error('Found no target task in \'move\' operation.')
+        }
 
         // add task to target column tasks collection
         targetColumn.tasks.push(targetTask)

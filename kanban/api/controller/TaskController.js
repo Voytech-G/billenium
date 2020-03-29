@@ -17,8 +17,6 @@ class TaskController {
 
             const task = await TaskService.createTask(payload)
 
-            TaskValidator.validateCreateResponse(task)
-
             callback({
                 status: true,
                 message: 'Successfully created a new task',
@@ -49,11 +47,10 @@ class TaskController {
 
             const movedTask = await TaskService.moveTask(payload)
 
-            TaskValidator.validateUpdateResponse(movedTask)
-
             callback({
                 status: true,
                 message: 'Successfully moved the task',
+                payload: movedTask,
             })
 
             return
@@ -79,8 +76,6 @@ class TaskController {
             TaskValidator.validateUpdateRequest(payload)
 
             const task = TaskService.updateTask(payload)
-
-            TaskValidator.validateUpdateResponse(task)
 
             callback({
                 status: true,
@@ -110,9 +105,7 @@ class TaskController {
         try {
             TaskValidator.validateRemoveRequest(payload)
 
-            const response = await TaskService.removeTask(payload)
-
-            TaskValidator.validateRemoveResponse(response)
+            await TaskService.removeTask(payload)
 
             callback({
                 status: true,

@@ -15,8 +15,6 @@ class ColumnController {
 
             const column = await ColumnService.createColumn(payload)
 
-            ColumnValidator.validateCreateResponse(column)
-
             callback({
                 status: true,
                 message: 'Successfully created a new column',
@@ -46,8 +44,6 @@ class ColumnController {
             ColumnValidator.validateUpdateRequest(payload)
     
             const column = await ColumnService.updateColumn(payload)
-
-            ColumnValidator.validateUpdateResponse(column)
     
             callback({
                 status: true,
@@ -77,14 +73,11 @@ class ColumnController {
         try {
             ColumnValidator.validateRemoveRequest(payload)
 
-            const column = await ColumnService.removeColumn(payload)
-
-            ColumnValidator.validateRemoveResponse(column)
+            await ColumnService.removeColumn(payload)
 
             callback({
                 status: true,
                 message: `Successfully removed the column`,
-                payload: column,
             })
 
             return

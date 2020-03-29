@@ -28,20 +28,6 @@ class ColumnValidator extends ValidatorAbstract {
     }
 
     /**
-     * Validate create column response data
-     * 
-     * @param {Object} column 
-     * @return {void}
-     */
-    static validateCreateResponse(column) {
-        if (typeof column != 'object') {
-            throw new Error('Create column error occured')
-        }
-
-        return
-    }
-
-    /**
      * Validate update column request data
      * 
      * @param {Object} payload 
@@ -62,57 +48,6 @@ class ColumnValidator extends ValidatorAbstract {
 
         if (payload.max_tasks == null) {
             throw new Error('Column max tasks number is required')
-        }
-
-        return
-    }
-
-    /**
-     * Validate update column response data
-     * 
-     * @param {Object} response 
-     * @return {void}
-     */
-    static validateUpdateResponse(response) {
-        if (response == null) {
-            throw new Error('Invalid update response')
-        }
-
-        if (!(response instanceof Object)) {
-            throw new Error('Invalid update response')
-        }
-
-        return
-    }
-    
-    /**
-     * Validate get all columns response data
-     * 
-     * @param {Array} response 
-     * @return {void}
-     */
-    static validateGetAllResponse(response) {
-        // check if response is not array
-        if (!Array.isArray(response)) {
-            throw new Error('Invalid response')
-        }
-
-        return
-    }
-
-    /**
-     * Validate find one column by id response data
-     * 
-     * @param {Object} response
-     * @return {void} 
-     */
-    static validateFindByIdResponse(response) {
-        if (response == null) {
-            throw new Error('Failed assigning created task to the selected column')
-        }
-
-        if (response.length > 1) {
-            throw new Error('Found more than 1 column of this ID')
         }
 
         return
@@ -141,24 +76,6 @@ class ColumnValidator extends ValidatorAbstract {
             throw new Error('Column ID is required')
         } 
         
-        return
-    }
-
-    /**
-     * Validate remove response data
-     * 
-     * @param {Object} response
-     * @return {void} 
-     */
-    static validateRemoveResponse(response) {
-        if (response == null) {
-            throw new Error('Invalid remove response')
-        }
-
-        if (!(response instanceof Object)) {
-            throw new Error('Invalid remove response')
-        }
-
         return
     }
 
