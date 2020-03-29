@@ -83,7 +83,7 @@ window.onload = (function() {
 
     const handleRemoveColumn = () => {
         socket.emit('remove-column', {
-            column_id: '5e7d1316d840e661301bdea8'
+            column_id: '5e7fc0194e91c44688d952fb'
         }, handleRemoveColumnResponse)
     }
 

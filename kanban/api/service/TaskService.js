@@ -154,9 +154,7 @@ class TaskService {
         // after we remove the task we move all tasks above it to fill the created gap
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
 
-        const filter = { _id: taskId }
-
-        return await TaskRepository.removeOneByFilter(filter)
+        return await TaskRepository.findByIdAndRemove(taskId)
     }
 
     /**

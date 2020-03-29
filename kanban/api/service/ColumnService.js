@@ -99,7 +99,11 @@ class ColumnService {
             await this.removeTasksAssignedToColumn(columnId)
         }
     
-        const column = await ColumnRepository.findOneByIdAndRemove(columnId)
+        const column = await ColumnRepository.findByIdAndRemove(columnId)
+
+        if (column == null) {
+            throw new Error('Found no column of given ID to remove.')
+        }
         
         // move all columns on the right from removed column to the left so the gap is filled
         const boardIndex = column.board_index

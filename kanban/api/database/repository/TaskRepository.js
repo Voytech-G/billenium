@@ -114,6 +114,18 @@ class TaskRepository {
     }
 
     /**
+     * Find one task by ID and remove it
+     * 
+     * @param {String} taskId
+     * @return {Object} 
+     */
+    static async findByIdAndRemove(taskId) {
+        return await Task.findByIdAndRemove(taskId, {
+            useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
+        })
+    }
+
+    /**
      * Get all tasks in given column by its ID
      * 
      * @param {string} columnId 
