@@ -75,7 +75,7 @@ class ColumnRepository {
      * @param {Object} update 
      * @return {Object}
      */
-    static async findByFilterAndUpdate(filter, update) {
+    static async findManyByFilterAndUpdate(filter, update) {
         return await Column.updateMany(filter, update)
     }
 

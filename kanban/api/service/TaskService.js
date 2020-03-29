@@ -44,7 +44,7 @@ class TaskService {
             await ColumnService.assignTaskToColumn(targetColumnId, taskId)
         }
 
-        // adjust all tasks in the same column
+        // adjust all tasks in target and source columns (move tasks above in source column task down, move tasks above in target column up)
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
         await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
 
@@ -60,7 +60,6 @@ class TaskService {
 
         // update moved task's position to target task position
         let updatedTask = await TaskRepository.findOneByFilterAndUpdate(filter, update)
-
         TaskValidator.validateUpdateResponse(updatedTask)
 
         return updatedTask
@@ -72,23 +71,14 @@ class TaskService {
      * @param {Number} sourceRowIndex 
      * @param {String} sourceColumnId 
      * @param {Boolean} including 
+     * @return {void}
      */
-    static async moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId, including = false) {
-        let filter = {
-            row_index: { $gt: sourceRowIndex },
-            column: sourceColumnId,
-        }
-
-        // if including flag is true update also the task at given row index, else only the ones above
-        filter.row_index = including === true ? { $gte: sourceRowIndex } : { $gt: sourceRowIndex }
-
+    static async moveTasksAboveRowIndexDown(rowIndex, columnId, including = false) {
         const update = {
             $inc: { row_index: -1 },
         }
 
-        let response = await TaskRepository.findManyByFilterAndUpdate(filter, update)
-
-        TaskValidator.validateMoveResponse(response)
+        await this.changeColumnTasksRowIndexes(update, rowIndex, columnId, including)
 
         return
     }
@@ -98,22 +88,36 @@ class TaskService {
      * 
      * @param {Number} targetRowIndex 
      * @param {String} targetColumnId 
-     * @param {Boolean} including 
+     * @param {Boolean} including
+     * @return {void}
      */
-    static async moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, including = false) {
-        let filter = {
-            column: targetColumnId,
-        }
-
-        // if including flag is true update also the task at given row index, else only the ones above
-        filter.row_index = including === true ? { $gte: targetRowIndex } : { $gt: targetRowIndex }
-
+    static async moveTasksAboveRowIndexUp(rowIndex, columnId, including = false) {
         const update = {
             $inc: { row_index: 1 },
         }
 
-        let response = await TaskRepository.findManyByFilterAndUpdate(filter, update)
+        await this.changeColumnTasksRowIndexes(update, rowIndex, columnId, including)
 
+        return
+    }
+
+    /**
+     * Change row_indexes of task in given column (move them above certain row_index up or down depending on given update object)  
+     * 
+     * @param {Object} update
+     * @param {Number} rowIndex 
+     * @param {Number} columnId 
+     * @param {Boolean} including 
+     * @return {void}
+     */
+    static async changeColumnTasksRowIndexes(update, rowIndex, columnId, including = false) {
+        const filter = {
+            column: columnId,
+        }
+
+        filter.row_index = including === true ? { $gte: rowIndex } : { $gt: rowIndex }
+
+        const response = await TaskRepository.findManyByFilterAndUpdate(filter, update)
         TaskValidator.validateMoveResponse(response)
 
         return

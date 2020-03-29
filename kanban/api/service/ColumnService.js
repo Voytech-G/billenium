@@ -2,6 +2,7 @@ const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 const TaskValidator = require('../validation/task/TaskValidator')
 const TaskRepository = require('../database/repository/TaskRepository')
+const columnConfig = require('../config/column')
 
 class ColumnService {
     /**
@@ -93,9 +94,52 @@ class ColumnService {
     static async removeColumn(payload) {
         const columnId = payload.column_id
 
-        await this.removeTasksAssignedToColumn(columnId)
+        // check if we want to remove tasks assigned to column when column is deleted
+        if (columnConfig.REMOVE_TASKS_ON_COLUMN_DELETE) {
+            await this.removeTasksAssignedToColumn(columnId)
+        }
+    
+        const column = await ColumnRepository.findOneByIdAndRemove(columnId)
+        
+        // move all columns on the right from removed column to the left so the gap is filled
+        const boardIndex = column.board_index
+        await this.moveNextColumnsLeft(boardIndex)
 
-        return await ColumnRepository.findOneByIdAndRemove(columnId)
+        return column
+    }
+
+    /**
+     * Move all columns to the right of given board index to the left
+     * 
+     * @param {Number} boardIndex
+     * @return {void} 
+     */
+    static async moveNextColumnsLeft(boardIndex) {
+        const update = {
+            $inc: { board_index: -1 }
+        }
+
+        await this.changeColumnsBoardIndexes(update, boardIndex)
+        
+        return
+    }
+
+    /**
+     * Change all columns board indexes to the right of the given board index with given filter
+     * 
+     * @param {Object} update 
+     * @param {Number} boardIndex 
+     * @param {Boolean} including
+     * @return {void} 
+     */
+    static async changeColumnsBoardIndexes(update, boardIndex, including = false) {
+        const filter = {
+            board_index: including === true ? { $gte: boardIndex } : { $gt: boardIndex }
+        }
+
+        await ColumnRepository.findManyByFilterAndUpdate(filter, update)
+
+        return
     }
 
     /**
