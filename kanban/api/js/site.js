@@ -66,8 +66,12 @@ window.onload = (function() {
         //     max_tasks: 25,
         // }, handleTestResponse)
 
-        socket.emit('get-column', {
-            column_id: '5e7cfae29e573044643817b4',
+        // socket.emit('get-column', {
+        //     column_id: '5e7fc0194e91c44688d952fb',
+        // }, handleTestResponse)
+
+        socket.emit('get-task', {
+            task_id: '5e80fa3b5df30509884abe7a',
         }, handleTestResponse)
 
         return

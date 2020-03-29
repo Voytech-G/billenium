@@ -169,9 +169,7 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateGetOneRequest(payload) {
-        if (payload.column_id == null) {
-            throw new Error('Column ID is required')
-        }
+        this.checkColumnObjectIDValid(payload.column_id)
 
         return
     }

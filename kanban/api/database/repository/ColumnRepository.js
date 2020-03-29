@@ -20,7 +20,13 @@ class ColumnRepository {
      * @return {void}
      */
     static async findById(columnId) {
-        return await Column.findById(columnId)
+        const column = await Column.findById(columnId)
+
+        if (column == null) {
+            throw new Error('Found no column of given ID')
+        }
+
+        return column
     }
 
      /**
@@ -29,8 +35,16 @@ class ColumnRepository {
      * @param {Object} columnId 
      * @return {void}
      */
-    static async findByIdAndPopulate(columnId, populateField = null) {
-        return Column.findById(columnId).populate(populateField)
+    static async findByIdAndPopulate(columnId, populateFields) {
+        let column = await Column.findById(columnId)
+
+        if (column == null) {
+            throw new Error('Found no column of given ID')
+        }
+
+        // need to call execPopulate() method as populating previously retrieved document needs 
+        // that method to get called
+        return await column.populate(populateFields).execPopulate()
     }
 
     /**

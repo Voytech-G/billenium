@@ -58,6 +58,12 @@ class ConnectionsHandler {
             return
         })
 
+        socket.on('get-task', (payload, callback) => {
+            TaskController.getOne(payload, callback)
+
+            return
+        })
+
         socket.on('create-column', (payload, callback) => {
             ColumnController.create(payload, callback)
 
