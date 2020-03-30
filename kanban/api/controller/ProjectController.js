@@ -1,4 +1,3 @@
-const ColumnRepository = require('../database/repository/ColumnRepository')
 const ProjectValidator = require('../validation/project/ProjectValidator')
 const ProjectService = require('../service/ProjectService')
 
@@ -100,15 +99,15 @@ class ProjectController {
      * @param {Function} callback
      * @return {void}
      */
-    static async getOne(callback) {
+    static async getOne(payload, callback) {
         try {
-            let columns = await ColumnRepository.findAll()
+            ProjectValidator.validateGetOneRequest(payload)
+
+            const project = await ProjectService.getOneProject(payload)
         
             callback({
                 status: true,
-                payload: {
-                    columns,
-                }
+                payload: project,
             })
 
             return
@@ -118,6 +117,32 @@ class ProjectController {
                 message: `An error occured while getting the project: ${exception.message}`
             })
 
+            return
+        }
+    }
+
+    /**
+     * Get array of all projects
+     * 
+     * @param {Function} callback
+     * @return {void} 
+     */
+    static async getAll(callback) {
+        try {
+            const projects = await ProjectService.getAllProjects()
+
+            callback({
+                status: true,
+                payload: projects,
+            })
+            
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `An error occured while getting list of all projects: ${exception.message}`,
+            })
+            
             return
         }
     }
