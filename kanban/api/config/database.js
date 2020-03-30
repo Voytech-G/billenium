@@ -1,13 +1,13 @@
 module.exports = {
   connection: {
-    databaseContainerName: "ds247270",
-    databasePort: "47270",
-    databaseName: "kanban-testowa",
+    databaseContainerName: "ds147946",
+    databasePort: "47946",
+    databaseName: "kanban-variant",
     username: "kanban-admin",
     password: "kinethicc69",
-    options: {
+    options: { 
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
+      useUnifiedTopology: true,
+    },
   }
 };
