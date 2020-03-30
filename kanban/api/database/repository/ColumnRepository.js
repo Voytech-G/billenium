@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Column = require('../model/Column')
-const Task = require('../model/Task')
+const TaskRepository = require('../repository/TaskRepository')
 const columnConfig = require('../../config/column')
 
 class ColumnRepository {
@@ -73,7 +73,7 @@ class ColumnRepository {
      * @return {Object}
      */
     static async getColumnByTaskId(taskId) {
-        let response = await Task.findById(taskId).populate('column')
+        const response = await TaskRepository.findByIdAndPopulate(taskId, ['column'])
 
         if (response.column == null) {
             throw new Error('Found no column assigned to that task')

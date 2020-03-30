@@ -60,19 +60,19 @@ window.onload = (function() {
         //     max_tasks: 15,
         // }, handleTestResponse)
 
-        // socket.emit('create-column', {
-        //     name: 'col4',
-        //     board_index: 3,
-        //     max_tasks: 25,
-        // }, handleTestResponse)
+        socket.emit('create-column', {
+            name: 'col4',
+            board_index: 3,
+            max_tasks: 5,
+        }, handleTestResponse)
 
         // socket.emit('get-column', {
         //     column_id: '5e7fc0194e91c44688d952fb',
         // }, handleTestResponse)
 
-        socket.emit('get-task', {
-            task_id: '5e80fa3b5df30509884abe7a',
-        }, handleTestResponse)
+        // socket.emit('get-task', {
+        //     task_id: '5e80fa3b5df30509884abe7a',
+        // }, handleTestResponse)
 
         return
     }

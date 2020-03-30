@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const databaseConfig = require('../config/database')
+const appConfig = require('../config/app')
 const LogService = require('../service/LogService')
 
 class DatabaseService {
@@ -13,17 +14,31 @@ class DatabaseService {
     }
 
     /**
+     * Return production or development database connection config depending on app development state
+     * 
+     * @return {Object}
+     */
+    getDatabaseConnectionConfig() {
+        const development = appConfig.development
+
+        return development === true ? databaseConfig.developmentDatabaseConnection : databaseConfig.productionDatabaseConnection
+    }
+
+    /**
      * Create database connection
      * 
      * @return {void}
      */
     async connectionOpen() {
-        const DB_CONTAINER_NAME = this.config.connection.databaseContainerName
-        const DB_PORT = this.config.connection.databasePort
-        const DB_NAME = this.config.connection.databaseName
-        const DB_USERNAME = this.config.connection.username
-        const DB_PASSWORD = this.config.connection.password
-        const DB_OPTIONS = this.config.connection.options
+        // get database connection config depending on development state
+        const config = this.getDatabaseConnectionConfig()
+
+        const DB_CONTAINER_NAME = config.databaseContainerName
+        const DB_PORT = config.databasePort
+        const DB_NAME = config.databaseName
+        const DB_USERNAME = config.username
+        const DB_PASSWORD = config.password
+        const DB_OPTIONS = config.options
 
         try {
             await mongoose.connect(`mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_CONTAINER_NAME}.mlab.com:${DB_PORT}/${DB_NAME}`, DB_OPTIONS)
