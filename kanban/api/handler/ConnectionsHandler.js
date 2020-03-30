@@ -1,6 +1,6 @@
 const TaskController = require('../controller/TaskController')
 const ConnectionsService = require('../service/ConnectionsService') 
-const BoardController = require('../controller/BoardController')
+const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
 
 class ConnectionsHandler {
@@ -28,8 +28,8 @@ class ConnectionsHandler {
             return
         })
 
-        socket.on('get-board', async callback => {
-            BoardController.getBoard(callback)
+        socket.on('get-project', async callback => {
+            ProjectController.getOne(callback)
 
             return
         })

@@ -9,7 +9,7 @@ const App = () => {
   const { setColumns, addCard } = useContext(GlobalContext);
 
   useEffect(() => {
-    socket.emit("get-board", data => {
+    socket.emit("get-project", data => {
       const columnsWithItems = data.payload.columns.map(column => ({
         id: column._id,
         name: column.name,

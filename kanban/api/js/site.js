@@ -78,7 +78,7 @@ window.onload = (function() {
     }
 
     const handleGetAll = () => {
-        socket.emit('get-board', handleGetAllResponse)
+        socket.emit('get-project', handleGetAllResponse)
     }
 
     const handleRemoveColumn = () => {
