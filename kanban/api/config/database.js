@@ -14,7 +14,7 @@ module.exports = {
     databaseContainerName: "ds147946",
     databasePort: "47946",
     databaseName: "kanban-variant",
-    username: "kanban-user",
+    username: "kanban-admin",
     password: "kinethicc69",
     options: { 
       useNewUrlParser: true,
