@@ -19,47 +19,46 @@ const onDragEnd = (result, columns, moveCard, socket) => {
   console.log(flag.flat()[0].items.length);
   // console.log(destination.droppableId);
   // console.log(destination.droppableId);
-  if (
-    source.droppableId !== destination.droppableId &&
-    flag.flat()[0].items.length >= 3
-  ) {
-    alert("Column must not have more than 3 cards!");
-  } else {
-    moveCard(
-      card,
-      source.droppableId,
-      destination.droppableId,
-      source.index,
-      destination.index
-    );
+  // if (
+  //   source.droppableId !== destination.droppableId &&
+  //   flag.flat()[0].items.length >= 3
+  // ) {
+  // alert("Column must not have more than 3 cards!");
 
-    socket.emit(
-      "move-task",
-      {
-        task_id: card.id,
-        content: card.content,
+  moveCard(
+    card,
+    source.droppableId,
+    destination.droppableId,
+    source.index,
+    destination.index
+  );
 
-        target_row_index: destination.index,
-        target_column_id: destination.droppableId,
+  socket.emit(
+    "move-task",
+    {
+      task_id: card.id,
+      content: card.content,
 
-        source_row_index: source.index,
-        source_column_id: source.droppableId
-      },
-      res => {
-        if (!res.status) {
-          moveCard(
-            card,
-            destination.droppableId,
-            source.droppableId,
-            destination.index,
-            source.index
-          );
+      target_row_index: destination.index,
+      target_column_id: destination.droppableId,
 
-          alert("Error: server returned false status");
-        }
+      source_row_index: source.index,
+      source_column_id: source.droppableId
+    },
+    res => {
+      if (!res.status) {
+        moveCard(
+          card,
+          destination.droppableId,
+          source.droppableId,
+          destination.index,
+          source.index
+        );
+
+        alert("Error: server returned false status");
       }
-    );
-  }
+    }
+  );
 };
 
 const Columns = ({ columns }) => {

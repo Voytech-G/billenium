@@ -15,35 +15,32 @@ const handleClick_addCard = (
   setColumns
 ) => {
   e.preventDefault();
-  // console.log(columnItems.length);
-  if (columnItems.length < 3) {
-    const cardContent = prompt("Type task name to add");
-    const newCard = {
-      // _id: "",
-      content: cardContent,
-      row_index: columnItems.length
-    };
 
-    socket.emit("create-task", { ...newCard, column_id: columnId }, res => {
+  const cardContent = prompt("Type task name to add");
+  const newCard = {
+    // _id: "",
+    content: cardContent,
+    row_index: columnItems.length
+  };
+
+  socket.emit(
+    "create-task",
+    { ...newCard, column_id: columnId, max_tasks: 3 },
+    res => {
       if (res.status) {
         newCard._id = res.payload._id;
         addCard(newCard, columnId);
         console.log(res.payload._id);
-        // console.log(res);
       } else {
         alert("Error: server returned false status");
       }
-    });
-  } else {
-    alert("Column must not have more than 3 cards!");
-  }
+    }
+  );
 };
 
 const Column = ({ column }) => {
   const { id, name, items } = column;
-
   const { socket, addCard, setColumns } = useContext(GlobalContext);
-
   return (
     <div
       style={{

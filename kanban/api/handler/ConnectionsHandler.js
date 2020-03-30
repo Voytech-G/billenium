@@ -1,106 +1,106 @@
-const TaskController = require('../controller/TaskController')
-const ConnectionsService = require('../service/ConnectionsService') 
-const BoardController = require('../controller/BoardController')
-const ColumnController = require('../controller/ColumnController')
+const TaskController = require("../controller/TaskController");
+const ConnectionsService = require("../service/ConnectionsService");
+const BoardController = require("../controller/BoardController");
+const ColumnController = require("../controller/ColumnController");
 
 class ConnectionsHandler {
-    /**
-     * ConnectionsHandler constructor
-     */
-    constructor() {
-        this.connectionsService = new ConnectionsService()
-    }
+  /**
+   * ConnectionsHandler constructor
+   */
+  constructor() {
+    this.connectionsService = new ConnectionsService();
+  }
 
-    /**
-     * Setup a socket.io connection, register events
-     * 
-     * @param {Object} socket
-     * @return {void} 
-     */
-    async setupConnection(socket) {
-        console.log(`Socket of ID: ${socket.id} has just connected`);
-        this.addConnection(socket)
-        
-        // method run every incoming event
-        socket.use((payload, next) => {
-            this.connectionsService.handleIncomingEvent(payload, next)
+  /**
+   * Setup a socket.io connection, register events
+   *
+   * @param {Object} socket
+   * @return {void}
+   */
+  async setupConnection(socket) {
+    console.log(`Socket of ID: ${socket.id} has just connected`);
+    this.addConnection(socket);
 
-            return
-        })
+    // method run every incoming event
+    socket.use((payload, next) => {
+      this.connectionsService.handleIncomingEvent(payload, next);
 
-        socket.on('get-board', async callback => {
-            BoardController.getBoard(callback)
+      return;
+    });
 
-            return
-        })
+    socket.on("get-board", async callback => {
+      BoardController.getBoard(callback);
 
-        socket.on('create-task', (payload, callback) => {
-            TaskController.create(payload, callback)
+      return;
+    });
 
-            return
-        })
+    socket.on("create-task", (payload, callback) => {
+      TaskController.create(payload, callback);
 
-        socket.on('update-task', (payload, callback) => {
-            TaskController.update(payload, callback)
-        
-            return
-        })
+      return;
+    });
 
-        socket.on('move-task', (payload, callback) => {
-            TaskController.move(payload, callback)
+    socket.on("update-task", (payload, callback) => {
+      TaskController.update(payload, callback);
 
-            return
-        })
+      return;
+    });
 
-        socket.on('remove-task', (payload, callback) => {
-            TaskController.remove(payload, callback)
-        
-            return
-        })
+    socket.on("move-task", (payload, callback) => {
+      TaskController.move(payload, callback);
 
-        socket.on('get-task', (payload, callback) => {
-            TaskController.getOne(payload, callback)
+      return;
+    });
 
-            return
-        })
+    socket.on("remove-task", (payload, callback) => {
+      TaskController.remove(payload, callback);
 
-        socket.on('create-column', (payload, callback) => {
-            ColumnController.create(payload, callback)
+      return;
+    });
 
-            return
-        })
+    socket.on("get-task", (payload, callback) => {
+      TaskController.getOne(payload, callback);
 
-        socket.on('update-column', (payload, callback) => {
-            ColumnController.update(payload, callback)
+      return;
+    });
 
-            return
-        })
+    socket.on("create-column", (payload, callback) => {
+      ColumnController.create(payload, callback);
 
-        socket.on('remove-column', (payload, callback) => {
-            ColumnController.remove(payload, callback)
+      return;
+    });
 
-            return
-        })
+    socket.on("update-column", (payload, callback) => {
+      ColumnController.update(payload, callback);
 
-        socket.on('get-column', (payload, callback) => {
-            ColumnController.getOne(payload, callback)
-        })
-    }
+      return;
+    });
 
-    /**
-     * Register new connection
-     * 
-     * @param {Object} socket 
-     * @return {void}
-     */
-    addConnection(socket) {
-        // add new socket connection
-        this.connectionsService.addConnection(socket)
+    socket.on("remove-column", (payload, callback) => {
+      ColumnController.remove(payload, callback);
 
-        this.connectionsService.showConnections()
+      return;
+    });
 
-        return
-    }
+    socket.on("get-column", (payload, callback) => {
+      ColumnController.getOne(payload, callback);
+    });
+  }
+
+  /**
+   * Register new connection
+   *
+   * @param {Object} socket
+   * @return {void}
+   */
+  addConnection(socket) {
+    // add new socket connection
+    this.connectionsService.addConnection(socket);
+
+    this.connectionsService.showConnections();
+
+    return;
+  }
 }
 
-module.exports = new ConnectionsHandler()
+module.exports = new ConnectionsHandler();
