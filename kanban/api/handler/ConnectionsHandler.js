@@ -28,8 +28,32 @@ class ConnectionsHandler {
             return
         })
 
-        socket.on('get-project', async callback => {
-            ProjectController.getOne(callback)
+        socket.on('create-project', async (payload, callback) => {
+            ProjectController.create(payload, callback)
+
+            return
+        })
+
+        socket.on('update-project', async (payload, callback) => {
+            ProjectController.update(payload, callback)
+
+            return
+        })
+
+        socket.on('remove-project', async (payload, callback) => {
+            ProjectController.remove(payload, callback)
+
+            return
+        })
+
+        socket.on('get-project', async (payload, callback) => {
+            ProjectController.getOne(payload, callback)
+
+            return
+        })
+
+        socket.on('get-all-projects', async callback => {
+            ProjectController.getAll(callback)
 
             return
         })

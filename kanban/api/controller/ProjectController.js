@@ -95,7 +95,7 @@ class ProjectController {
     /**
      * Get data about a project, list of columns and tasks assigned to it
      * 
-     * @param {Object|null} payload
+     * @param {Object} payload
      * @param {Function} callback
      * @return {void}
      */
