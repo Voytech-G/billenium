@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 
 import { GlobalContext } from "../context/GlobalState";
@@ -13,17 +13,8 @@ const onDragEnd = (result, columns, moveCard, socket) => {
   const card = columns
     .map(column => column.items.filter(item => item.id === draggableId))
     .flat()[0];
-  // console.log("Source:" + source.index);
-  // console.log("Source" + source.index);
   let flag = columns.filter(column => column.id === destination.droppableId);
   console.log(flag.flat()[0].items.length);
-  // console.log(destination.droppableId);
-  // console.log(destination.droppableId);
-  // if (
-  //   source.droppableId !== destination.droppableId &&
-  //   flag.flat()[0].items.length >= 3
-  // ) {
-  // alert("Column must not have more than 3 cards!");
 
   moveCard(
     card,
@@ -60,14 +51,44 @@ const onDragEnd = (result, columns, moveCard, socket) => {
     }
   );
 };
-
+const addNewColumn = (columns, socket, addColumnFunc) => {
+  const newName = prompt("Type column name: ");
+  const maxLimit = prompt("Type max tasks limit: ");
+  socket.emit(
+    "create-column",
+    { name: newName, board_index: columns.length, max_tasks: maxLimit },
+    res => {
+      if (res.status) {
+        console.log(res.payload);
+        addColumnFunc(res.payload.columnId, newName, maxLimit, columns.length);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
+};
+const AddColumnBtn = ({ columnsItems, socket, addColumnFunc }) => {
+  return (
+    <button
+      onClick={() => addNewColumn(columnsItems, socket, addColumnFunc)}
+      style={{ height: "40px", marginTop: "85px" }}
+    >
+      Add new column
+    </button>
+  );
+};
 const Columns = ({ columns }) => {
-  const { socket, moveCard } = useContext(GlobalContext);
+  const { socket, moveCard, addColumn } = useContext(GlobalContext);
 
   return (
     <DragDropContext
       onDragEnd={result => onDragEnd(result, columns, moveCard, socket)}
     >
+      <AddColumnBtn
+        columnsItems={columns}
+        addColumnFunc={addColumn}
+        socket={socket}
+      ></AddColumnBtn>
       {columns
         .sort((a, b) => a.board_index - b.board_index)
         .map(column => (
