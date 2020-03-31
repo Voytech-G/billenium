@@ -9,9 +9,15 @@ Array.prototype.insert = function(index) {
 const rearrangeCards = cardArray =>
   cardArray.map((card, idx) => ({ ...card, row_index: idx }));
 
-// Use for column items only
+const rearrangeColumns = columnArray =>
+  columnArray.map((column, idx) => ({ ...column, board_index: idx }));
+
 Array.prototype.rearrangeCards = function() {
   return rearrangeCards(this);
+};
+
+Array.prototype.rearrangeColumns = function() {
+  return rearrangeColumns(this);
 };
 
 export default (state, action) => {
@@ -65,6 +71,11 @@ export default (state, action) => {
               : column
           )
           .rearrangeCards()
+      };
+    case "ADD_COLUMN":
+      return {
+        ...state,
+        columns: [...state.columns, action.payload.column].rearrangeColumns()
       };
     case "REMOVE_CARD":
       return {
@@ -129,6 +140,7 @@ export default (state, action) => {
             : column.items
         )
       };
+
     default:
       return state;
   }

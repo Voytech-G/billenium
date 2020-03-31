@@ -11,7 +11,6 @@ const handleClick_removeCard = (
   columnId
 ) => {
   e.preventDefault();
-  // removeCard(cardId, cardIndex, columnId);
   socket.emit(
     "remove-task",
     {
@@ -41,7 +40,6 @@ const handleClick_editCard = (
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
   console.log(cardContent);
-  // console.log(cardId);
   socket.emit("update-task", { task_id: cardId, content: cardContent }, res => {
     if (res.status) {
       editCard(cardId, cardIndex, columnId, cardContent);

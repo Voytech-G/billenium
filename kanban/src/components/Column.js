@@ -37,7 +37,23 @@ const handleClick_addCard = (
     }
   );
 };
-
+const Amount = ({ amount }) => {
+  return (
+    <h5
+      style={{ margin: "0px 0 0 5px" }}
+      className={amount > 3 ? "taskLimit" : false}
+    >
+      {amount}/3
+    </h5>
+  );
+};
+const DeleteColumnBtn = () => {
+  return (
+    <button style={{ display: "flex", margin: "0 auto", height: "40px" }}>
+      Delete column
+    </button>
+  );
+};
 const Column = ({ column }) => {
   const { id, name, items } = column;
   const { socket, addCard, setColumns } = useContext(GlobalContext);
@@ -51,8 +67,14 @@ const Column = ({ column }) => {
       key={id}
     >
       <h3>{name}</h3>
+      <Amount amount={items.length}></Amount>
       <div style={{ margin: 8 }}>
-        <Droppable droppableId={id} key={id}>
+        <Droppable
+          droppableId={id}
+          key={id}
+          className="taskLimitColumn"
+          style={{ backgroundColor: "red" }}
+        >
           {(provided, snapshot) => {
             return (
               <div
@@ -99,6 +121,7 @@ const Column = ({ column }) => {
             );
           }}
         </Droppable>
+        <DeleteColumnBtn></DeleteColumnBtn>
       </div>
     </div>
   );

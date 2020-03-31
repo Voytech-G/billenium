@@ -39,7 +39,6 @@ export const GlobalProvider = ({ children }) => {
         dest_card_index: destCardIndex
       }
     });
-    // console.log(sourceCardIndex);
   }
 
   function addCard(card, columnId) {
@@ -54,7 +53,20 @@ export const GlobalProvider = ({ children }) => {
         column_id: columnId
       }
     });
-    console.log(card._id);
+  }
+  function addColumn(columnId, newName, maxLimit, columnsItems) {
+    dispatch({
+      type: "ADD_COLUMN",
+      payload: {
+        column: {
+          id: columnId,
+          name: newName,
+          board_index: columnsItems.length,
+          items: [],
+          maxTasks: parseInt(maxLimit)
+        }
+      }
+    });
   }
   function editCard(cardId, cardIndex, columnId, content) {
     dispatch({
@@ -80,8 +92,6 @@ export const GlobalProvider = ({ children }) => {
         column_id: columnId
       }
     });
-    // console.log(cardId);
-    // console.log(cardIndex);
   }
   function setItems(columnId, items) {
     dispatch({
@@ -101,6 +111,7 @@ export const GlobalProvider = ({ children }) => {
         setItems,
         removeCard,
         editCard,
+        addColumn,
         socket: state.socket,
         columns: state.columns
       }}
