@@ -50,6 +50,7 @@ const Column = ({ column }) => {
       }}
       key={id}
     >
+      <h4>Siema</h4>
       <h3>{name}</h3>
       <div style={{ margin: 8 }}>
         <Droppable droppableId={id} key={id}>
