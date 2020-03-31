@@ -6,6 +6,7 @@ window.onload = (function() {
     let moveButton = document.querySelector('.move-button')
     let testButton = document.querySelector('.test-button')
     let removeColumnButton = document.querySelector('.remove-column-button')
+    let addProjectButton = document.querySelector('.add-project-button')
 
     const column1 = '5e7617a72c0df71c482647cb'
     const column2 = '5e7618bef4416f47802498df'
@@ -61,9 +62,10 @@ window.onload = (function() {
         // }, handleTestResponse)
 
         socket.emit('create-column', {
+            project_id: '5e8384a3c1ebd573c0346e5b',
             name: 'col4',
             board_index: 3,
-            max_tasks: 5,
+            max_tasks: 3,
         }, handleTestResponse)
 
         // socket.emit('get-column', {
@@ -87,6 +89,13 @@ window.onload = (function() {
         }, handleRemoveColumnResponse)
     }
 
+    const handleAddProject = () => {
+        socket.emit('create-project', {
+            project_name: 'Test',
+            total_budget: '500',
+        }, handleAddProjectResponse)
+    }
+
     addButton.addEventListener('click', handleAdd)
     updateButton.addEventListener('click', handleUpdate)
     removeButton.addEventListener('click', handleRemove)
@@ -94,7 +103,7 @@ window.onload = (function() {
     moveButton.addEventListener('click', handleMove)
     testButton.addEventListener('click', handleTest)
     removeColumnButton.addEventListener('click', handleRemoveColumn)
-
+    addProjectButton.addEventListener('click', handleAddProject)
     
     const SERVER_URL = 'http://localhost:4000'
     let socket = io(SERVER_URL)
@@ -126,4 +135,9 @@ window.onload = (function() {
     const handleRemoveColumnResponse = response => {
         console.log(response)
     }
+
+    const handleAddProjectResponse = response => {
+        console.log(response)
+    }
+
 })

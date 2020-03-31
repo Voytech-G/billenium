@@ -1,7 +1,6 @@
-const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
-const TaskValidator = require('../validation/task/TaskValidator')
 const TaskRepository = require('../database/repository/TaskRepository')
+const ProjectRepository = require('../database/repository/ProjectRepository')
 const columnConfig = require('../config/column')
 
 class ColumnService {
@@ -12,11 +11,48 @@ class ColumnService {
      * @return {Object} 
      */
     static async createColumn(payload) {
+        const projectId = payload.project_id
         const name = payload.name
         const boardIndex = payload.board_index
         const maxTasks = payload.max_tasks
 
-        return await ColumnRepository.create(name, boardIndex, maxTasks)
+        // get column ID to add reference to it to target project
+        const column = await ColumnRepository.create(projectId, name, boardIndex, maxTasks)
+
+        const columnId = column.id
+        await this.assignColumnToProject(columnId, projectId)
+
+        return column
+    }
+
+    /**
+     * Find a project by ID, assign column found by ID to it
+     * 
+     * @param {String} columnId 
+     * @param {String} projectId 
+     * @return {void}
+     */
+    static async assignColumnToProject(columnId, projectId) {
+        // get project we want the column to assign to
+        const targetProject = await ProjectRepository.findById(projectId)
+
+        if (targetProject == null) {
+            throw new Error('Project ID is invalid')
+        }
+        
+        // get the column assigned to project
+        const column = await ColumnRepository.findById(columnId)
+
+        if (column == null) {
+            throw new Error('Column ID is invalid')
+        }
+
+        // push column to columns list in Project model
+        targetProject.columns.push(column)
+
+        await targetProject.save()
+
+        return
     }
 
     /**
@@ -58,6 +94,7 @@ class ColumnService {
             throw new Error('Found no target column in\'move\' operation.')
         }
         
+        // find the task we want to assign to column
         const targetTask = await TaskRepository.findById(taskId)
 
         if (targetTask == null) {

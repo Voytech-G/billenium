@@ -10,7 +10,7 @@ class ColumnRepository {
      * @return {Array}
      */
     static async findAll() {
-        return await Column.find({}).populate('tasks')
+        return await Column.find({})
     }
 
     /**
@@ -20,13 +20,7 @@ class ColumnRepository {
      * @return {void}
      */
     static async findById(columnId) {
-        const column = await Column.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Found no column of given ID')
-        }
-
-        return column
+        return await Column.findById(columnId)
     }
 
      /**
@@ -39,7 +33,7 @@ class ColumnRepository {
         let column = await Column.findById(columnId)
 
         if (column == null) {
-            throw new Error('Found no column of given ID')
+            throw new Error('Failed to populate the column, found no column of given ID')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 
@@ -50,17 +44,19 @@ class ColumnRepository {
     /**
      * Create a new column
      * 
+     * @param {String} projectId
      * @param {String} name
      * @param {Number} boardIndex
      * @param {Number} maxTasks
      * @return {Object} 
      */
-    static async create(name, boardIndex, maxTasks) {
+    static async create(projectId, name, boardIndex, maxTasks) {
         const newColumn = new Column({
             _id: new mongoose.Types.ObjectId(),
             name: name,
             board_index: boardIndex,
             max_tasks: maxTasks,
+            project: projectId,
         })
 
         return await newColumn.save()
@@ -76,7 +72,7 @@ class ColumnRepository {
         const response = await TaskRepository.findByIdAndPopulate(taskId, ['column'])
 
         if (response.column == null) {
-            throw new Error('Found no column assigned to that task')
+            throw new Error('Found no column assigned to given task')
         }
 
         return response.column

@@ -1,4 +1,3 @@
-const TaskValidator = require('../validation/task/TaskValidator')
 const ColumnService = require('../service/ColumnService')
 const TaskRepository = require('../database/repository/TaskRepository')
 

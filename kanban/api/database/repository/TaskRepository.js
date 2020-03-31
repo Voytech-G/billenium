@@ -20,9 +20,7 @@ class TaskRepository {
             column: columnId,
         })
 
-        await newTask.save()
-
-        return newTask
+        return await newTask.save()
     }
 
     /**
@@ -126,34 +124,13 @@ class TaskRepository {
     }
 
     /**
-     * Get all tasks in given column by its ID
-     * 
-     * @param {string} columnId 
-     */
-    static async getTasksByColumnId(columnId) {
-        const response = await Column.findById(columnId).populate('tasks')
-
-        if (response.tasks == null) {
-            throw new Error('An error occured while getting tasks assigned to column')
-        }
-
-        return response.tasks
-    }
-
-    /**
      * Find one task by ID
      * 
      * @param {string} taskId
      * @return {Object} 
      */
     static async findById(taskId) {
-        const task = await Task.findById(taskId)
-
-        if (task == null) {
-            throw new Error('Found no task of given ID.')
-        }
-
-        return task
+        return await Task.findById(taskId)
     }
 
     /**
@@ -167,7 +144,7 @@ class TaskRepository {
         let task = await Task.findById(taskId)
 
         if (task == null) {
-            throw new Error('Found no task of given ID.')
+            throw new Error('Failed to populate the task, found no task of given ID')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 
