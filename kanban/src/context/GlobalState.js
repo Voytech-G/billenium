@@ -63,7 +63,7 @@ export const GlobalProvider = ({ children }) => {
           name: newName,
           board_index: columnsItems.length,
           items: [],
-          maxTasks: parseInt(maxLimit)
+          max_tasks: parseInt(maxLimit)
         }
       }
     });

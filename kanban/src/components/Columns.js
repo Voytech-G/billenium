@@ -65,7 +65,7 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
           {
             id: res.payload._id,
             name: newName,
-            maxTasks: maxLimit,
+            max_tasks: maxLimit,
             items: [],
             board_index: columns.length
           }
