@@ -93,6 +93,17 @@ export const GlobalProvider = ({ children }) => {
       }
     });
   }
+  function removeColumn(columnId, boardIndex) {
+    dispatch({
+      type: "REMOVE_COLUMN",
+      payload: {
+        column: {
+          id: columnId,
+          board_index: boardIndex
+        }
+      }
+    });
+  }
   function setItems(columnId, items) {
     dispatch({
       type: "SET_ITEMS",
@@ -112,6 +123,7 @@ export const GlobalProvider = ({ children }) => {
         removeCard,
         editCard,
         addColumn,
+        removeColumn,
         socket: state.socket,
         columns: state.columns
       }}

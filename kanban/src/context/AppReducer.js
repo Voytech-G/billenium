@@ -95,6 +95,15 @@ export default (state, action) => {
           )
           .rearrangeCards()
       };
+    case "REMOVE_COLUMN":
+      return {
+        ...state,
+        columns: [
+          ...state.columns.filter(
+            column => column.id !== action.payload.column.id
+          )
+        ].rearrangeColumns()
+      };
     case "EDIT_CARD":
       return {
         ...state,
