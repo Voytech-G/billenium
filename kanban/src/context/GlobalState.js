@@ -89,7 +89,7 @@ export const GlobalProvider = ({ children }) => {
           id: columnId,
           name: name,
           board_index: boardIndex,
-          maxTasks: maxTasks
+          max_tasks: maxTasks
         },
         column_id: columnId
       }

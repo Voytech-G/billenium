@@ -132,7 +132,7 @@ export default (state, action) => {
               ? {
                   ...column,
                   name: action.payload.column.name,
-                  maxTasks: action.payload.column.maxTasks
+                  max_tasks: action.payload.column.max_tasks
                 }
               : column
           )
