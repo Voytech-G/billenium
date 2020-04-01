@@ -123,6 +123,21 @@ export default (state, action) => {
           )
           .rearrangeCards()
       };
+    case "EDIT_COLUMN":
+      return {
+        ...state,
+        columns: [
+          ...state.columns.map(column =>
+            column.id === action.payload.column.id
+              ? {
+                  ...column,
+                  name: action.payload.column.name,
+                  maxTasks: action.payload.column.maxTasks
+                }
+              : column
+          )
+        ].rearrangeColumns()
+      };
     case "SET_COLUMN_CARDS":
       return {
         ...state,

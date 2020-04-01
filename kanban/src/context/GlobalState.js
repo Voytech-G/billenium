@@ -81,6 +81,20 @@ export const GlobalProvider = ({ children }) => {
       }
     });
   }
+  function editColumn(columnId, name, boardIndex, maxTasks) {
+    dispatch({
+      type: "EDIT_COLUMN",
+      payload: {
+        column: {
+          id: columnId,
+          name: name,
+          board_index: boardIndex,
+          maxTasks: maxTasks
+        },
+        column_id: columnId
+      }
+    });
+  }
   function removeCard(cardId, cardIndex, columnId) {
     dispatch({
       type: "REMOVE_CARD",
@@ -124,6 +138,7 @@ export const GlobalProvider = ({ children }) => {
         editCard,
         addColumn,
         removeColumn,
+        editColumn,
         socket: state.socket,
         columns: state.columns
       }}
