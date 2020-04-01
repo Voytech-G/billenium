@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Task = require('../model/Task')
 
 const ColumnSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -11,6 +12,20 @@ const ColumnSchema = new mongoose.Schema({
   project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true }, // project to which the column is assigned
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-});
+})
+
+ColumnSchema.post('remove', async column => {
+  const columnId = column.id
+
+  const filter = {
+    column: columnId,
+  }
+
+  const tasks = await Task.find(filter)
+
+  tasks.forEach(task => {
+    task.remove()
+  })
+})
 
 module.exports = mongoose.model("Column", ColumnSchema);

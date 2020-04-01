@@ -104,37 +104,15 @@ class ColumnRepository {
     }
 
     /**
-     * Find all columns matching filter and remove them
-     * 
-     * @param {Object} filter 
-     * @return {Object} // data about the remove transaction (number of removed entities etc)
-     */
-    static async findManyByFilterAndRemove(filter) {
-        return await Column.remove(filter)
-    }
-
-    /**
-     * Find one column by filter and remove it
-     * 
-     * @param {Object} filter
-     * @return {Object} // removed column data
-     */
-    static async findOneByFilterAndRemove(filter) {
-        return await Column.findOneAndRemove(filter, {
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
-    }
-
-    /**
      * Find one column by ID and remove it
      * 
      * @param {Number} columnId 
      * @return {Object} // removed column data
      */
     static async findByIdAndRemove(columnId) {
-        return await Column.findByIdAndRemove(columnId, {
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
+        const column = await Column.findById(columnId)
+
+        return await column.remove()
     }
 }
 

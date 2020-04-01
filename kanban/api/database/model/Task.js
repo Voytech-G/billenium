@@ -15,4 +15,7 @@ const TaskSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
+TaskSchema.post('remove', task => {
+})
+
 module.exports = mongoose.model("Task", TaskSchema);

@@ -39,7 +39,7 @@ class TaskService {
 
         // in case target column is not the same as source column we switch them
         if (targetColumnId !== sourceColumnId) {
-            await ColumnService.unassignTaskFromColumn(taskId)
+            await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
             await ColumnService.assignTaskToColumn(targetColumnId, taskId)
         }
 
@@ -148,7 +148,7 @@ class TaskService {
         const sourceRowIndex = payload.source_row_index
         const sourceColumnId = payload.source_column_id
 
-        await ColumnService.unassignTaskFromColumn(taskId)
+        await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
 
         // after we remove the task we move all tasks above it to fill the created gap
         await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)

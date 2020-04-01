@@ -7,10 +7,8 @@ window.onload = (function() {
     let testButton = document.querySelector('.test-button')
     let removeColumnButton = document.querySelector('.remove-column-button')
     let addProjectButton = document.querySelector('.add-project-button')
-
-    const column1 = '5e7617a72c0df71c482647cb'
-    const column2 = '5e7618bef4416f47802498df'
-    const invalidColumn = '5e7618bef4452f47802498df'
+    let updateProjectButton = document.querySelector('.update-project-button')
+    let removeProjectButton = document.querySelector('.remove-project-button')
 
     const handleUpdate = () => {
         socket.emit('update-task', {
@@ -25,9 +23,9 @@ window.onload = (function() {
         socket.emit('move-task', {
             task_id: '5e7272b551979e3accfd9e70',
             target_row_index: 0,
-            target_column_id: column1,
+            target_column_id: '5e760791c3dd0d47a850fa70',
             source_row_index: 2,
-            source_column_id: column1,
+            source_column_id: '5e760791c3dd0d47a850fa70',
         }, handleMoveResponse)
 
         return
@@ -35,9 +33,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-task', {
+            column_id: '5e8507b3c360416dbc1c6306',
             content: '3task',
-            row_index: 0,
-            column_id: column2,
+            row_index: 2,
         }, handleAddResponse)
 
         return
@@ -45,9 +43,9 @@ window.onload = (function() {
 
     const handleRemove = () => {
         socket.emit('remove-task', {
-            task_id: '5e762e251aa88357e0e8ef14',
-            source_row_index: 0,
-            source_column_id: column2,
+            task_id: '5e8508f58dc804281c58f669',
+            source_row_index: 2,
+            source_column_id: '5e8507b3c360416dbc1c6306',
         }, handleRemoveResponse)
 
         return
@@ -62,10 +60,10 @@ window.onload = (function() {
         // }, handleTestResponse)
 
         socket.emit('create-column', {
-            project_id: '5e8384a3c1ebd573c0346e5b',
-            name: 'col4',
-            board_index: 3,
-            max_tasks: 3,
+            project_id: '5e850799c360416dbc1c6305',
+            name: 'col1',
+            board_index: 0,
+            max_tasks: 5,
         }, handleTestResponse)
 
         // socket.emit('get-column', {
@@ -80,20 +78,38 @@ window.onload = (function() {
     }
 
     const handleGetAll = () => {
-        socket.emit('get-project', handleGetAllResponse)
+        socket.emit('get-project', {
+            project_id: '5e850799c360416dbc1c6305',
+        }, handleGetAllResponse)
     }
 
     const handleRemoveColumn = () => {
         socket.emit('remove-column', {
-            column_id: '5e7fc0194e91c44688d952fb'
+            column_id: '5e85060e78841b24ccc2fd6a'
         }, handleRemoveColumnResponse)
     }
 
     const handleAddProject = () => {
         socket.emit('create-project', {
-            project_name: 'Test',
+            project_name: 'Project 1',
             total_budget: '500',
         }, handleAddProjectResponse)
+    }
+
+    const handleUpdateProject = () => {
+        socket.emit('update-project', {
+            project_id: '5e8384a3c1ebd573c0346e5b',
+            project_name: 'Test update 2',
+            used_budget: 150,
+            total_budget: 500,
+
+        }, handleUpdateProjectResponse)
+    }
+
+    const handleRemoveProject = () => {
+        socket.emit('remove-project', {
+            project_id: '5e85035119931524b052d20d',
+        }, handleRemoveProjectReponse)
     }
 
     addButton.addEventListener('click', handleAdd)
@@ -104,6 +120,8 @@ window.onload = (function() {
     testButton.addEventListener('click', handleTest)
     removeColumnButton.addEventListener('click', handleRemoveColumn)
     addProjectButton.addEventListener('click', handleAddProject)
+    updateProjectButton.addEventListener('click', handleUpdateProject)
+    removeProjectButton.addEventListener('click', handleRemoveProject)
     
     const SERVER_URL = 'http://localhost:4000'
     let socket = io(SERVER_URL)
@@ -137,6 +155,14 @@ window.onload = (function() {
     }
 
     const handleAddProjectResponse = response => {
+        console.log(response)
+    }
+
+    const handleUpdateProjectResponse = response => {
+        console.log(response)
+    }
+
+    const handleRemoveProjectReponse = response => {
         console.log(response)
     }
 

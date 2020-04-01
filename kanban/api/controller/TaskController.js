@@ -103,11 +103,12 @@ class TaskController {
         try {
             TaskValidator.validateRemoveRequest(payload)
 
-            await TaskService.removeTask(payload)
+            const task = await TaskService.removeTask(payload)
 
             callback({
                 status: true,
-                message: `Successfully removed the task`
+                message: `Successfully removed the task`,
+                payload: task,
             })
 
             return

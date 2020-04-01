@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Task = require('../model/Task')
-const Column = require('../model/Column')
 const taskConfig = require('../../config/task')
 
 class TaskRepository {
@@ -91,36 +90,15 @@ class TaskRepository {
     }
 
     /**
-     * Find one task by filter and remove it
-     * 
-     * @param {Object} filter
-     * @return {Object} // removed task 
-     */
-    static async findOneByFilterAndRemove(filter) {
-        return await Task.findOneAndRemove(filter)
-    }
-
-    /**
-     * Remove one task found by parameters specified in filter. If more than one task 
-     * passes the filter only one of those is removed
-     * 
-     * @param {Object} filter
-     * @return {Object} 
-     */
-    static async removeOneByFilter(filter) {
-        return await Task.deleteOne(filter)
-    }
-
-    /**
      * Find one task by ID and remove it
      * 
      * @param {String} taskId
      * @return {Object} 
      */
     static async findByIdAndRemove(taskId) {
-        return await Task.findByIdAndRemove(taskId, {
-            useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
-        })
+       const task = await Task.findById(taskId)
+
+       return await task.remove()
     }
 
     /**
@@ -134,7 +112,7 @@ class TaskRepository {
     }
 
     /**
-     * Get one task by given task ID, populate given field
+     * Get one task by given task ID, populate given fields
      * 
      * @param {String} taskId 
      * @param {Array} populateFields
