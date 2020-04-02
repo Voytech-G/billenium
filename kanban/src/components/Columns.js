@@ -51,7 +51,7 @@ const onDragEnd = (result, columns, moveCard, socket) => {
     }
   );
 };
-const addNewColumn = (columns, socket, addColumnFunc) => {
+const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const newName = prompt("Type column name: ");
   const maxLimit = prompt("Type max tasks limit: ");
   socket.emit(
@@ -59,18 +59,29 @@ const addNewColumn = (columns, socket, addColumnFunc) => {
     { name: newName, board_index: columns.length, max_tasks: maxLimit },
     res => {
       if (res.status) {
-        console.log(res.payload);
-        addColumnFunc(res.payload.columnId, newName, maxLimit, columns.length);
+        addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
+        setColumns([
+          ...columns,
+          {
+            id: res.payload._id,
+            name: newName,
+            max_tasks: maxLimit,
+            items: [],
+            board_index: columns.length
+          }
+        ]);
       } else {
         alert("Error: server returned false status");
       }
     }
   );
 };
-const AddColumnBtn = ({ columnsItems, socket, addColumnFunc }) => {
+const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
   return (
     <button
-      onClick={() => addNewColumn(columnsItems, socket, addColumnFunc)}
+      onClick={() =>
+        addNewColumn(columnsItems, socket, addColumnFunc, setColumns)
+      }
       style={{ height: "40px", marginTop: "85px" }}
     >
       Add new column
@@ -78,7 +89,7 @@ const AddColumnBtn = ({ columnsItems, socket, addColumnFunc }) => {
   );
 };
 const Columns = ({ columns }) => {
-  const { socket, moveCard, addColumn } = useContext(GlobalContext);
+  const { socket, moveCard, addColumn, setColumns } = useContext(GlobalContext);
 
   return (
     <DragDropContext
@@ -88,6 +99,7 @@ const Columns = ({ columns }) => {
         columnsItems={columns}
         addColumnFunc={addColumn}
         socket={socket}
+        setColumns={setColumns}
       ></AddColumnBtn>
       {columns
         .sort((a, b) => a.board_index - b.board_index)

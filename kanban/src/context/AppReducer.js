@@ -95,6 +95,15 @@ export default (state, action) => {
           )
           .rearrangeCards()
       };
+    case "REMOVE_COLUMN":
+      return {
+        ...state,
+        columns: [
+          ...state.columns.filter(
+            column => column.id !== action.payload.column.id
+          )
+        ].rearrangeColumns()
+      };
     case "EDIT_CARD":
       return {
         ...state,
@@ -113,6 +122,21 @@ export default (state, action) => {
               : column
           )
           .rearrangeCards()
+      };
+    case "EDIT_COLUMN":
+      return {
+        ...state,
+        columns: [
+          ...state.columns.map(column =>
+            column.id === action.payload.column.id
+              ? {
+                  ...column,
+                  name: action.payload.column.name,
+                  max_tasks: action.payload.column.max_tasks
+                }
+              : column
+          )
+        ].rearrangeColumns()
       };
     case "SET_COLUMN_CARDS":
       return {

@@ -63,7 +63,7 @@ export const GlobalProvider = ({ children }) => {
           name: newName,
           board_index: columnsItems.length,
           items: [],
-          maxTasks: parseInt(maxLimit)
+          max_tasks: parseInt(maxLimit)
         }
       }
     });
@@ -81,6 +81,20 @@ export const GlobalProvider = ({ children }) => {
       }
     });
   }
+  function editColumn(columnId, name, boardIndex, maxTasks) {
+    dispatch({
+      type: "EDIT_COLUMN",
+      payload: {
+        column: {
+          id: columnId,
+          name: name,
+          board_index: boardIndex,
+          max_tasks: maxTasks
+        },
+        column_id: columnId
+      }
+    });
+  }
   function removeCard(cardId, cardIndex, columnId) {
     dispatch({
       type: "REMOVE_CARD",
@@ -90,6 +104,17 @@ export const GlobalProvider = ({ children }) => {
           row_index: cardIndex
         },
         column_id: columnId
+      }
+    });
+  }
+  function removeColumn(columnId, boardIndex) {
+    dispatch({
+      type: "REMOVE_COLUMN",
+      payload: {
+        column: {
+          id: columnId,
+          board_index: boardIndex
+        }
       }
     });
   }
@@ -112,6 +137,8 @@ export const GlobalProvider = ({ children }) => {
         removeCard,
         editCard,
         addColumn,
+        removeColumn,
+        editColumn,
         socket: state.socket,
         columns: state.columns
       }}
