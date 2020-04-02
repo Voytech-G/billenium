@@ -16,6 +16,7 @@ const App = () => {
         id: column._id,
         name: column.name,
         board_index: column.board_index,
+        max_tasks: column.max_tasks,
         items: column.tasks.map(task => ({
           id: task._id,
           content: task.content,
