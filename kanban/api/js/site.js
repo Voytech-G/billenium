@@ -33,7 +33,7 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-task', {
-            column_id: '5e8507b3c360416dbc1c6306',
+            column_id: '5e86275b61fac5245c8c5f0c',
             content: '3task',
             row_index: 2,
         }, handleAddResponse)
@@ -59,16 +59,16 @@ window.onload = (function() {
         //     max_tasks: 15,
         // }, handleTestResponse)
 
-        socket.emit('create-column', {
-            project_id: '5e850799c360416dbc1c6305',
-            name: 'col1',
-            board_index: 0,
-            max_tasks: 5,
-        }, handleTestResponse)
-
-        // socket.emit('get-column', {
-        //     column_id: '5e7fc0194e91c44688d952fb',
+        // socket.emit('create-column', {
+        //     project_id: '5e850799c360416dbc1c6305',
+        //     name: 'col1',
+        //     board_index: 0,
+        //     max_tasks: 5,
         // }, handleTestResponse)
+
+        socket.emit('get-column', {
+            column_id: '5e86275b61fac5245c8c5f0c',
+        }, handleTestResponse)
 
         // socket.emit('get-task', {
         //     task_id: '5e80fa3b5df30509884abe7a',

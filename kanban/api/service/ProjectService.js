@@ -102,19 +102,19 @@ class ProjectService {
     static async getOneProject(payload) {
         const projectId = payload.project_id
 
-        const project = await ProjectRepository.findByIdAndPopulate(projectId, ['columns'])
+        // populate columns field, populate tasks field in every column
+        const populateConfig = [
+            {
+                path: 'columns',
+                model: 'Column',
+                populate: {
+                    path: 'tasks',
+                    model: 'Task',
+                },
+            },
+        ]
 
-        let columns = project.columns
-
-        columns = columns.map(async column => {
-            return await column.populate('tasks').execPopulate()
-        })
-
-        console.log(columns)
-
-        project.columns = columns
-        
-        return project
+        return await ProjectRepository.findByIdAndPopulate(projectId, populateConfig)
     }
 }
 

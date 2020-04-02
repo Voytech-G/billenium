@@ -159,8 +159,19 @@ class ColumnService {
      */
     static async getOne(payload) {
         const columnId = payload.column_id
+
+        const populateConfig = [
+            {
+                path: 'tasks',
+                model: 'Task',
+                // populate: {
+                //     path: 'subtasks',
+                //     model: 'Subtask',
+                // },
+            }
+        ]
         
-        return await ColumnRepository.findByIdAndPopulate(columnId, ['tasks'])
+        return await ColumnRepository.findByIdAndPopulate(columnId, populateConfig)
     }
 }
 
