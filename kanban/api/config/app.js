@@ -1,6 +1,6 @@
 module.exports = {
   port: 4000,
-  development: true,
+  development: false,
   logs: {
     saveSuccessMessages: false,
     saveInfoMessages: false,
