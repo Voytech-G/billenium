@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Task = require('../model/Task')
+const ColumnHandler = require('../../handler/ColumnHandler')
+const mongoose = require("mongoose")
 
 const ColumnSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
@@ -15,17 +15,7 @@ const ColumnSchema = new mongoose.Schema({
 })
 
 ColumnSchema.post('remove', async column => {
-  const columnId = column.id
-
-  const filter = {
-    column: columnId,
-  }
-
-  const tasks = await Task.find(filter)
-
-  tasks.forEach(task => {
-    task.remove()
-  })
+  ColumnHandler.handleColumnRemoved(column)
 })
 
 module.exports = mongoose.model("Column", ColumnSchema);

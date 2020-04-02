@@ -50,8 +50,6 @@ class ProjectService {
      * @return {void} 
      */
     static async unassignColumnFromProject(columnId, projectId) {
-        console.log(columnId, projectId)
-
         const project = await ProjectRepository.findById(projectId)
 
         if (project == null) {

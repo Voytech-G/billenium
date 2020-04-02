@@ -80,7 +80,7 @@ class ProjectRepository {
         const project = await Project.findById(projectId)
 
         if (project == null) {
-            throw new Error('Failed to populate the task, found no task of given ID')
+            throw new Error('Failed to populate the project, found no project of given ID')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 

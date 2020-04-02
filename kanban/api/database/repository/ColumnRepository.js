@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Column = require('../model/Column')
-const TaskRepository = require('../repository/TaskRepository')
 const columnConfig = require('../../config/column')
 
 class ColumnRepository {
@@ -63,19 +62,13 @@ class ColumnRepository {
     }
 
     /**
-     * Get column with which the task column is assigned
+     * Find many columns with specified parameters as filter
      * 
-     * @param {string} taskId 
+     * @param {Object} filter 
      * @return {Object}
      */
-    static async getColumnByTaskId(taskId) {
-        const response = await TaskRepository.findByIdAndPopulate(taskId, ['column'])
-
-        if (response.column == null) {
-            throw new Error('Found no column assigned to given task')
-        }
-
-        return response.column
+    static async findManyByFilter(filter) {
+        return await Column.find(filter)
     }
 
     /**

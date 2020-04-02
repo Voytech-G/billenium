@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const TaskHandler = require('../../handler/TaskHandler')
 
 const TaskSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId, 
@@ -15,7 +16,8 @@ const TaskSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
-TaskSchema.post('remove', task => {
+TaskSchema.post('remove', async task => {
+  TaskHandler.handleTaskRemoved(task)
 })
 
 module.exports = mongoose.model("Task", TaskSchema);

@@ -108,7 +108,7 @@ window.onload = (function() {
 
     const handleRemoveProject = () => {
         socket.emit('remove-project', {
-            project_id: '5e85035119931524b052d20d',
+            project_id: '5e850799c360416dbc1c6305',
         }, handleRemoveProjectReponse)
     }
 
