@@ -56,7 +56,12 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const maxLimit = prompt("Type max tasks limit: ");
   socket.emit(
     "create-column",
-    { name: newName, board_index: columns.length, max_tasks: maxLimit },
+    { 
+      project_id: '5e850799c360416dbc1c6305',
+      name: newName, 
+      board_index: columns.length,
+      max_tasks: maxLimit,
+    },
     res => {
       if (res.status) {
         addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
