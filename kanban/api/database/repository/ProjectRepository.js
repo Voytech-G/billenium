@@ -20,6 +20,15 @@ class ProjectRepository {
     }
 
     /**
+     * Find all projects
+     * 
+     * @return {Array}
+     */
+    static async findAll() {
+        return await Project.find({})
+    }
+
+    /**
      * Find one project by ID and update it with given values
      * 
      * @param {String} projectId 

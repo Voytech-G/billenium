@@ -78,9 +78,11 @@ window.onload = (function() {
     }
 
     const handleGetAll = () => {
-        socket.emit('get-project', {
-            project_id: '5e850799c360416dbc1c6305',
-        }, handleGetAllResponse)
+        socket.emit('get-all-projects', handleGetAllResponse)
+
+        // socket.emit('get-project', {
+        //     project_id: '5e850799c360416dbc1c6305',
+        // }, handleGetAllResponse)
     }
 
     const handleRemoveColumn = () => {
@@ -91,8 +93,8 @@ window.onload = (function() {
 
     const handleAddProject = () => {
         socket.emit('create-project', {
-            project_name: 'Project 1',
-            total_budget: '500',
+            project_name: 'Project 3 niook',
+            total_budget: '55600',
         }, handleAddProjectResponse)
     }
 

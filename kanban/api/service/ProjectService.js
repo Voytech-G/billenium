@@ -114,6 +114,19 @@ class ProjectService {
 
         return await ProjectRepository.findByIdAndPopulate(projectId, populateConfig)
     }
+
+    /**
+     * Get all projects
+     * 
+     * @return {Array}
+     */
+    static async getAllProjects() {
+        const projects = await ProjectRepository.findAll()
+
+        console.log(projects)
+
+        return projects
+    }
 }
 
 module.exports = ProjectService
