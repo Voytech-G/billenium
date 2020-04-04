@@ -2,6 +2,7 @@ const TaskController = require('../controller/TaskController')
 const ConnectionsService = require('../service/ConnectionsService') 
 const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
+const AuthenticationController = require('../controller/AuthenticationController')
 
 class ConnectionsHandler {
     /**
@@ -24,6 +25,12 @@ class ConnectionsHandler {
         // method run every incoming event
         socket.use((payload, next) => {
             this.connectionsService.handleIncomingEvent(payload, next)
+
+            return
+        })
+
+        socket.on('sign-up', async (payload, callback) => {
+            AuthenticationController.signUp(payload, callback)
 
             return
         })
