@@ -11,11 +11,11 @@ module.exports = {
     }
   },
   productionDatabaseConnection: {
-    databaseContainerName: "ds147946",
-    databasePort: "47946",
-    databaseName: "kanban-variant",
-    username: "kanban-admin",
-    password: "kinethicc69",
+    databaseContainerName: process.env.DATABASE_CONTAINER_NAME || "ds147946",
+    databasePort: process.env.DATABASE_PORT || "47946",
+    databaseName: process.env.DATABASE_NAME || "kanban-variant",
+    username: process.env.USERNAME || "kanban-admin",
+    password: process.env.PASSWORD || "kinethicc69",
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true
