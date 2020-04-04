@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const userConfig = require('../../config/user')
+// const UserHandler = require('../handler/UserHandler')
 
 const UserSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,

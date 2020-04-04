@@ -1,4 +1,4 @@
-const ColumnHandler = require('../../handler/ColumnHandler')
+const ColumnHandler = require('../handler/ColumnHandler')
 const mongoose = require("mongoose")
 
 const ColumnSchema = new mongoose.Schema({

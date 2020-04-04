@@ -1,5 +1,5 @@
+const TaskHandler = require('../handler/TaskHandler')
 const mongoose = require("mongoose");
-const TaskHandler = require('../../handler/TaskHandler')
 
 const TaskSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId, 

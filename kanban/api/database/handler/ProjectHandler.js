@@ -1,4 +1,4 @@
-const ColumnRepository = require('../database/repository/ColumnRepository')
+const ColumnRepository = require('../repository/ColumnRepository')
 
 class ProjectHandler {
     /**

@@ -1,4 +1,4 @@
-const ProjectHandler = require('../../handler/ProjectHandler')
+const ProjectHandler = require('../handler/ProjectHandler')
 const mongoose = require("mongoose")
 
 const ProjectSchema = new mongoose.Schema({
