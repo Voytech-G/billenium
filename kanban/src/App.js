@@ -10,7 +10,7 @@ const App = () => {
 
   useEffect(() => {
     socket.emit("get-project", {
-      project_id: '5e850799c360416dbc1c6305',
+      project_id: '5e87717ec2386013906d7422',
     }, data => {
       const columnsWithItems = data.payload.columns.map(column => ({
         id: column._id,

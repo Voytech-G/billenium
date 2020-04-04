@@ -9,6 +9,7 @@ window.onload = (function() {
     let addProjectButton = document.querySelector('.add-project-button')
     let updateProjectButton = document.querySelector('.update-project-button')
     let removeProjectButton = document.querySelector('.remove-project-button')
+    let signUpButton = document.querySelector('.sign-up-button')
 
     const handleUpdate = () => {
         socket.emit('update-task', {
@@ -78,11 +79,11 @@ window.onload = (function() {
     }
 
     const handleGetAll = () => {
-        socket.emit('get-all-projects', handleGetAllResponse)
+        // socket.emit('get-all-projects', handleGetAllResponse)
 
-        // socket.emit('get-project', {
-        //     project_id: '5e850799c360416dbc1c6305',
-        // }, handleGetAllResponse)
+        socket.emit('get-project', {
+            project_id: '5e87717ec2386013906d7422',
+        }, handleGetAllResponse)
     }
 
     const handleRemoveColumn = () => {
@@ -114,6 +115,22 @@ window.onload = (function() {
         }, handleRemoveProjectReponse)
     }
 
+    const handleSignUp = () => {
+        const username = document.querySelector('.username-field').value
+        const pin = document.querySelector('.pin-field').value
+        const firstName = document.querySelector('.first-name-field').value
+        const lastName = document.querySelector('.last-name-field').value
+        const userType = document.querySelector('.user-type-field').value
+
+        socket.emit('sign-up', {
+            username,
+            pin,
+            first_name: firstName,
+            last_name: lastName,
+            user_type: userType,
+        }, handleSignUpResponse)
+    }
+
     addButton.addEventListener('click', handleAdd)
     updateButton.addEventListener('click', handleUpdate)
     removeButton.addEventListener('click', handleRemove)
@@ -124,6 +141,7 @@ window.onload = (function() {
     addProjectButton.addEventListener('click', handleAddProject)
     updateProjectButton.addEventListener('click', handleUpdateProject)
     removeProjectButton.addEventListener('click', handleRemoveProject)
+    signUpButton.addEventListener('click', handleSignUp)
     
     const SERVER_URL = 'http://localhost:4000'
     let socket = io(SERVER_URL)
@@ -168,4 +186,7 @@ window.onload = (function() {
         console.log(response)
     }
 
+    const handleSignUpResponse = response => {
+        console.log(response)
+    }
 })
