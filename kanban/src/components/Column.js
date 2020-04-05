@@ -179,7 +179,7 @@ const Column = ({ column, user }) => {
     GlobalContext
   );
   return (
-    <div style={{ borderBottom: "1px solid black" }}>
+    <div style={{ borderBottom: "5px solid black" }}>
       <div
         style={{
           display: "flex",

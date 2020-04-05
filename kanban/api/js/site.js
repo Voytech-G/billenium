@@ -154,11 +154,11 @@ window.onload = function () {
       "create-column",
       {
         tasks: [],
-        name: "Todo",
-        board_index: 1,
-        row_index: 1,
+        name: "Done",
+        board_index: 2,
+        row_index: 2,
         max_tasks: 5,
-        user: "Kamil",
+        user: "Wacek",
         project_id: "5e877170c2386013906d7421",
       },
       handleAddColumnReponse
