@@ -83,6 +83,7 @@ window.onload = (function() {
 
         socket.emit('get-project', {
             project_id: '5e877170c2386013906d7421',
+            token,
         }, handleGetAllResponse)
     }
 
@@ -144,11 +145,15 @@ window.onload = (function() {
     signUpButton.addEventListener('click', handleSignUp)
     
     const SERVER_URL = 'http://localhost:4000'
-    const token = '523623623623236'
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.wPv6iahI_o8jl3XZzxieDhZJrEMFCfeDTJg7l3cRc90'
     let socket = io.connect(SERVER_URL, {
-        query: {
-            // token,
-        }
+        // query: { token }
+    })
+
+    socket.emit('authenticate', {
+        token,
+    }, response => {
+        console.log(response)
     })
 
     socket.on('error', response => {

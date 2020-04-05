@@ -6,4 +6,8 @@ module.exports = {
         saveInfoMessages: false,
         saveErrorMessages: true,
     },
+    authentication: {
+        // later on the secret will be stored securily
+        secret: process.env.SECRET || 'KHzZ[n5-$^8[DRfF',
+    },
 }

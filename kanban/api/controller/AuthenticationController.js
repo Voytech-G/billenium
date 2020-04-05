@@ -9,11 +9,9 @@ class AuthenticationController {
 
             const response = await AuthenticationService.authenticate(payload)
 
-            console.log(response)
-
             callback({
                 status: true,
-                message: `You are logged in`,
+                message: `Successfully authorized`,
                 payload: response,
             })
 
@@ -21,7 +19,7 @@ class AuthenticationController {
         } catch (exception) {
             callback({
                 status: false,
-                message: 'You are not logged in',
+                message: `Authorization failed: ${exception.message}`,
             })
 
             return

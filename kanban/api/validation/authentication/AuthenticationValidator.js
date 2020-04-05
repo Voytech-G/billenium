@@ -12,6 +12,8 @@ class AuthenticationValidator extends ValidatorAbstract {
         if (payload.token == null || payload.token == "") {
             throw new Error('Authentication token is required')
         }
+
+        return
     }
 
     /**

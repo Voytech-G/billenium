@@ -25,19 +25,6 @@ class ConnectionsService {
     }
 
     /**
-     * Method run every incoming event
-     * 
-     * @param {Object} payload // data sent from client in event 
-     * @param {Function} next // next run method, in this case given event handler
-     */
-    handleIncomingEvent(payload, next) {
-        LogService.info('Incoming event')
-
-        // calling default event handler to which this request was going to
-        return next()
-    }
-
-    /**
      * Show all connected sockets
      * 
      * @return {void}

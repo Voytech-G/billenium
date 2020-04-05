@@ -3,6 +3,7 @@ const ConnectionsService = require('../service/ConnectionsService')
 const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
 const AuthenticationController = require('../controller/AuthenticationController')
+const AuthenticationService = require('../service/AuthenticationService')
 
 class ConnectionsHandler {
     /**
@@ -23,10 +24,16 @@ class ConnectionsHandler {
         this.addConnection(socket)
         
         // method run every incoming event
-        socket.use((payload, next) => {
-            this.connectionsService.handleIncomingEvent(payload, next)
+        socket.use(async (payload, next) => {
+            const eventPayload = payload[1]
 
-            return
+            try {
+                await AuthenticationService.authenticate(eventPayload)
+
+                next()
+            } catch (exception) {
+                return next(new Error(`Authentication failed: ${exception.message}`))
+            }
         })
 
         socket.on('authenticate', async (payload, callback) => {
