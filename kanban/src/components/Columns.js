@@ -62,7 +62,7 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
       board_index: columns.length,
       max_tasks: maxLimit,
       user: "Jacek",
-      row_index: 0,
+      col_row_index: 0,
     },
     (res) => {
       console.log(res);
@@ -77,7 +77,7 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
             items: [],
             board_index: columns.length,
             user: res.payload.user,
-            row_index: res.payload.row_index,
+            col_row_index: res.payload.col_row_index,
           },
         ]);
       } else {
@@ -106,7 +106,7 @@ const Columns = ({ columns, users }) => {
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
         {users.map((user) => (
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", borderTop: "5px solid black" }}>
             <div
               style={{
                 display: "flex",

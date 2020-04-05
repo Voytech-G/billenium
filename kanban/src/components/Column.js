@@ -37,11 +37,11 @@ const handleClick_addCard = (
     }
   );
 };
-const Amount = ({ amount, maxTasks }) => {
+const Amount = ({ amount, maxTasks, rowIndex }) => {
   return (
     <h5
       style={{ margin: "0px 0 0 5px" }}
-      className={amount > maxTasks ? "taskLimit" : false}
+      className={`${amount > maxTasks ? "taskLimit" : false} row${rowIndex}`}
     >
       {amount}/{maxTasks}
     </h5>
@@ -174,21 +174,22 @@ const ChangeMaxLimitBtn = ({
   );
 };
 const Column = ({ column, user }) => {
-  const { id, name, items, max_tasks, board_index } = column;
+  const { id, name, items, max_tasks, board_index, col_row_index } = column;
   const { socket, addCard, setColumns, removeColumn, editColumn } = useContext(
     GlobalContext
   );
   return (
-    <div style={{ borderBottom: "5px solid black" }}>
+    <div>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          width: "292px",
         }}
         key={id}
       >
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }} className={`row${col_row_index}`}>
           <ChangeMaxLimitBtn
             editColumn={editColumn}
             socket={socket}
@@ -214,8 +215,12 @@ const Column = ({ column, user }) => {
             boardIndex={board_index}
           ></DeleteColumnBtn>
         </div>
-        <h3>{name}</h3>
-        <Amount amount={items.length} maxTasks={max_tasks}></Amount>
+        <h3 className={`row${col_row_index}`}>{name}</h3>
+        <Amount
+          rowIndex={col_row_index}
+          amount={items.length}
+          maxTasks={max_tasks}
+        ></Amount>
         <div
           style={{
             margin: 8,

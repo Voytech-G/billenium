@@ -14,9 +14,10 @@ body {
 .taskLimitColumn {
   background-color: firebrick;
 }
+.row1,
 .row2,
 .row3,
 .row4,
 .row5 {
-  display: none;
+  display: none !important;
 }
