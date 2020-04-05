@@ -144,7 +144,16 @@ window.onload = (function() {
     signUpButton.addEventListener('click', handleSignUp)
     
     const SERVER_URL = 'http://localhost:4000'
-    let socket = io(SERVER_URL)
+    const token = '523623623623236'
+    let socket = io.connect(SERVER_URL, {
+        query: {
+            // token,
+        }
+    })
+
+    socket.on('error', response => {
+        console.log(response)
+    })
     
     const handleGetAllResponse = response => { 
         console.log(response)

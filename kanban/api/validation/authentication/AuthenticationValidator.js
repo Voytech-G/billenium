@@ -3,6 +3,18 @@ const ValidatorAbstract = require('../ValidatorAbstract')
 
 class AuthenticationValidator extends ValidatorAbstract {
     /**
+     * Validate authenticate request
+     * 
+     * @param {Object} payload 
+     * @return {void}
+     */
+    static validateAuthenticateRequest(payload) {
+        if (payload.token == null || payload.token == "") {
+            throw new Error('Authentication token is required')
+        }
+    }
+
+    /**
      * Validate sign up request
      * 
      * @param {Object} payload

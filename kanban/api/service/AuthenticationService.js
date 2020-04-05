@@ -1,6 +1,10 @@
 const bcrypt = require('bcrypt')
 
 class AuthenticationService {
+    static async authenticate(payload) {
+        
+    }
+
     /**
      * Return hashed string
      * 

@@ -29,6 +29,12 @@ class ConnectionsHandler {
             return
         })
 
+        socket.on('authenticate', async (payload, callback) => {
+            AuthenticationController.authenticate(payload, callback)
+            
+            return
+        })
+
         socket.on('sign-up', async (payload, callback) => {
             AuthenticationController.signUp(payload, callback)
 

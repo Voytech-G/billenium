@@ -1,7 +1,33 @@
 const AuthenticationValidator = require('../validation/authentication/AuthenticationValidator')
+const AuthenticationService = require('../service/AuthenticationService')
 const UserService = require('../service/UserService')
 
 class AuthenticationController {
+    static async authenticate(payload, callback) {
+        try {
+            AuthenticationValidator.validateAuthenticateRequest(payload)
+
+            const response = await AuthenticationService.authenticate(payload)
+
+            console.log(response)
+
+            callback({
+                status: true,
+                message: `You are logged in`,
+                payload: response,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: 'You are not logged in',
+            })
+
+            return
+        }
+    }
+
     /**
      * Sign up a new user
      * 
