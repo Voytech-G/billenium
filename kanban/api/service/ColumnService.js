@@ -1,178 +1,191 @@
-const ColumnRepository = require('../database/repository/ColumnRepository')
-const TaskRepository = require('../database/repository/TaskRepository')
-const ProjectService = require('../service/ProjectService')
+const ColumnRepository = require("../database/repository/ColumnRepository");
+const TaskRepository = require("../database/repository/TaskRepository");
+const ProjectService = require("../service/ProjectService");
 
 class ColumnService {
-    /**
-     * Create column
-     * 
-     * @param {Object} payload
-     * @return {Object} 
-     */
-    static async createColumn(payload) {
-        const projectId = payload.project_id
-        const name = payload.name
-        const boardIndex = payload.board_index
-        const maxTasks = payload.max_tasks
+  /**
+   * Create column
+   *
+   * @param {Object} payload
+   * @return {Object}
+   */
+  static async createColumn(payload) {
+    const projectId = payload.project_id;
+    const name = payload.name;
+    const boardIndex = payload.board_index;
+    const maxTasks = payload.max_tasks;
+    const userName = payload.user;
+    const rowIndex = payload.row_index;
+    // get column ID to add reference to it to target project
+    const column = await ColumnRepository.create(
+      projectId,
+      name,
+      boardIndex,
+      maxTasks,
+      userName,
+      rowIndex
+    );
 
-        // get column ID to add reference to it to target project
-        const column = await ColumnRepository.create(projectId, name, boardIndex, maxTasks)
+    const columnId = column.id;
+    await ProjectService.assignColumnToProject(columnId, projectId);
 
-        const columnId = column.id
-        await ProjectService.assignColumnToProject(columnId, projectId)
+    return column;
+  }
 
-        return column
+  /**
+   * Update column
+   *
+   * @param {Object} payload
+   * @return {Object}
+   */
+  static async updateColumn(payload) {
+    const columnId = payload.column_id;
+    const name = payload.name;
+    const boardIndex = payload.board_index;
+    const maxTasks = payload.max_tasks;
+
+    const filter = {
+      _id: columnId,
+    };
+
+    const update = {
+      name: name,
+      board_index: boardIndex,
+      max_tasks: maxTasks,
+    };
+
+    return await ColumnRepository.findOneByFilterAndUpdate(filter, update);
+  }
+
+  /**
+   * Find the target column for task and assign the task to it
+   *
+   * @param {string} columnId
+   * @param {Object} taskId
+   * @return {void}
+   */
+  static async assignTaskToColumn(columnId, taskId) {
+    const targetColumn = await ColumnRepository.findById(columnId);
+
+    if (targetColumn == null) {
+      throw new Error("Found no column to assign the task to");
     }
 
-    /**
-     * Update column
-     * 
-     * @param {Object} payload
-     * @return {Object} 
-     */
-    static async updateColumn(payload) {
-        const columnId = payload.column_id
-        const name = payload.name
-        const boardIndex = payload.board_index
-        const maxTasks = payload.max_tasks
+    // find the task we want to assign to column
+    const targetTask = await TaskRepository.findById(taskId);
 
-        const filter = {
-            _id: columnId,
-        }
-
-        const update = {
-            name: name,
-            board_index: boardIndex,
-            max_tasks: maxTasks,
-        }
-
-        return await ColumnRepository.findOneByFilterAndUpdate(filter, update)
+    if (targetTask == null) {
+      throw new Error("Found no task to assign to the column");
     }
 
-    /**
-     * Find the target column for task and assign the task to it
-     * 
-     * @param {string} columnId
-     * @param {Object} taskId
-     * @return {void}
-     */
-    static async assignTaskToColumn(columnId, taskId) {
-        const targetColumn = await ColumnRepository.findById(columnId)
-        
-        if (targetColumn == null) {
-            throw new Error('Found no column to assign the task to')
-        }
-        
-        // find the task we want to assign to column
-        const targetTask = await TaskRepository.findById(taskId)
+    // add task to target column tasks collection
+    targetColumn.tasks.push(targetTask);
 
-        if (targetTask == null) {
-            throw new Error('Found no task to assign to the column')
-        }
+    await targetColumn.save();
 
-        // add task to target column tasks collection
-        targetColumn.tasks.push(targetTask)
+    return;
+  }
 
-        await targetColumn.save()
+  /**
+   * Find target column and remove the task from it
+   *
+   * @param {string} taskId
+   * @return {void}
+   */
+  static async unassignTaskFromColumn(columnId, taskId) {
+    const column = await ColumnRepository.findById(columnId);
 
-        return
+    column.tasks.pull(taskId);
+
+    await column.save();
+  }
+
+  /**
+   * Remove one column by ID
+   *
+   * @param {Object} payload
+   * @return {Object} // data about the removed column
+   */
+  static async removeColumn(payload) {
+    const columnId = payload.column_id;
+
+    const column = await ColumnRepository.findByIdAndRemove(columnId);
+
+    if (column == null) {
+      throw new Error("Found no column of given ID to remove.");
     }
 
-    /**
-     * Find target column and remove the task from it
-     * 
-     * @param {string} taskId
-     * @return {void} 
-     */
-    static async unassignTaskFromColumn(columnId, taskId) {
-        const column = await ColumnRepository.findById(columnId)
+    const projectId = column.project;
+    await ProjectService.unassignColumnFromProject(columnId, projectId);
 
-        column.tasks.pull(taskId)
+    // move all columns on the right from removed column to the left so the gap is filled
+    const boardIndex = column.board_index;
+    await this.moveNextColumnsLeft(boardIndex);
 
-        await column.save()
-    }
+    return column;
+  }
 
-    /**
-     * Remove one column by ID
-     * 
-     * @param {Object} payload
-     * @return {Object} // data about the removed column 
-     */
-    static async removeColumn(payload) {
-        const columnId = payload.column_id
-    
-        const column = await ColumnRepository.findByIdAndRemove(columnId)
+  /**
+   * Move all columns to the right of given board index to the left
+   *
+   * @param {Number} boardIndex
+   * @return {void}
+   */
+  static async moveNextColumnsLeft(boardIndex) {
+    const update = {
+      $inc: { board_index: -1 },
+    };
 
-        if (column == null) {
-            throw new Error('Found no column of given ID to remove.')
-        }
+    await this.changeColumnsBoardIndexes(update, boardIndex);
 
-        const projectId = column.project
-        await ProjectService.unassignColumnFromProject(columnId, projectId)
-        
-        // move all columns on the right from removed column to the left so the gap is filled
-        const boardIndex = column.board_index
-        await this.moveNextColumnsLeft(boardIndex)
+    return;
+  }
 
-        return column
-    }
+  /**
+   * Change all columns board indexes to the right of the given board index with given filter
+   *
+   * @param {Object} update
+   * @param {Number} boardIndex
+   * @param {Boolean} including
+   * @return {void}
+   */
+  static async changeColumnsBoardIndexes(
+    update,
+    boardIndex,
+    including = false
+  ) {
+    const filter = {
+      board_index:
+        including === true ? { $gte: boardIndex } : { $gt: boardIndex },
+    };
 
-    /**
-     * Move all columns to the right of given board index to the left
-     * 
-     * @param {Number} boardIndex
-     * @return {void} 
-     */
-    static async moveNextColumnsLeft(boardIndex) {
-        const update = {
-            $inc: { board_index: -1 }
-        }
+    await ColumnRepository.findManyByFilterAndUpdate(filter, update);
 
-        await this.changeColumnsBoardIndexes(update, boardIndex)
-        
-        return
-    }
+    return;
+  }
 
-    /**
-     * Change all columns board indexes to the right of the given board index with given filter
-     * 
-     * @param {Object} update 
-     * @param {Number} boardIndex 
-     * @param {Boolean} including
-     * @return {void} 
-     */
-    static async changeColumnsBoardIndexes(update, boardIndex, including = false) {
-        const filter = {
-            board_index: including === true ? { $gte: boardIndex } : { $gt: boardIndex }
-        }
+  /**
+   * Get one column data
+   *
+   * @param {Object} payload
+   * @return {Object}
+   */
+  static async getOne(payload) {
+    const columnId = payload.column_id;
 
-        await ColumnRepository.findManyByFilterAndUpdate(filter, update)
+    const populateConfig = [
+      {
+        path: "tasks",
+        model: "Task",
+        // populate: {
+        //     path: 'subtasks',
+        //     model: 'Subtask',
+        // },
+      },
+    ];
 
-        return
-    }
-
-    /**
-     * Get one column data
-     * 
-     * @param {Object} payload
-     * @return {Object} 
-     */
-    static async getOne(payload) {
-        const columnId = payload.column_id
-
-        const populateConfig = [
-            {
-                path: 'tasks',
-                model: 'Task',
-                // populate: {
-                //     path: 'subtasks',
-                //     model: 'Subtask',
-                // },
-            }
-        ]
-        
-        return await ColumnRepository.findByIdAndPopulate(columnId, populateConfig)
-    }
+    return await ColumnRepository.findByIdAndPopulate(columnId, populateConfig);
+  }
 }
 
-module.exports = ColumnService
+module.exports = ColumnService;

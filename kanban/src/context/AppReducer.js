@@ -1,4 +1,4 @@
-Array.prototype.insert = function(index) {
+Array.prototype.insert = function (index) {
   this.splice.apply(
     this,
     [index, 0].concat(Array.prototype.slice.call(arguments, 1))
@@ -6,17 +6,17 @@ Array.prototype.insert = function(index) {
   return this;
 };
 
-const rearrangeCards = cardArray =>
+const rearrangeCards = (cardArray) =>
   cardArray.map((card, idx) => ({ ...card, row_index: idx }));
 
-const rearrangeColumns = columnArray =>
+const rearrangeColumns = (columnArray) =>
   columnArray.map((column, idx) => ({ ...column, board_index: idx }));
 
-Array.prototype.rearrangeCards = function() {
+Array.prototype.rearrangeCards = function () {
   return rearrangeCards(this);
 };
 
-Array.prototype.rearrangeColumns = function() {
+Array.prototype.rearrangeColumns = function () {
   return rearrangeColumns(this);
 };
 
@@ -25,144 +25,149 @@ export default (state, action) => {
     case "SET_COLUMNS":
       return {
         ...state,
-        columns: action.payload
+        columns: action.payload,
+      };
+    case "SET_USERS":
+      return {
+        ...state,
+        users: action.payload,
       };
     case "MOVE_CARD":
       return {
         ...state,
         columns: state.columns
-          .map(column =>
+          .map((column) =>
             column.id === action.payload.source_column_id
               ? {
                   ...column,
                   items: column.items
-                    .filter(card => card.id !== action.payload.card.id)
-                    .rearrangeCards()
+                    .filter((card) => card.id !== action.payload.card.id)
+                    .rearrangeCards(),
                 }
               : column
           )
-          .map(column =>
+          .map((column) =>
             column.id === action.payload.dest_column_id
               ? {
                   ...column,
                   items: column.items
                     .insert(action.payload.dest_card_index, {
                       ...action.payload.card,
-                      row_index: action.payload.dest_card_index
+                      row_index: action.payload.dest_card_index,
                     })
-                    .rearrangeCards()
+                    .rearrangeCards(),
                 }
               : column
-          )
+          ),
       };
     case "ADD_CARD":
       return {
         ...state,
         columns: state.columns
-          .map(column =>
+          .map((column) =>
             column.id === action.payload.column_id
               ? {
                   ...column,
                   items: [
                     ...column.items,
-                    { ...action.payload.card, row_index: column.items.length }
-                  ]
+                    { ...action.payload.card, row_index: column.items.length },
+                  ],
                 }
               : column
           )
-          .rearrangeCards()
+          .rearrangeCards(),
       };
     case "ADD_COLUMN":
       return {
         ...state,
-        columns: [...state.columns, action.payload.column].rearrangeColumns()
+        columns: [...state.columns, action.payload.column].rearrangeColumns(),
       };
     case "REMOVE_CARD":
       return {
         ...state,
         columns: state.columns
-          .map(column =>
+          .map((column) =>
             column.id === action.payload.column_id
               ? {
                   ...column,
                   items: [
                     ...column.items.filter(
-                      task => task.id !== action.payload.card.id
-                    )
-                  ]
+                      (task) => task.id !== action.payload.card.id
+                    ),
+                  ],
                 }
               : column
           )
-          .rearrangeCards()
+          .rearrangeCards(),
       };
     case "REMOVE_COLUMN":
       return {
         ...state,
         columns: [
           ...state.columns.filter(
-            column => column.id !== action.payload.column.id
-          )
-        ].rearrangeColumns()
+            (column) => column.id !== action.payload.column.id
+          ),
+        ].rearrangeColumns(),
       };
     case "EDIT_CARD":
       return {
         ...state,
         columns: state.columns
-          .map(column =>
+          .map((column) =>
             column.id === action.payload.column_id
               ? {
                   ...column,
                   items: [
                     ...column.items.filter(
-                      task => task.id !== action.payload.card.id
+                      (task) => task.id !== action.payload.card.id
                     ),
-                    { ...action.payload.card }
-                  ]
+                    { ...action.payload.card },
+                  ],
                 }
               : column
           )
-          .rearrangeCards()
+          .rearrangeCards(),
       };
     case "EDIT_COLUMN":
       return {
         ...state,
         columns: [
-          ...state.columns.map(column =>
+          ...state.columns.map((column) =>
             column.id === action.payload.column.id
               ? {
                   ...column,
                   name: action.payload.column.name,
-                  max_tasks: action.payload.column.max_tasks
+                  max_tasks: action.payload.column.max_tasks,
                 }
               : column
-          )
-        ].rearrangeColumns()
+          ),
+        ].rearrangeColumns(),
       };
     case "SET_COLUMN_CARDS":
       return {
         ...state,
         columns: state.columns
-          .map(column =>
+          .map((column) =>
             column.id === action.payload.column_id
               ? {
                   ...column,
                   items: [
                     ...column.items,
-                    { ...action.payload.card, row_index: column.items.length }
-                  ]
+                    { ...action.payload.card, row_index: column.items.length },
+                  ],
                 }
               : column
           )
-          .rearrangeCards()
+          .rearrangeCards(),
       };
     case "SET_ITEMS":
       return {
         ...state,
-        columns: state.columns.map(column =>
+        columns: state.columns.map((column) =>
           column.id === action.payload.column_id
             ? action.payload.items
             : column.items
-        )
+        ),
       };
 
     default:

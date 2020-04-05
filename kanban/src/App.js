@@ -5,32 +5,39 @@ import Columns from "./components/Columns";
 import { GlobalContext } from "./context/GlobalState";
 
 const App = () => {
-  const { socket, columns } = useContext(GlobalContext);
-  const { setColumns, addCard } = useContext(GlobalContext);
+  const { socket, columns, users } = useContext(GlobalContext);
+  const { setColumns, addCard, setUsers } = useContext(GlobalContext);
 
   useEffect(() => {
-    socket.emit("get-project", {
-      project_id: '5e850799c360416dbc1c6305',
-    }, data => {
-      const columnsWithItems = data.payload.columns.map(column => ({
-        id: column._id,
-        name: column.name,
-        board_index: column.board_index,
-        max_tasks: column.max_tasks,
-        items: column.tasks.map(task => ({
-          id: task._id,
-          content: task.content,
-          row_index: task.row_index
-        }))
-      }));
-      // console.log(columnsWithItems);
-      setColumns(columnsWithItems);
-    });
+    socket.emit(
+      "get-project",
+      {
+        project_id: "5e877170c2386013906d7421",
+      },
+      (data) => {
+        console.log(data);
+        const columnsWithItems = data.payload.columns.map((column) => ({
+          id: column._id,
+          name: column.name,
+          board_index: column.board_index,
+          row_index: column.row_index,
+          max_tasks: column.max_tasks,
+          user: column.user,
+          items: column.tasks.map((task) => ({
+            id: task._id,
+            content: task.content,
+            row_index: task.row_index,
+          })),
+        }));
+        setColumns(columnsWithItems);
+        setUsers(users);
+      }
+    );
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-      <Columns columns={columns} />
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Columns columns={columns} users={users} />
     </div>
   );
 };

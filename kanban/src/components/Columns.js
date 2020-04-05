@@ -11,9 +11,9 @@ const onDragEnd = (result, columns, moveCard, socket) => {
   const { draggableId, source, destination } = result;
 
   const card = columns
-    .map(column => column.items.filter(item => item.id === draggableId))
+    .map((column) => column.items.filter((item) => item.id === draggableId))
     .flat()[0];
-  let flag = columns.filter(column => column.id === destination.droppableId);
+  let flag = columns.filter((column) => column.id === destination.droppableId);
   console.log(flag.flat()[0].items.length);
 
   moveCard(
@@ -34,9 +34,9 @@ const onDragEnd = (result, columns, moveCard, socket) => {
       target_column_id: destination.droppableId,
 
       source_row_index: source.index,
-      source_column_id: source.droppableId
+      source_column_id: source.droppableId,
     },
-    res => {
+    (res) => {
       if (!res.status) {
         moveCard(
           card,
@@ -56,13 +56,16 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const maxLimit = prompt("Type max tasks limit: ");
   socket.emit(
     "create-column",
-    { 
-      project_id: '5e850799c360416dbc1c6305',
-      name: newName, 
+    {
+      project_id: "5e877170c2386013906d7421",
+      name: newName,
       board_index: columns.length,
       max_tasks: maxLimit,
+      user: "Jacek",
+      row_index: 0,
     },
-    res => {
+    (res) => {
+      console.log(res);
       if (res.status) {
         addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
         setColumns([
@@ -72,8 +75,10 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
             name: newName,
             max_tasks: maxLimit,
             items: [],
-            board_index: columns.length
-          }
+            board_index: columns.length,
+            user: res.payload.user,
+            row_index: res.payload.row_index,
+          },
         ]);
       } else {
         alert("Error: server returned false status");
@@ -93,24 +98,41 @@ const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
     </button>
   );
 };
-const Columns = ({ columns }) => {
+const Columns = ({ columns, users }) => {
   const { socket, moveCard, addColumn, setColumns } = useContext(GlobalContext);
-
   return (
     <DragDropContext
-      onDragEnd={result => onDragEnd(result, columns, moveCard, socket)}
+      onDragEnd={(result) => onDragEnd(result, columns, moveCard, socket)}
     >
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {users.map((user) => (
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {user.name}
+            </div>
+
+            {columns
+              .sort((a, b) => a.board_index - b.board_index)
+              .map((column) => (
+                <div>
+                  <Column column={column} />
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
       <AddColumnBtn
         columnsItems={columns}
         addColumnFunc={addColumn}
         socket={socket}
         setColumns={setColumns}
       ></AddColumnBtn>
-      {columns
-        .sort((a, b) => a.board_index - b.board_index)
-        .map(column => (
-          <Column column={column} />
-        ))}
     </DragDropContext>
   );
 };
