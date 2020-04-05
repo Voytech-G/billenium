@@ -1,5 +1,4 @@
 const TaskController = require('../controller/TaskController')
-const ConnectionsService = require('../service/ConnectionsService') 
 const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
 const AuthenticationController = require('../controller/AuthenticationController')
@@ -7,33 +6,23 @@ const AuthenticationService = require('../service/AuthenticationService')
 
 class ConnectionsHandler {
     /**
-     * ConnectionsHandler constructor
-     */
-    constructor() {
-        this.connectionsService = new ConnectionsService()
-    }
-
-    /**
      * Setup a socket.io connection, register events
      * 
      * @param {Object} socket
      * @return {void} 
      */
-    async setupConnection(socket) {
+    static async setupConnection(socket) {
         console.log(`Socket of ID: ${socket.id} has just connected`);
-        this.addConnection(socket)
         
         // method run every incoming event
-        socket.use(async (payload, next) => {
-            const eventPayload = payload[1]
+        socket.use((payload, next) => {
+            const authorized = AuthenticationService.authenticateIncomingEvent(payload, next)
 
-            try {
-                await AuthenticationService.authenticate(eventPayload)
-
-                next()
-            } catch (exception) {
-                return next(new Error(`Authentication failed: ${exception.message}`))
+            if (!authorized) {
+                return next()
             }
+
+            next()
         })
 
         socket.on('authenticate', async (payload, callback) => {
@@ -130,21 +119,6 @@ class ConnectionsHandler {
             ColumnController.getOne(payload, callback)
         })
     }
-
-    /**
-     * Register new connection
-     * 
-     * @param {Object} socket 
-     * @return {void}
-     */
-    addConnection(socket) {
-        // add new socket connection
-        this.connectionsService.addConnection(socket)
-
-        this.connectionsService.showConnections()
-
-        return
-    }
 }
 
-module.exports = new ConnectionsHandler()
+module.exports = ConnectionsHandler

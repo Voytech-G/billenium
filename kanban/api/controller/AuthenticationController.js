@@ -3,11 +3,19 @@ const AuthenticationService = require('../service/AuthenticationService')
 const UserService = require('../service/UserService')
 
 class AuthenticationController {
+    /**
+     * Authenticate session
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback
+     * @return {void} 
+     */
     static async authenticate(payload, callback) {
         try {
             AuthenticationValidator.validateAuthenticateRequest(payload)
 
-            const response = await AuthenticationService.authenticate(payload)
+            const token = payload.token
+            const response = await AuthenticationService.authenticate(token)
 
             callback({
                 status: true,

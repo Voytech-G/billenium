@@ -155,10 +155,6 @@ window.onload = (function() {
     }, response => {
         console.log(response)
     })
-
-    socket.on('error', response => {
-        console.log(response)
-    })
     
     const handleGetAllResponse = response => { 
         console.log(response)

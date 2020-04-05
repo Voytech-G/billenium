@@ -1,19 +1,47 @@
+const AuthenticationValidator = require('../validation/authentication/AuthenticationValidator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const appConfig = require('../config/app')
 
 class AuthenticationService {
     /**
+     * Authenticate incoming socket io event
+     * 
+     * @param {Object} payload 
+     * @param {Function} next
+     * @return {Boolean}
+     */
+    static async authenticateIncomingEvent(payload) {
+        // payload[0] is the event name, payload[1] is the actual data carried in the event, payload[2] is the callback
+        const eventPayload = payload[1]
+        const callback = payload[2]
+        
+        try {
+            AuthenticationValidator.validateAuthenticateRequest(eventPayload)
+        
+            const token = eventPayload.token
+            await AuthenticationService.authenticate(token)
+
+            return true
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `Authentication failed: ${exception.message}`,
+            })
+
+            return false
+        }
+    }
+
+    /**
      * Authenticate user.
      * 
      * Check given authentication token, check its validity, return data about authenticated user
      * 
-     * @param {Object} payload
+     * @param {String} token
      * @return {Object} 
      */
-    static async authenticate(payload) {
-        const token = payload.token
-    
+    static async authenticate(token) {
         return await this.getAuthorizationTokenData(token)
     }
 
