@@ -119,6 +119,7 @@ const Columns = ({ columns, users }) => {
 
             {columns
               .sort((a, b) => a.board_index - b.board_index)
+              .filter((column) => column.user == user.name)
               .map((column) => (
                 <div>
                   <Column column={column} />

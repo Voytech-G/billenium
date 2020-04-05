@@ -15,7 +15,6 @@ const App = () => {
         project_id: "5e877170c2386013906d7421",
       },
       (data) => {
-        console.log(data);
         const columnsWithItems = data.payload.columns.map((column) => ({
           id: column._id,
           name: column.name,
