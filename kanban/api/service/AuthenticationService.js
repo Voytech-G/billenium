@@ -5,6 +5,19 @@ const appConfig = require('../config/app')
 
 class AuthenticationService {
     /**
+     * Select fields from decoded JWT token data that will be sent in response to authenticate request
+     * 
+     * @param {Object} tokenData 
+     * @return {Object}
+     */
+    static getAuthenticationResponseFromTokenData(tokenData) {
+        return {
+            username: tokenData.username,
+            user_type: tokenData.user_type,
+        }
+    }
+
+    /**
      * Authenticate incoming socket io event
      * 
      * @param {Object} payload 

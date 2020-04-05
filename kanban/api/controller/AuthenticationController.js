@@ -1,25 +1,38 @@
 const AuthenticationValidator = require('../validation/authentication/AuthenticationValidator')
 const AuthenticationService = require('../service/AuthenticationService')
+const TokenValidator = require('../validation/token/TokenValidator')
 const UserService = require('../service/UserService')
 
 class AuthenticationController {
     /**
      * Authenticate session
      * 
+     * @param {Object} socket
      * @param {Object} payload 
      * @param {Function} callback
      * @return {void} 
      */
-    static async authenticate(payload, callback) {
+    static async authenticate(socket, payload, callback) {
         try {
+            // validate fields in request
             AuthenticationValidator.validateAuthenticateRequest(payload)
 
+            // decode received token, validate it
             const token = payload.token
-            const response = await AuthenticationService.authenticate(token)
+            const tokenData = await AuthenticationService.authenticate(token)
+
+            // check if decoded token has valid data
+            TokenValidator.validateDecodedData(tokenData)
+
+            // set socket session data
+            socket.session_data = tokenData
+
+            // select fields from token data that will be sent back to the user
+            const response = AuthenticationService.getAuthenticationResponseFromTokenData(tokenData)
 
             callback({
                 status: true,
-                message: `Successfully authorized`,
+                message: `Successfully authenticated`,
                 payload: response,
             })
 
@@ -27,7 +40,7 @@ class AuthenticationController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Authorization failed: ${exception.message}`,
+                message: `Authentication failed: ${exception.message}`,
             })
 
             return

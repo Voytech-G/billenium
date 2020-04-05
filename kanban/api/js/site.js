@@ -145,7 +145,7 @@ window.onload = (function() {
     signUpButton.addEventListener('click', handleSignUp)
     
     const SERVER_URL = 'http://localhost:4000'
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.wPv6iahI_o8jl3XZzxieDhZJrEMFCfeDTJg7l3cRc90'
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pY2hhbCIsInVzZXJfdHlwZSI6InJlZ3VsYXIiLCJpYXQiOjI1MjUyNTI1fQ.rZ9Ms4Hx1TRpSqZ5ozJq-cMfJjY0-tV5ZIie0sJmmYk'
     let socket = io.connect(SERVER_URL, {
         // query: { token }
     })
@@ -154,6 +154,10 @@ window.onload = (function() {
         token,
     }, response => {
         console.log(response)
+    })
+
+    socket.on('error', error => {
+        console.log(error)
     })
     
     const handleGetAllResponse = response => { 

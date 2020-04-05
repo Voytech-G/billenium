@@ -26,8 +26,8 @@ class ConnectionsHandler {
         })
 
         socket.on('authenticate', async (payload, callback) => {
-            AuthenticationController.authenticate(payload, callback)
-            
+            AuthenticationController.authenticate(socket, payload, callback)
+
             return
         })
 
