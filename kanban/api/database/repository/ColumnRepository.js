@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const Column = require("../model/Column");
-const columnConfig = require("../../config/column");
+const mongoose = require("mongoose")
+const Column = require("../model/Column")
+const columnConfig = require("../../config/column")
 
 class ColumnRepository {
   /**
@@ -9,7 +9,7 @@ class ColumnRepository {
    * @return {Array}
    */
   static async findAll() {
-    return await Column.find({});
+    return await Column.find({})
   }
 
   /**
@@ -19,7 +19,7 @@ class ColumnRepository {
    * @return {void}
    */
   static async findById(columnId) {
-    return await Column.findById(columnId);
+    return await Column.findById(columnId)
   }
 
   /**
@@ -29,17 +29,17 @@ class ColumnRepository {
    * @return {void}
    */
   static async findByIdAndPopulate(columnId, populateFields) {
-    let column = await Column.findById(columnId);
+    let column = await Column.findById(columnId)
 
     if (column == null) {
       throw new Error(
         "Failed to populate the column, found no column of given ID"
-      );
+      )
     }
 
     // need to call execPopulate() method as populating previously retrieved document needs
     // that method to get called
-    return await column.populate(populateFields).execPopulate();
+    return await column.populate(populateFields).execPopulate()
   }
 
   /**
@@ -67,9 +67,9 @@ class ColumnRepository {
       project: projectId,
       user: userName,
       row_index: rowIndex,
-    });
+    })
 
-    return await newColumn.save();
+    return await newColumn.save()
   }
 
   /**
@@ -79,7 +79,7 @@ class ColumnRepository {
    * @return {Object}
    */
   static async findManyByFilter(filter) {
-    return await Column.find(filter);
+    return await Column.find(filter)
   }
 
   /**
@@ -90,7 +90,7 @@ class ColumnRepository {
    * @return {Object}
    */
   static async findManyByFilterAndUpdate(filter, update) {
-    return await Column.updateMany(filter, update);
+    return await Column.updateMany(filter, update)
   }
 
   /**
@@ -104,7 +104,7 @@ class ColumnRepository {
     return await Column.findOneAndUpdate(filter, update, {
       new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
       useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-    });
+    })
   }
 
   /**
@@ -114,10 +114,10 @@ class ColumnRepository {
    * @return {Object} // removed column data
    */
   static async findByIdAndRemove(columnId) {
-    const column = await Column.findById(columnId);
+    const column = await Column.findById(columnId)
 
-    return await column.remove();
+    return await column.remove()
   }
 }
 
-module.exports = ColumnRepository;
+module.exports = ColumnRepository
