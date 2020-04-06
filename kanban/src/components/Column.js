@@ -77,7 +77,8 @@ const updateColumn = (
   columnName,
   boardIndex,
   maxTasks,
-  btnName
+  btnName,
+  columns
 ) => {
   if (btnName == "name") {
     const new_name = prompt("Type new column name: ", columnName);
@@ -92,6 +93,16 @@ const updateColumn = (
       (res) => {
         if (res.status) {
           editColumn(columnId, new_name, boardIndex, maxTasks);
+          columns
+            .filter((column) => column.board_index == boardIndex)
+            .map((column) =>
+              socket.emit("update-column", {
+                column_id: column.id,
+                board_index: column.board_index,
+                name: new_name,
+                max_tasks: maxTasks,
+              })
+            );
         } else {
           alert("Error: server returned false status");
         }
@@ -110,6 +121,16 @@ const updateColumn = (
       (res) => {
         if (res.status) {
           editColumn(columnId, columnName, boardIndex, new_maxTasks);
+          columns
+            .filter((column) => column.board_index == boardIndex)
+            .map((column) =>
+              socket.emit("update-column", {
+                column_id: column.id,
+                board_index: column.board_index,
+                name: columnName,
+                max_tasks: new_maxTasks,
+              })
+            );
         } else {
           alert("Error: server returned false status");
         }
@@ -125,6 +146,7 @@ const ChangeColumnNameBtn = ({
   boardIndex,
   maxTasks,
   btnName,
+  columns,
 }) => {
   return (
     <button
@@ -136,7 +158,8 @@ const ChangeColumnNameBtn = ({
           columnName,
           boardIndex,
           maxTasks,
-          btnName
+          btnName,
+          columns
         )
       }
       style={{ display: "flex", margin: "0 auto", height: "40px" }}
@@ -153,6 +176,7 @@ const ChangeMaxLimitBtn = ({
   boardIndex,
   maxTasks,
   btnName,
+  columns,
 }) => {
   return (
     <button
@@ -164,7 +188,8 @@ const ChangeMaxLimitBtn = ({
           columnName,
           boardIndex,
           maxTasks,
-          btnName
+          btnName,
+          columns
         )
       }
       style={{ display: "flex", margin: "0 auto", height: "40px" }}
@@ -173,11 +198,16 @@ const ChangeMaxLimitBtn = ({
     </button>
   );
 };
-const Column = ({ column, user }) => {
+const Column = ({ column, columns }) => {
   const { id, name, items, max_tasks, board_index, col_row_index } = column;
-  const { socket, addCard, setColumns, removeColumn, editColumn } = useContext(
-    GlobalContext
-  );
+  const {
+    socket,
+    addCard,
+    setColumns,
+    removeColumn,
+    editColumn,
+    users,
+  } = useContext(GlobalContext);
   return (
     <div>
       <div
@@ -189,38 +219,49 @@ const Column = ({ column, user }) => {
         }}
         key={id}
       >
-        <div style={{ display: "flex" }} className={`row${col_row_index}`}>
-          <ChangeMaxLimitBtn
-            editColumn={editColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-            btnName={"limit"}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            borderBottom: "5px solid black",
+          }}
+        >
+          <div style={{ display: "flex" }} className={`row${col_row_index}`}>
+            <ChangeMaxLimitBtn
+              editColumn={editColumn}
+              socket={socket}
+              columnId={id}
+              boardIndex={board_index}
+              btnName={"limit"}
+              maxTasks={max_tasks}
+              columnName={name}
+              columns={columns}
+            ></ChangeMaxLimitBtn>
+            <ChangeColumnNameBtn
+              editColumn={editColumn}
+              socket={socket}
+              columnId={id}
+              boardIndex={board_index}
+              btnName={"name"}
+              maxTasks={max_tasks}
+              columnName={name}
+              columns={columns}
+            ></ChangeColumnNameBtn>
+            <DeleteColumnBtn
+              removeColumn={removeColumn}
+              socket={socket}
+              columnId={id}
+              boardIndex={board_index}
+            ></DeleteColumnBtn>
+          </div>
+          <h3 className={`row${col_row_index}`}>{name}</h3>
+          <Amount
+            rowIndex={col_row_index}
+            amount={items.length}
             maxTasks={max_tasks}
-            columnName={name}
-          ></ChangeMaxLimitBtn>
-          <ChangeColumnNameBtn
-            editColumn={editColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-            btnName={"name"}
-            maxTasks={max_tasks}
-            columnName={name}
-          ></ChangeColumnNameBtn>
-          <DeleteColumnBtn
-            removeColumn={removeColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-          ></DeleteColumnBtn>
+          ></Amount>
         </div>
-        <h3 className={`row${col_row_index}`}>{name}</h3>
-        <Amount
-          rowIndex={col_row_index}
-          amount={items.length}
-          maxTasks={max_tasks}
-        ></Amount>
         <div
           style={{
             margin: 8,

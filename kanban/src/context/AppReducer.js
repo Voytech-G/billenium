@@ -133,7 +133,7 @@ export default (state, action) => {
         ...state,
         columns: [
           ...state.columns.map((column) =>
-            column.id === action.payload.column.id
+            column.board_index === action.payload.column.board_index
               ? {
                   ...column,
                   name: action.payload.column.name,

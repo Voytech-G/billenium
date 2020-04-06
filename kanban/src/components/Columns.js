@@ -106,12 +106,13 @@ const Columns = ({ columns, users }) => {
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
         {users.map((user) => (
-          <div style={{ display: "flex", borderTop: "5px solid black" }}>
+          <div style={{ display: "flex", borderTop: "2px solid black" }}>
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                width: "100px",
               }}
             >
               {user.name}
@@ -121,8 +122,12 @@ const Columns = ({ columns, users }) => {
               .sort((a, b) => a.board_index - b.board_index)
               .filter((column) => column.user == user.name)
               .map((column) => (
-                <div>
-                  <Column column={column} />
+                <div
+                  style={{
+                    borderLeft: "5px solid green",
+                  }}
+                >
+                  <Column column={column} columns={columns} />
                 </div>
               ))}
           </div>
