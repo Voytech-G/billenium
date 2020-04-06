@@ -127,7 +127,7 @@ const Columns = ({ columns, users }) => {
                     borderLeft: "5px solid green",
                   }}
                 >
-                  <Column column={column} columns={columns} />
+                  <Column column={column} />
                 </div>
               ))}
           </div>

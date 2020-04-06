@@ -37,15 +37,25 @@ const handleClick_addCard = (
     }
   );
 };
-const Amount = ({ amount, maxTasks, rowIndex, columns, boardIndex }) => {
-  let actualAmount = columns.map((column) => console.log(column));
-  console.log(columns);
+const Amount = ({ amount, maxTasks, rowIndex, column, columns }) => {
+  let actualAmount = 0;
+
+  let columnElements = columns.filter(
+    (columnItem) => columnItem.board_index === column.board_index
+  );
+
+  [...columnElements].forEach(
+    (columnElement) => (actualAmount += columnElement.items.length)
+  );
+
   return (
     <h5
       style={{ margin: "0px 0 0 5px" }}
-      className={`${amount > maxTasks ? "taskLimit" : false} row${rowIndex}`}
+      className={`${
+        actualAmount > maxTasks ? "taskLimit" : false
+      } row${rowIndex}`}
     >
-      {amount}/{maxTasks}
+      {actualAmount}/{maxTasks}
     </h5>
   );
 };
@@ -200,8 +210,9 @@ const ChangeMaxLimitBtn = ({
     </button>
   );
 };
-const Column = ({ column, columns }) => {
+const Column = ({ column }) => {
   const { id, name, items, max_tasks, board_index, col_row_index } = column;
+  const { columns } = useContext(GlobalContext);
   const {
     socket,
     addCard,
@@ -262,6 +273,7 @@ const Column = ({ column, columns }) => {
             rowIndex={col_row_index}
             amount={items.length}
             maxTasks={max_tasks}
+            column={column}
             columns={columns}
             boardIndex={board_index}
           ></Amount>
