@@ -10,11 +10,13 @@ window.onload = (function() {
     let updateProjectButton = document.querySelector('.update-project-button')
     let removeProjectButton = document.querySelector('.remove-project-button')
     let signUpButton = document.querySelector('.sign-up-button')
+    let signInButton = document.querySelector('.sign-in-button')
 
     const handleUpdate = () => {
         socket.emit('update-task', {
             task_id: '5e760791c3dd0d47a850fa70',
             content: '2card updated xx',
+            token,
         }, handleUpdateResponse)
 
         return
@@ -27,6 +29,7 @@ window.onload = (function() {
             target_column_id: '5e760791c3dd0d47a850fa70',
             source_row_index: 2,
             source_column_id: '5e760791c3dd0d47a850fa70',
+            token,
         }, handleMoveResponse)
 
         return
@@ -37,6 +40,7 @@ window.onload = (function() {
             column_id: '5e86275b61fac5245c8c5f0c',
             content: '3task',
             row_index: 2,
+            token,
         }, handleAddResponse)
 
         return
@@ -47,6 +51,7 @@ window.onload = (function() {
             task_id: '5e8508f58dc804281c58f669',
             source_row_index: 2,
             source_column_id: '5e8507b3c360416dbc1c6306',
+            token,
         }, handleRemoveResponse)
 
         return
@@ -58,6 +63,7 @@ window.onload = (function() {
         //     name: 'col1 update update update pls',
         //     board_index: 3,
         //     max_tasks: 15,
+        //     token,
         // }, handleTestResponse)
 
         // socket.emit('create-column', {
@@ -65,14 +71,17 @@ window.onload = (function() {
         //     name: 'col1',
         //     board_index: 0,
         //     max_tasks: 5,
+        //     token,
         // }, handleTestResponse)
 
         socket.emit('get-column', {
             column_id: '5e86275b61fac5245c8c5f0c',
+            token,
         }, handleTestResponse)
 
         // socket.emit('get-task', {
         //     task_id: '5e80fa3b5df30509884abe7a',
+        //     token,
         // }, handleTestResponse)
 
         return
@@ -89,7 +98,8 @@ window.onload = (function() {
 
     const handleRemoveColumn = () => {
         socket.emit('remove-column', {
-            column_id: '5e85060e78841b24ccc2fd6a'
+            column_id: '5e85060e78841b24ccc2fd6a',
+            token,
         }, handleRemoveColumnResponse)
     }
 
@@ -97,6 +107,7 @@ window.onload = (function() {
         socket.emit('create-project', {
             project_name: 'Project 3 niook',
             total_budget: '55600',
+            token,
         }, handleAddProjectResponse)
     }
 
@@ -106,14 +117,27 @@ window.onload = (function() {
             project_name: 'Test update 2',
             used_budget: 150,
             total_budget: 500,
-
+            token,
         }, handleUpdateProjectResponse)
     }
 
     const handleRemoveProject = () => {
         socket.emit('remove-project', {
             project_id: '5e850799c360416dbc1c6305',
+            token,
         }, handleRemoveProjectReponse)
+    }
+
+    const handleSignIn = () => {
+        const username = document.querySelector('.username-field-login').value
+        const pin = document.querySelector('.pin-field-login').value
+
+        socket.emit('sign-in', {
+            username,
+            pin,
+        }, handleSignInResponse)
+
+        return
     }
 
     const handleSignUp = () => {
@@ -143,11 +167,14 @@ window.onload = (function() {
     updateProjectButton.addEventListener('click', handleUpdateProject)
     removeProjectButton.addEventListener('click', handleRemoveProject)
     signUpButton.addEventListener('click', handleSignUp)
+    signInButton.addEventListener('click', handleSignIn)
     
     const SERVER_URL = 'http://localhost:4000'
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pY2hhbCIsInVzZXJfdHlwZSI6InJlZ3VsYXIiLCJpYXQiOjI1MjUyNTI1fQ.rZ9Ms4Hx1TRpSqZ5ozJq-cMfJjY0-tV5ZIie0sJmmYk'
+    // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pY2hhbCIsInVzZXJfdHlwZSI6InJlZ3VsYXIiLCJpYXQiOjI1MjUyNTI1fQ.rZ9Ms4Hx1TRpSqZ5ozJq-cMfJjY0-tV5ZIie0sJmmYk'
+    let token = ''
+    
     let socket = io.connect(SERVER_URL, {
-        // query: { token }
+        query: { token }
     })
 
     socket.emit('authenticate', {
@@ -201,6 +228,10 @@ window.onload = (function() {
     }
 
     const handleSignUpResponse = response => {
+        console.log(response)
+    }
+
+    const handleSignInResponse = response => {
         console.log(response)
     }
 })
