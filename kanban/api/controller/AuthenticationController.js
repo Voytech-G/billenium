@@ -1,6 +1,5 @@
 const AuthenticationValidator = require('../validation/authentication/AuthenticationValidator')
 const AuthenticationService = require('../service/AuthenticationService')
-const TokenValidator = require('../validation/token/TokenValidator')
 const UserService = require('../service/UserService')
 
 class AuthenticationController {
@@ -19,13 +18,7 @@ class AuthenticationController {
 
             // decode received token, validate it
             const token = payload.token
-            const tokenData = await AuthenticationService.authenticate(token)
-
-            // check if decoded token has valid data
-            TokenValidator.validateDecodedData(tokenData)
-
-            // set socket session data
-            socket.session_data = tokenData
+            const tokenData = await AuthenticationService.authenticate(socket, token)
 
             // select fields from token data that will be sent back to the user
             const response = AuthenticationService.getAuthenticationResponseFromTokenData(tokenData)

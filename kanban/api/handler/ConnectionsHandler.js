@@ -16,7 +16,9 @@ class ConnectionsHandler {
         
         // method run every incoming event
         socket.use((payload, next) => {
-            const authorized = AuthenticationService.authenticateIncomingEvent(payload, next)
+            console.log(socket.authenticated ? `Authenticated. Hello, ${socket.session_data.username}` : 'Not authenticated.')
+            
+            const authorized = AuthenticationService.authenticateIncomingEvent(socket, payload)
 
             if (!authorized) {
                 return next()
@@ -33,6 +35,12 @@ class ConnectionsHandler {
 
         socket.on('sign-up', async (payload, callback) => {
             AuthenticationController.signUp(payload, callback)
+
+            return
+        })
+
+        socket.on('sign-in', async (payload, callback) => {
+            AuthenticationController.signIn(payload, callback)
 
             return
         })
