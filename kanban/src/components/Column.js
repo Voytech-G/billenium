@@ -60,17 +60,18 @@ const Amount = ({ amount, maxTasks, rowIndex, column, columns }) => {
   );
 };
 const deleteColumn = (removeColumn, socket, id, boardIndex) => {
-  socket.emit(
-    "remove-column",
-    { column_id: id, board_index: boardIndex },
-    (res) => {
-      if (res.status) {
-        removeColumn(id, boardIndex);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  console.log("test usuwania kolumn");
+  // socket.emit(
+  //   "remove-column",
+  //   { column_id: id, board_index: boardIndex },
+  //   (res) => {
+  //     if (res.status) {
+  //       removeColumn(id, boardIndex);
+  //     } else {
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 const DeleteColumnBtn = ({ removeColumn, socket, columnId, boardIndex }) => {
   return (

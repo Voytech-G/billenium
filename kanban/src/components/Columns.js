@@ -54,37 +54,38 @@ const onDragEnd = (result, columns, moveCard, socket) => {
 const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const newName = prompt("Type column name: ");
   const maxLimit = prompt("Type max tasks limit: ");
-  socket.emit(
-    "create-column",
-    {
-      project_id: "5e877170c2386013906d7421",
-      name: newName,
-      board_index: columns.length,
-      max_tasks: maxLimit,
-      user: "Jacek",
-      col_row_index: 0,
-    },
-    (res) => {
-      console.log(res);
-      if (res.status) {
-        addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
-        setColumns([
-          ...columns,
-          {
-            id: res.payload._id,
-            name: newName,
-            max_tasks: maxLimit,
-            items: [],
-            board_index: columns.length,
-            user: res.payload.user,
-            col_row_index: res.payload.col_row_index,
-          },
-        ]);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  console.log("Test dodawania");
+  // socket.emit(
+  //   "create-column",
+  //   {
+  //     project_id: "5e877170c2386013906d7421",
+  //     name: newName,
+  //     board_index: columns.length,
+  //     max_tasks: maxLimit,
+  //     user: "Jacek",
+  //     col_row_index: 0,
+  //   },
+  //   (res) => {
+  //     console.log(res);
+  //     if (res.status) {
+  //       addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
+  //       setColumns([
+  //         ...columns,
+  //         {
+  //           id: res.payload._id,
+  //           name: newName,
+  //           max_tasks: maxLimit,
+  //           items: [],
+  //           board_index: columns.length,
+  //           user: res.payload.user,
+  //           col_row_index: res.payload.col_row_index,
+  //         },
+  //       ]);
+  //     } else {
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
   return (
