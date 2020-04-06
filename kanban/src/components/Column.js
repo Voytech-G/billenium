@@ -37,7 +37,9 @@ const handleClick_addCard = (
     }
   );
 };
-const Amount = ({ amount, maxTasks, rowIndex }) => {
+const Amount = ({ amount, maxTasks, rowIndex, columns, boardIndex }) => {
+  let actualAmount = columns.map((column) => console.log(column));
+  console.log(columns);
   return (
     <h5
       style={{ margin: "0px 0 0 5px" }}
@@ -260,6 +262,8 @@ const Column = ({ column, columns }) => {
             rowIndex={col_row_index}
             amount={items.length}
             maxTasks={max_tasks}
+            columns={columns}
+            boardIndex={board_index}
           ></Amount>
         </div>
         <div
