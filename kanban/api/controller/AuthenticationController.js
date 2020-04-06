@@ -69,6 +69,35 @@ class AuthenticationController {
             return
         }
     }
+
+    /**
+     * Sign in, return JWT token
+     * 
+     * @param {Object} payload 
+     * @param {Function} callback 
+     */
+    static async signIn(payload, callback) {
+        try {
+            AuthenticationValidator.validateSignInRequest(payload)
+
+            const token = await AuthenticationService.signIn(payload)
+
+            callback({
+                status: true,
+                message: 'Successfully signed in',
+                payload: token,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `An error occured while signing in: ${exception.message}`
+            })
+
+            return
+        }
+    }
 }
 
 module.exports = AuthenticationController

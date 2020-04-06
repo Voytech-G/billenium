@@ -136,6 +136,21 @@ class AuthenticationService {
     static async getHash(plainText, saltRounds) {
         return await bcrypt.hash(plainText, saltRounds)
     }
+
+    /**
+     * Sign in
+     * 
+     * @param {Object} payload
+     * @return {String} 
+     */
+    static async signIn(payload) {
+        const username = payload.username
+        const pin = payload.pin
+
+        console.log(`signing in with username: ${username} and PIN: ${pin}`)
+
+        return ''
+    }
 }
 
 module.exports = AuthenticationService

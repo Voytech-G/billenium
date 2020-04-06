@@ -1,5 +1,6 @@
 const userConfig = require('../../config/user')
 const ValidatorAbstract = require('../ValidatorAbstract')
+const TokenValidator = require('../token/TokenValidator')
 
 class AuthenticationValidator extends ValidatorAbstract {
     /**
@@ -9,9 +10,7 @@ class AuthenticationValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateAuthenticateRequest(payload) {
-        if (payload.token == null || payload.token == "") {
-            throw new Error('Authentication token is required')
-        }
+        TokenValidator.validateToken(payload.token)
 
         return
     }
@@ -23,29 +22,9 @@ class AuthenticationValidator extends ValidatorAbstract {
      * @return {void} 
      */
     static validateSignUpRequest(payload) {
-        if (payload.username == null || payload.username == "") {
-            throw new Error('Username is required')
-        }
-        
-        const usernameLength = payload.username.length
+        this.validateUsername(payload.username)
 
-        if (usernameLength < userConfig.validation.minUsernameLength || usernameLength > userConfig.validation.maxUsernameLength) {
-            throw new Error('Username length is invalid')
-        }
-
-        if (payload.pin == null || payload.pin == "") {
-            throw new Error('PIN is required')
-        }
-
-        const pinLength = payload.pin.length
-
-        if (pinLength != userConfig.validation.pinLength) {
-            throw new Error('Invalid PIN length')
-        }
-
-        if (isNaN(payload.pin)) {
-            throw new Error('PIN should be a number')
-        }
+        this.validatePIN(payload.pin)
 
         if (payload.first_name == null || payload.first_name == "") {
             throw new Error('First name is required')
@@ -72,6 +51,64 @@ class AuthenticationValidator extends ValidatorAbstract {
         if (userType == null || userType == "") {
             throw new Error('User type is required')
         }
+
+        return
+    }
+
+    /**
+     * Validate username format
+     * 
+     * @param {String} username
+     * @return {void} 
+     */
+    static validateUsername(username) {
+        if (username == null || username == "") {
+            throw new Error('Username is required')
+        }
+        
+        const usernameLength = username.length
+
+        if (usernameLength < userConfig.validation.minUsernameLength || usernameLength > userConfig.validation.maxUsernameLength) {
+            throw new Error('Username length is invalid')
+        }
+
+        return
+    }
+
+    /**
+     * Validate authentication PIN code
+     * 
+     * @param {String} pin
+     * @return {void} 
+     */
+    static validatePIN(pin) {
+        if (pin == null || pin == "") {
+            throw new Error('PIN is required')
+        }
+
+        const pinLength = pin.length
+
+        if (pinLength != userConfig.validation.pinLength) {
+            throw new Error('Invalid PIN length')
+        }
+
+        if (isNaN(pin)) {
+            throw new Error('PIN should be a number')
+        }
+
+        return
+    }
+
+    /**
+     * Validate sign in request data
+     * 
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static validateSignInRequest(payload) {
+        this.validateUsername(payload.username)
+
+        this.validatePIN(payload.pin)
 
         return
     }
