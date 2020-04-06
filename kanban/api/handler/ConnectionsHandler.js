@@ -3,6 +3,7 @@ const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
 const AuthenticationController = require('../controller/AuthenticationController')
 const AuthenticationService = require('../service/AuthenticationService')
+const AuthorizationService = require('../service/AuthorizationService')
 
 class ConnectionsHandler {
     /**
@@ -13,18 +14,13 @@ class ConnectionsHandler {
      */
     static async setupConnection(socket) {
         console.log(`Socket of ID: ${socket.id} has just connected`);
-        
-        // method run every incoming event
+
         socket.use((payload, next) => {
-            console.log(socket.authenticated ? `Authenticated. Hello, ${socket.session_data.username}` : 'Not authenticated.')
-            
-            const authorized = AuthenticationService.authenticateIncomingEvent(socket, payload)
+            AuthenticationService.authenticateEvent(socket, payload, next)
+        })
 
-            if (!authorized) {
-                return next()
-            }
-
-            next()
+        socket.use((payload, next) => {
+            AuthorizationService.authorizeEvent(socket, payload, next)
         })
 
         socket.on('authenticate', async (payload, callback) => {

@@ -5,6 +5,20 @@ const jwt = require('jsonwebtoken')
 const appConfig = require('../config/app')
 
 class AuthenticationService {
+    // TODO think about a better place for those types
+    // list of events that will not be authenticated
+    static AUTHENTICATION_EXCLUDED_EVENTS = ['sign-in', 'sign-up', 'authenticate']
+
+    /**
+     * Return true, if given event type is excluded from authentication
+     * 
+     * @param {String} eventType
+     * @return {Boolean} 
+     */
+    static isEventTypeExcludedFromAuthentication(eventType) {
+        return this.AUTHENTICATION_EXCLUDED_EVENTS.includes(eventType)
+    }
+
     /**
      * Set authenticated socket data
      * 
@@ -17,6 +31,20 @@ class AuthenticationService {
         socket.session_data = data
 
         return
+    }
+
+    /**
+     * Check if socket is authenticated
+     * 
+     * @param {Object} socket
+     * @return {Boolean} 
+     */
+    static isSocketAuthenticated(socket) {
+        if (socket.authenticated == null) {
+            return false
+        }
+
+        return true
     }
 
     /**
@@ -47,32 +75,31 @@ class AuthenticationService {
     }
 
     /**
-     * Authenticate incoming socket io event
+     * Authenticate incoming event
      * 
      * @param {Object} payload 
-     * @param {Function} next
-     * @return {Boolean}
+     * @return {void}
      */
-    static async authenticateIncomingEvent(socket, payload) {
-        // payload[0] is the event name, payload[1] is the actual data carried in the event, payload[2] is the callback
-        const eventPayload = payload[1]
-        const callback = payload[2]
-        
-        try {
-            AuthenticationValidator.validateAuthenticateRequest(eventPayload)
-        
-            const token = eventPayload.token
-            await this.authenticate(socket, token)
+    static authenticateEvent(socket, payload, next) {
+        const eventType = payload[0]
 
-            return true
-        } catch (exception) {
-            callback({
-                status: false,
-                message: `Authentication failed: ${exception.message}`,
-            })
+        // if given event type is excluded from authentication stop
+        if (this.isEventTypeExcludedFromAuthentication(eventType)) {
+            next()
 
-            return false
+            return
         }
+
+        // if socket is authenticated
+        if (this.isSocketAuthenticated(socket)) {
+            next()
+
+            return
+        }
+
+        next(new Error('Socket not authenticated'))
+
+        return
     }
 
     /**
