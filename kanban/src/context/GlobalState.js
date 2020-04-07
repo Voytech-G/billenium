@@ -65,7 +65,14 @@ export const GlobalProvider = ({ children }) => {
       },
     });
   }
-  function addColumn(columnId, newName, maxLimit, columnsItems) {
+  function addColumn(
+    columnId,
+    newName,
+    maxLimit,
+    columnsItems,
+    userName,
+    colRowIndex
+  ) {
     dispatch({
       type: "ADD_COLUMN",
       payload: {
@@ -75,6 +82,8 @@ export const GlobalProvider = ({ children }) => {
           board_index: columnsItems.length,
           items: [],
           max_tasks: parseInt(maxLimit),
+          col_row_index: colRowIndex,
+          user: userName,
         },
       },
     });

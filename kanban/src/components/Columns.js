@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-
+import uuid from "uuid/v4";
 import { GlobalContext } from "../context/GlobalState";
 
 import Column from "./Column";
@@ -51,17 +51,35 @@ const onDragEnd = (result, columns, moveCard, socket) => {
     }
   );
 };
-const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
+const addNewColumn = (columns, socket, addColumnFunc, setColumns, users) => {
   const newName = prompt("Type column name: ");
   const maxLimit = prompt("Type max tasks limit: ");
   console.log("Test dodawania");
+  let idcolumn;
+  users.map((user, idx) => {
+    idcolumn = uuid();
+    addColumnFunc(idcolumn, newName, maxLimit, columns.length, user.name, idx);
+    setColumns([
+      ...columns,
+      {
+        id: idcolumn,
+        name: newName,
+        max_tasks: maxLimit,
+        items: [],
+        board_index: columns.length / users.length,
+        user: user.name,
+        col_row_index: idx,
+      },
+    ]);
+  });
+
   // socket.emit(
   //   "create-column",
   //   {
   //     project_id: "5e877170c2386013906d7421",
   //     name: newName,
   //     board_index: columns.length,
-  //     max_tasks: maxLimit,
+  //     max_tasks: parseInt(maxLimit),
   //     user: "Jacek",
   //     col_row_index: 0,
   //   },
@@ -87,11 +105,17 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   //   }
   // );
 };
-const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
+const AddColumnBtn = ({
+  columnsItems,
+  socket,
+  addColumnFunc,
+  setColumns,
+  users,
+}) => {
   return (
     <button
       onClick={() =>
-        addNewColumn(columnsItems, socket, addColumnFunc, setColumns)
+        addNewColumn(columnsItems, socket, addColumnFunc, setColumns, users)
       }
       style={{ height: "40px", marginTop: "85px" }}
     >
@@ -99,8 +123,11 @@ const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
     </button>
   );
 };
-const Columns = ({ columns, users }) => {
-  const { socket, moveCard, addColumn, setColumns } = useContext(GlobalContext);
+const Columns = ({ columns }) => {
+  const { socket, moveCard, addColumn, setColumns, users } = useContext(
+    GlobalContext
+  );
+
   return (
     <DragDropContext
       onDragEnd={(result) => onDragEnd(result, columns, moveCard, socket)}
@@ -139,6 +166,7 @@ const Columns = ({ columns, users }) => {
         addColumnFunc={addColumn}
         socket={socket}
         setColumns={setColumns}
+        users={users}
       ></AddColumnBtn>
     </DragDropContext>
   );
