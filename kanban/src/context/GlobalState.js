@@ -69,7 +69,7 @@ export const GlobalProvider = ({ children }) => {
     columnId,
     newName,
     maxLimit,
-    columnsItems,
+    columnsItemsLength,
     userName,
     colRowIndex
   ) {
@@ -79,7 +79,7 @@ export const GlobalProvider = ({ children }) => {
         column: {
           id: columnId,
           name: newName,
-          board_index: columnsItems.length,
+          board_index: columnsItemsLength,
           items: [],
           max_tasks: parseInt(maxLimit),
           col_row_index: colRowIndex,

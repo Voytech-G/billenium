@@ -58,19 +58,26 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns, users) => {
   let idcolumn;
   users.map((user, idx) => {
     idcolumn = uuid();
-    addColumnFunc(idcolumn, newName, maxLimit, columns.length, user.name, idx);
-    setColumns([
-      ...columns,
-      {
-        id: idcolumn,
-        name: newName,
-        max_tasks: maxLimit,
-        items: [],
-        board_index: columns.length / users.length,
-        user: user.name,
-        col_row_index: idx,
-      },
-    ]);
+    addColumnFunc(
+      idcolumn,
+      newName,
+      maxLimit,
+      columns.length / users.length,
+      user.name,
+      idx
+    );
+    // setColumns([
+    //   ...columns,
+    //   {
+    //     id: idcolumn,
+    //     name: newName,
+    //     max_tasks: maxLimit,
+    //     items: [],
+    //     board_index: columns.length / users.length,
+    //     user: user.name,
+    //     col_row_index: idx,
+    //   },
+    // ]);
   });
 
   // socket.emit(

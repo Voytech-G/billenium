@@ -80,7 +80,7 @@ export default (state, action) => {
     case "ADD_COLUMN":
       return {
         ...state,
-        columns: [...state.columns, action.payload.column].rearrangeColumns(),
+        columns: [...state.columns, action.payload.column],
       };
     case "REMOVE_CARD":
       return {
