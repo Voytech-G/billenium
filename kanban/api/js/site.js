@@ -10,6 +10,7 @@ window.onload = (function() {
     let updateProjectButton = document.querySelector('.update-project-button')
     let removeProjectButton = document.querySelector('.remove-project-button')
     let signUpButton = document.querySelector('.sign-up-button')
+    let signInButton = document.querySelector('.sign-in-button')
 
     const handleUpdate = () => {
         socket.emit('update-task', {
@@ -88,7 +89,7 @@ window.onload = (function() {
 
     const handleRemoveColumn = () => {
         socket.emit('remove-column', {
-            column_id: '5e85060e78841b24ccc2fd6a'
+            column_id: '5e85060e78841b24ccc2fd6a',
         }, handleRemoveColumnResponse)
     }
 
@@ -105,7 +106,6 @@ window.onload = (function() {
             project_name: 'Test update 2',
             used_budget: 150,
             total_budget: 500,
-
         }, handleUpdateProjectResponse)
     }
 
@@ -113,6 +113,18 @@ window.onload = (function() {
         socket.emit('remove-project', {
             project_id: '5e850799c360416dbc1c6305',
         }, handleRemoveProjectReponse)
+    }
+
+    const handleSignIn = () => {
+        const username = document.querySelector('.username-field-login').value
+        const pin = document.querySelector('.pin-field-login').value
+
+        socket.emit('sign-in', {
+            username,
+            pin,
+        }, handleSignInResponse)
+
+        return
     }
 
     const handleSignUp = () => {
@@ -142,9 +154,26 @@ window.onload = (function() {
     updateProjectButton.addEventListener('click', handleUpdateProject)
     removeProjectButton.addEventListener('click', handleRemoveProject)
     signUpButton.addEventListener('click', handleSignUp)
+    signInButton.addEventListener('click', handleSignIn)
     
     const SERVER_URL = 'http://localhost:4000'
-    let socket = io(SERVER_URL)
+    let token = localStorage.getItem('token')
+
+    console.log(token)
+    
+    let socket = io.connect(SERVER_URL, {
+        // query: { token }
+    })
+
+    socket.emit('authenticate', {
+        token,
+    }, response => {
+        console.log(response)
+    })
+
+    socket.on('error', error => {
+        console.log(error)
+    })
     
     const handleGetAllResponse = response => { 
         console.log(response)
@@ -188,5 +217,11 @@ window.onload = (function() {
 
     const handleSignUpResponse = response => {
         console.log(response)
+    }
+
+    const handleSignInResponse = response => {
+        const token = response.payload
+
+        localStorage.setItem('token', token)
     }
 })

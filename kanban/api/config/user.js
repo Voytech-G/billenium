@@ -8,7 +8,4 @@ module.exports = {
         maxLastNameLength: 15,
         minLastNameLength: 2,
     },
-    authentication: {
-        saltRounds: 10,
-    },
 }

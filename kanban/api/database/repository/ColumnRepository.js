@@ -105,6 +105,10 @@ class ColumnRepository {
     static async findByIdAndRemove(columnId) {
         const column = await Column.findById(columnId)
 
+        if (column == null) {
+            throw new Error('Found no column of given ID to remove.')
+        }
+
         return await column.remove()
     }
 }

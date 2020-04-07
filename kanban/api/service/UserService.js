@@ -1,7 +1,7 @@
 const UserRepository = require('../database/repository/UserRepository')
-const AuthenticationService = require('../service/AuthenticationService')
+const AuthorizationService = require('../service/AuthorizationService')
 const UserTypes = require('../database/dictionary/user/UserTypes')
-const userConfig = require('../config/user')
+const appConfig = require('../config/app')
 
 class UserService {
     /**
@@ -46,9 +46,9 @@ class UserService {
      * @return {String} 
      */
     static async getPinHash(pin) {
-        const saltRounds = userConfig.authentication.saltRounds
+        const saltRounds = appConfig.authentication.userPINHashSaltRounds
 
-        return await AuthenticationService.getHash(pin, saltRounds)
+        return await AuthorizationService.getHash(pin, saltRounds)
     }
 
     /**
