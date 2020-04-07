@@ -73,7 +73,7 @@ class TaskController {
         try {
             TaskValidator.validateUpdateRequest(payload)
 
-            const task = TaskService.updateTask(payload)
+            const task = await TaskService.updateTask(payload)
 
             callback({
                 status: true,

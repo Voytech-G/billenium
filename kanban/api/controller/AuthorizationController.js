@@ -1,8 +1,8 @@
-const AuthenticationValidator = require('../validation/authentication/AuthenticationValidator')
-const AuthenticationService = require('../service/AuthenticationService')
+const AuthorizationValidator = require('../validation/authorization/AuthorizationValidator')
+const AuthorizationService = require('../service/AuthorizationService')
 const UserService = require('../service/UserService')
 
-class AuthenticationController {
+class AuthorizationController {
     /**
      * Authenticate session
      * 
@@ -14,14 +14,14 @@ class AuthenticationController {
     static async authenticate(socket, payload, callback) {
         try {
             // validate fields in request
-            AuthenticationValidator.validateAuthenticateRequest(payload)
+            AuthorizationValidator.validateAuthenticateRequest(payload)
 
             // decode received token, validate it
             const token = payload.token
-            const tokenData = await AuthenticationService.authenticate(socket, token)
+            const tokenData = await AuthorizationService.authenticate(socket, token)
 
             // select fields from token data that will be sent back to the user
-            const response = AuthenticationService.getAuthenticationResponseFromTokenData(tokenData)
+            const response = AuthorizationService.getAuthenticationResponseFromTokenData(tokenData.data)
 
             callback({
                 status: true,
@@ -49,7 +49,7 @@ class AuthenticationController {
      */
     static async signUp(payload, callback) {
         try {
-            AuthenticationValidator.validateSignUpRequest(payload)
+            AuthorizationValidator.validateSignUpRequest(payload)
 
             const user = await UserService.createUser(payload)
 
@@ -73,14 +73,15 @@ class AuthenticationController {
     /**
      * Sign in, return JWT token
      * 
+     * @param {Object} socket
      * @param {Object} payload 
      * @param {Function} callback 
      */
-    static async signIn(payload, callback) {
+    static async signIn(socket, payload, callback) {
         try {
-            AuthenticationValidator.validateSignInRequest(payload)
+            AuthorizationValidator.validateSignInRequest(payload)
 
-            const token = await AuthenticationService.signIn(payload)
+            const token = await AuthorizationService.signIn(socket, payload)
 
             callback({
                 status: true,
@@ -100,4 +101,4 @@ class AuthenticationController {
     }
 }
 
-module.exports = AuthenticationController
+module.exports = AuthorizationController

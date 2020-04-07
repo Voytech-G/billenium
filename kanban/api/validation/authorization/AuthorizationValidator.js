@@ -2,7 +2,7 @@ const userConfig = require('../../config/user')
 const ValidatorAbstract = require('../ValidatorAbstract')
 const TokenValidator = require('../token/TokenValidator')
 
-class AuthenticationValidator extends ValidatorAbstract {
+class AuthorizationValidator extends ValidatorAbstract {
     /**
      * Validate authenticate request
      * 
@@ -112,6 +112,36 @@ class AuthenticationValidator extends ValidatorAbstract {
 
         return
     }
+
+    /**
+     * Validate if data put into socket session data contains valid fields
+     * 
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static validateCreateSessionDataObjectRequest(payload) {
+        if (payload.username == null) {
+            throw new Error("Session data object requires 'username' field")
+        }
+
+        if (payload.first_name == null) {
+            throw new Error("Session data object requires 'first name' field")
+        }
+
+        if (payload.last_name == null) {
+            throw new Error("Session data object requires 'last name' field")
+        }
+
+        if (payload.user_type == null) {
+            throw new Error("Session data object requires 'user type' field")
+        }
+
+        if (payload.initials == null) {
+            throw new Error("Session data object requires 'initials' field")
+        }
+
+        return
+    }
 }
 
-module.exports = AuthenticationValidator
+module.exports = AuthorizationValidator

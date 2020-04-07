@@ -9,5 +9,7 @@ module.exports = {
     authentication: {
         // later on the secret will be stored securily
         secret: process.env.SECRET || 'KHzZ[n5-$^8[DRfF',
+        JWTTokenExpiresInSeconds: 3600,
+        userPINHashSaltRounds: 10,
     },
 }

@@ -26,10 +26,22 @@ class UserRepository {
 
         return await newUser.save()
     }
+
+    /**
+     * Find user by ID
+     * 
+     * @param {String} userId
+     * @return {Object|null} 
+     */
+    static async findById(userId) {
+        return await User.findById(userId)
+    }
+
     /**
      * Find many users by filter
      * 
      * @param {Object} filter 
+     * @return {Array}
      */
     static async findManyByFilter(filter) {
         return await User.find(filter)

@@ -5,7 +5,7 @@ const userConfig = require('../../config/user')
 const UserSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     username: { type: String, required: [true, 'Username is required'], unique: [true, 'Username has to be unique'] },
-    pin: { type: String, required: [true, 'PIN is required'], select: false },
+    pin: { type: String, required: [true, 'PIN is required'] },
     first_name: { type: String, required: [true, 'First name is required'] },
     last_name: { type: String, required: [true, 'Last name is required'] },
     user_type: { type: String, enum: userConfig.userTypes, required: [true, 'User type is required'] }, // type of user, permissions depend on it

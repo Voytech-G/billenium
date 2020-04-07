@@ -1,8 +1,7 @@
 const TaskController = require('../controller/TaskController')
 const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
-const AuthenticationController = require('../controller/AuthenticationController')
-const AuthenticationService = require('../service/AuthenticationService')
+const AuthorizationController = require('../controller/AuthorizationController')
 const AuthorizationService = require('../service/AuthorizationService')
 
 class ConnectionsHandler {
@@ -16,7 +15,7 @@ class ConnectionsHandler {
         console.log(`Socket of ID: ${socket.id} has just connected`);
 
         socket.use((payload, next) => {
-            AuthenticationService.authenticateEvent(socket, payload, next)
+            AuthorizationService.authenticateEvent(socket, payload, next)
         })
 
         socket.use((payload, next) => {
@@ -24,19 +23,19 @@ class ConnectionsHandler {
         })
 
         socket.on('authenticate', async (payload, callback) => {
-            AuthenticationController.authenticate(socket, payload, callback)
+            AuthorizationController.authenticate(socket, payload, callback)
 
             return
         })
 
         socket.on('sign-up', async (payload, callback) => {
-            AuthenticationController.signUp(payload, callback)
+            AuthorizationController.signUp(payload, callback)
 
             return
         })
 
         socket.on('sign-in', async (payload, callback) => {
-            AuthenticationController.signIn(payload, callback)
+            AuthorizationController.signIn(socket, payload, callback)
 
             return
         })
