@@ -54,17 +54,31 @@ const onDragEnd = (result, columns, moveCard, socket) => {
 const addNewColumn = (columns, socket, addColumnFunc, setColumns, users) => {
   const newName = prompt("Type column name: ");
   const maxLimit = prompt("Type max tasks limit: ");
-  console.log("Test dodawania");
-  let idcolumn;
   users.map((user, idx) => {
-    idcolumn = uuid();
-    addColumnFunc(
-      idcolumn,
-      newName,
-      maxLimit,
-      columns.length / users.length,
-      user.name,
-      idx
+    socket.emit(
+      "create-column",
+      {
+        project_id: "5e877170c2386013906d7421",
+        name: newName,
+        board_index: Math.floor(columns.length / users.length),
+        max_tasks: parseInt(maxLimit),
+        user: user.name,
+        col_row_index: idx,
+      },
+      (res) => {
+        if (res.status) {
+          addColumnFunc(
+            res.payload._id,
+            newName,
+            maxLimit,
+            Math.floor(columns.length / users.length),
+            user.name,
+            idx
+          );
+        } else {
+          alert("Error: server returned false status");
+        }
+      }
     );
     // setColumns([
     //   ...columns,
@@ -79,38 +93,6 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns, users) => {
     //   },
     // ]);
   });
-
-  // socket.emit(
-  //   "create-column",
-  //   {
-  //     project_id: "5e877170c2386013906d7421",
-  //     name: newName,
-  //     board_index: columns.length,
-  //     max_tasks: parseInt(maxLimit),
-  //     user: "Jacek",
-  //     col_row_index: 0,
-  //   },
-  //   (res) => {
-  //     console.log(res);
-  //     if (res.status) {
-  //       addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
-  //       setColumns([
-  //         ...columns,
-  //         {
-  //           id: res.payload._id,
-  //           name: newName,
-  //           max_tasks: maxLimit,
-  //           items: [],
-  //           board_index: columns.length,
-  //           user: res.payload.user,
-  //           col_row_index: res.payload.col_row_index,
-  //         },
-  //       ]);
-  //     } else {
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
 };
 const AddColumnBtn = ({
   columnsItems,

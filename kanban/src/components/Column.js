@@ -59,24 +59,36 @@ const Amount = ({ amount, maxTasks, rowIndex, column, columns }) => {
     </h5>
   );
 };
-const deleteColumn = (removeColumn, socket, id, boardIndex) => {
+const deleteColumn = (removeColumn, socket, id, boardIndex, columnItems) => {
   console.log("test usuwania kolumn");
-  // socket.emit(
-  //   "remove-column",
-  //   { column_id: id, board_index: boardIndex },
-  //   (res) => {
-  //     if (res.status) {
-  //       removeColumn(id, boardIndex);
-  //     } else {
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
+  columnItems
+    .filter((columnItem) => columnItem.board_index === boardIndex)
+    .map((columnElement) =>
+      socket.emit(
+        "remove-column",
+        { column_id: id, board_index: boardIndex },
+        (res) => {
+          if (res.status) {
+            removeColumn(columnElement.id, boardIndex);
+          } else {
+            alert("Error: server returned false status");
+          }
+        }
+      )
+    );
 };
-const DeleteColumnBtn = ({ removeColumn, socket, columnId, boardIndex }) => {
+const DeleteColumnBtn = ({
+  removeColumn,
+  socket,
+  columnId,
+  boardIndex,
+  columnItems,
+}) => {
   return (
     <button
-      onClick={() => deleteColumn(removeColumn, socket, columnId, boardIndex)}
+      onClick={() =>
+        deleteColumn(removeColumn, socket, columnId, boardIndex, columnItems)
+      }
       style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Delete column
@@ -267,6 +279,7 @@ const Column = ({ column }) => {
               socket={socket}
               columnId={id}
               boardIndex={board_index}
+              columnItems={columns}
             ></DeleteColumnBtn>
           </div>
           <h3 className={`row${col_row_index}`}>{name}</h3>
