@@ -10,6 +10,8 @@ const ColumnSchema = new mongoose.Schema({
   ],
   max_tasks: { type: Number, required: true },
   project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true }, // project to which the column is assigned
+  user: { type: String, required: true },
+  col_row_index: { type: String, required: true },
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 })
