@@ -66,7 +66,7 @@ const deleteColumn = (removeColumn, socket, id, boardIndex, columnItems) => {
     .map((columnElement) =>
       socket.emit(
         "remove-column",
-        { column_id: id, board_index: boardIndex },
+        { column_id: columnElement.id, board_index: boardIndex },
         (res) => {
           if (res.status) {
             removeColumn(columnElement.id, boardIndex);

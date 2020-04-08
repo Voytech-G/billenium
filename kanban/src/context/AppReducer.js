@@ -107,7 +107,7 @@ export default (state, action) => {
           ...state.columns.filter(
             (column) => column.id !== action.payload.column.id
           ),
-        ].rearrangeColumns(),
+        ],
       };
     case "EDIT_CARD":
       return {
@@ -141,7 +141,7 @@ export default (state, action) => {
                 }
               : column
           ),
-        ].rearrangeColumns(),
+        ],
       };
     case "SET_COLUMN_CARDS":
       return {
