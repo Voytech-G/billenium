@@ -103,10 +103,6 @@ class ColumnService {
     
         const column = await ColumnRepository.findByIdAndRemove(columnId)
 
-        if (column == null) {
-            throw new Error('Found no column of given ID to remove.')
-        }
-
         const projectId = column.project
         await ProjectService.unassignColumnFromProject(columnId, projectId)
         

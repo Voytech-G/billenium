@@ -1,5 +1,5 @@
-const TaskRepository = require('../database/repository/TaskRepository')
-const columnConfig = require('../config/column')
+const TaskRepository = require('../repository/TaskRepository')
+const columnConfig = require('../../config/column')
 
 class ColumnHandler {
     /**

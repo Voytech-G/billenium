@@ -121,11 +121,7 @@ class ProjectService {
      * @return {Array}
      */
     static async getAllProjects() {
-        const projects = await ProjectRepository.findAll()
-
-        console.log(projects)
-
-        return projects
+        return await ProjectRepository.findAll()
     }
 }
 

@@ -37,16 +37,6 @@ class TaskService {
         const sourceRowIndex = payload.source_row_index
         const sourceColumnId = payload.source_column_id
 
-        // in case target column is not the same as source column we switch them
-        if (targetColumnId !== sourceColumnId) {
-            await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
-            await ColumnService.assignTaskToColumn(targetColumnId, taskId)
-        }
-
-        // adjust all tasks in target and source columns (move tasks above in source column task down, move tasks above in target column up)
-        await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
-        await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
-
         // update the moved task (its position)
         const filter = { 
             _id: taskId,
@@ -58,7 +48,23 @@ class TaskService {
         }
 
         // update moved task's position to target task position
-        return await TaskRepository.findOneByFilterAndUpdate(filter, update)
+        const movedTask = await TaskRepository.findOneByFilterAndUpdate(filter, update)
+
+        if (movedTask == null) {
+            throw new Error('Couldn\'t find the task to move')
+        }
+
+        // in case target column is not the same as source column we switch them
+        if (targetColumnId !== sourceColumnId) {
+            await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
+            await ColumnService.assignTaskToColumn(targetColumnId, taskId)
+        }
+
+        // adjust all tasks in target and source columns (move tasks above in source column task down, move tasks above in target column up)
+        await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
+        await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
+
+        return movedTask
     }
 
      /**
@@ -134,7 +140,13 @@ class TaskService {
             content, 
         }
 
-        return await TaskRepository.findOneByFilterAndUpdate(filter, update)
+        const updatedTask = await TaskRepository.findOneByFilterAndUpdate(filter, update)
+
+        if (updatedTask == null) {
+            throw new Error('Couldn\'t find the task to update')
+        }
+
+        return updatedTask
     }
 
     /**

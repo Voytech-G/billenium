@@ -11,16 +11,15 @@ const ServerHandler = require('./handler/ServerHandler')
 
 DatabaseService.connectionOpen()
 
-io.use((socket, next) => {
-  // method run every time before someone connects
-  
+// method called once every time new socket connection is established
+io.use(async (socket, next) => {
   next()
 })
 .on('connection', async socket => {
   ConnectionsHandler.setupConnection(socket)
 })
 
-const PORT = process.env.PORT || appConfig.port
+const PORT = appConfig.port
 server.listen(PORT, () => {
   ServerHandler.handleListening(PORT)
 })
