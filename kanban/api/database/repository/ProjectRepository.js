@@ -37,20 +37,20 @@ class ProjectRepository {
      * @param {Number} totalBudget
      * @return {Object} 
      */
-    static async findByIdAndUpdate(projectId, projectName, usedBudget, totalBudget) {
-        const update = {
-            project_name: projectName,
-            used_budget: usedBudget,
-            total_budget: totalBudget,
+    static async findByIdAndUpdate(projectId, update) {
+        const project = Project.findById(projectId)
+
+        if (project == null) {
+            throw new Error('Failed to update the project, found no project of given ID')
         }
 
-        const project = await Project.findByIdAndUpdate(projectId, update, {
+        const updatedProject = await Project.findByIdAndUpdate(projectId, update, {
             new: projectConfig.repository.RETURN_NEW_AFTER_UPDATE,
             useFindAndModify: projectConfig.repository.USE_FIND_AND_MODIFY,
         })
 
-        if (project == null) {
-            throw new Error('No project of given ID found, couldn\'t update')
+        if (updatedProject == null) {
+            throw new Error('Failed to update the project.')
         }
 
         return project
@@ -65,6 +65,20 @@ class ProjectRepository {
     static async findByIdAndRemove(projectId) {
         const project = await Project.findById(projectId)
 
+        if (project == null) {
+            throw new Error('Failed to remove the project, found no project of given ID.')
+        }
+
+        return await project.remove()
+    }
+
+    /**
+     * Remvove given project
+     * 
+     * @param {Object} project
+     * @return {Object} 
+     */
+    static async remove(project) {
         return await project.remove()
     }
 
@@ -81,15 +95,13 @@ class ProjectRepository {
     /**
      * Get one project by given project ID, populate given fields
      * 
-     * @param {String} projectId 
+     * @param {Object} project
      * @param {Array} populateFields
      * @return {Object}
      */
-    static async findByIdAndPopulate(projectId, populateFields) {
-        const project = await Project.findById(projectId)
-
+    static async populate(project, populateFields) {
         if (project == null) {
-            throw new Error('Failed to populate the project, found no project of given ID')
+            throw new Error('Failed to populate the project.')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 

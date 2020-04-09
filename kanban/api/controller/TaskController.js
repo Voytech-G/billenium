@@ -17,7 +17,6 @@ class TaskController {
 
             callback({
                 status: true,
-                message: 'Successfully created a new task',
                 payload: task,
             })
 
@@ -47,7 +46,6 @@ class TaskController {
 
             callback({
                 status: true,
-                message: 'Successfully moved the task',
                 payload: movedTask,
             })
 
@@ -77,7 +75,6 @@ class TaskController {
 
             callback({
                 status: true,
-                message: 'Successfully updated the task',
                 payload: task,
             })
 
@@ -107,7 +104,6 @@ class TaskController {
 
             callback({
                 status: true,
-                message: `Successfully removed the task`,
                 payload: task,
             })
 

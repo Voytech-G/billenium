@@ -36,17 +36,13 @@ class ColumnService {
         const boardIndex = payload.board_index
         const maxTasks = payload.max_tasks
 
-        const filter = {
-            _id: columnId,
-        }
-
         const update = {
             name: name,
             board_index: boardIndex,
             max_tasks: maxTasks,
         }
 
-        return await ColumnRepository.findOneByFilterAndUpdate(filter, update)
+        return await ColumnRepository.findByIdAndUpdate(columnId, update)
     }
 
     /**
@@ -156,6 +152,12 @@ class ColumnService {
     static async getOne(payload) {
         const columnId = payload.column_id
 
+        const column = await ColumnRepository.findById(columnId)
+
+        if (column == null) {
+            throw new Error('Failed to get one column, found no column of given ID.')
+        }
+
         const populateConfig = [
             {
                 path: 'tasks',
@@ -166,8 +168,8 @@ class ColumnService {
                 // },
             }
         ]
-        
-        return await ColumnRepository.findByIdAndPopulate(columnId, populateConfig)
+
+        return await ColumnRepository.populate(column, populateConfig)
     }
 }
 

@@ -17,7 +17,6 @@ class ProjectController {
 
             callback({
                 status: true,
-                message: 'Successfully created a project',
                 payload: project,
             })
 
@@ -47,7 +46,6 @@ class ProjectController {
 
             callback({
                 status: true,
-                message: 'Successfully updated the project',
                 payload: project,
             })
 
@@ -77,7 +75,6 @@ class ProjectController {
 
             callback({
                 status: true,
-                message: 'Successfully removed the project',
                 payload: project,
             })
 

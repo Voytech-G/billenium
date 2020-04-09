@@ -25,7 +25,6 @@ class AuthorizationController {
 
             callback({
                 status: true,
-                message: `Successfully authenticated`,
                 payload: response,
             })
 

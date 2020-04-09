@@ -177,7 +177,20 @@ class TaskService {
     static async getOne(payload) {
         const taskId = payload.task_id
 
-        return await TaskRepository.findByIdAndPopulate(taskId, ['column'])
+        const task = await TaskRepository.findById(taskId)
+
+        if (task == null) {
+            throw new Error('Failed to get one task, found no task of given ID.')
+        }
+
+        const populateConfig = [
+            {
+                path: 'columns',
+                model: 'Column',
+            }
+        ]
+
+        return await TaskRepository.populate(task, populateConfig)
     }
 }
 

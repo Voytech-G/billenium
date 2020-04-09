@@ -17,7 +17,6 @@ class ColumnController {
 
             callback({
                 status: true,
-                message: 'Successfully created a new column',
                 payload: column,
             })
 
@@ -47,7 +46,6 @@ class ColumnController {
     
             callback({
                 status: true,
-                message: 'Successfully updated the column',
                 column: column,
             })
 
@@ -77,7 +75,6 @@ class ColumnController {
 
             callback({
                 status: true,
-                message: `Successfully removed the column`,
                 payload: column,
             })
 

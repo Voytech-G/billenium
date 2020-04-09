@@ -26,8 +26,14 @@ class ProjectService {
         const projectName = payload.project_name
         const usedBudget = payload.used_budget
         const totalBudget = payload.total_budget
+        
+        const update = {
+            project_name: projectName,
+            used_budget: usedBudget,
+            total_budget: totalBudget,
+        }
 
-        return await ProjectRepository.findByIdAndUpdate(projectId, projectName, usedBudget, totalBudget)
+        return await ProjectRepository.findByIdAndUpdate(projectId, update)
     }
 
     /**
@@ -73,14 +79,14 @@ class ProjectService {
         const targetProject = await ProjectRepository.findById(projectId)
 
         if (targetProject == null) {
-            throw new Error('Project ID is invalid')
+            throw new Error('Failed to assign column to the project, found no project of given ID.')
         }
         
         // get the column assigned to project
         const column = await ColumnRepository.findById(columnId)
 
         if (column == null) {
-            throw new Error('Column ID is invalid')
+            throw new Error('Failed to assign column to the project, found no column of given ID.')
         }
 
         // push column to columns list in Project model
@@ -112,7 +118,13 @@ class ProjectService {
             },
         ]
 
-        return await ProjectRepository.findByIdAndPopulate(projectId, populateConfig)
+        const project = await ProjectRepository.findById(projectId, populateConfig)
+
+        if (project == null) {
+            throw new Error('Found no project of given ID.')
+        }
+
+        return await ProjectRepository.populate(project, populateConfig)
     }
 
     /**

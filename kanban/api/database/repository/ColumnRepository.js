@@ -22,6 +22,14 @@ class ColumnRepository {
         return await Column.findById(columnId)
     }
 
+    static async populate(column, populateConfig) {
+        if (column == null) {
+            throw new Error('Failed to populate the column.')
+        }
+
+        return await column.populate(populateConfig).execPopulate()
+    }
+
      /**
      * Find column by ID and populate given field
      * 
@@ -29,10 +37,10 @@ class ColumnRepository {
      * @return {void}
      */
     static async findByIdAndPopulate(columnId, populateFields) {
-        let column = await Column.findById(columnId)
+        const column = await Column.findById(columnId)
 
         if (column == null) {
-            throw new Error('Failed to populate the column, found no column of given ID')
+            throw new Error('Failed to populate the column, found no column of given ID.')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 
@@ -69,6 +77,32 @@ class ColumnRepository {
      */
     static async findManyByFilter(filter) {
         return await Column.find(filter)
+    }
+
+    /**
+     * Find one column by column ID and update with given update object
+     * 
+     * @param {String} columnId 
+     * @param {Object} update 
+     * @return {Object}
+     */
+    static async findByIdAndUpdate(columnId, update) {
+        const column = Column.findById(columnId)
+
+        if (column == null) {
+            throw new Error('Failed to update the column, found no column of given ID.')
+        }
+
+        const updatedColumn = Column.findByIdAndUpdate(filter, update, {
+            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
+
+        if (updatedColumn == null) {
+            throw new Error('Failed to update the column.')
+        }
+
+        return updatedColumn
     }
 
     /**
