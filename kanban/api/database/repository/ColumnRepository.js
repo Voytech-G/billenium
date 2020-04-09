@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Column = require('../model/Column')
-const TaskRepository = require('../repository/TaskRepository')
 const columnConfig = require('../../config/column')
 
 class ColumnRepository {
@@ -10,7 +9,7 @@ class ColumnRepository {
      * @return {Array}
      */
     static async findAll() {
-        return await Column.find({}).populate('tasks')
+        return await Column.find({})
     }
 
     /**
@@ -20,13 +19,7 @@ class ColumnRepository {
      * @return {void}
      */
     static async findById(columnId) {
-        const column = await Column.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Found no column of given ID')
-        }
-
-        return column
+        return await Column.findById(columnId)
     }
 
      /**
@@ -39,7 +32,7 @@ class ColumnRepository {
         let column = await Column.findById(columnId)
 
         if (column == null) {
-            throw new Error('Found no column of given ID')
+            throw new Error('Failed to populate the column, found no column of given ID')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 
@@ -50,36 +43,32 @@ class ColumnRepository {
     /**
      * Create a new column
      * 
+     * @param {String} projectId
      * @param {String} name
      * @param {Number} boardIndex
      * @param {Number} maxTasks
      * @return {Object} 
      */
-    static async create(name, boardIndex, maxTasks) {
+    static async create(projectId, name, boardIndex, maxTasks) {
         const newColumn = new Column({
             _id: new mongoose.Types.ObjectId(),
             name: name,
             board_index: boardIndex,
             max_tasks: maxTasks,
+            project: projectId,
         })
 
         return await newColumn.save()
     }
 
     /**
-     * Get column with which the task column is assigned
+     * Find many columns with specified parameters as filter
      * 
-     * @param {string} taskId 
+     * @param {Object} filter 
      * @return {Object}
      */
-    static async getColumnByTaskId(taskId) {
-        const response = await TaskRepository.findByIdAndPopulate(taskId, ['column'])
-
-        if (response.column == null) {
-            throw new Error('Found no column assigned to that task')
-        }
-
-        return response.column
+    static async findManyByFilter(filter) {
+        return await Column.find(filter)
     }
 
     /**
@@ -108,37 +97,19 @@ class ColumnRepository {
     }
 
     /**
-     * Find all columns matching filter and remove them
-     * 
-     * @param {Object} filter 
-     * @return {Object} // data about the remove transaction (number of removed entities etc)
-     */
-    static async findManyByFilterAndRemove(filter) {
-        return await Column.remove(filter)
-    }
-
-    /**
-     * Find one column by filter and remove it
-     * 
-     * @param {Object} filter
-     * @return {Object} // removed column data
-     */
-    static async findOneByFilterAndRemove(filter) {
-        return await Column.findOneAndRemove(filter, {
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
-    }
-
-    /**
      * Find one column by ID and remove it
      * 
      * @param {Number} columnId 
      * @return {Object} // removed column data
      */
     static async findByIdAndRemove(columnId) {
-        return await Column.findByIdAndRemove(columnId, {
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
+        const column = await Column.findById(columnId)
+
+        if (column == null) {
+            throw new Error('Found no column of given ID to remove.')
+        }
+
+        return await column.remove()
     }
 }
 

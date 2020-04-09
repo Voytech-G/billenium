@@ -1,7 +1,5 @@
 const TaskValidator = require('../validation/task/TaskValidator')
-const TaskRepository = require('../database/repository/TaskRepository')
 const TaskService = require('../service/TaskService')
-const ColumnService = require('../service/ColumnService')
 
 class TaskController {
     /**
@@ -75,7 +73,7 @@ class TaskController {
         try {
             TaskValidator.validateUpdateRequest(payload)
 
-            const task = TaskService.updateTask(payload)
+            const task = await TaskService.updateTask(payload)
 
             callback({
                 status: true,
@@ -105,11 +103,12 @@ class TaskController {
         try {
             TaskValidator.validateRemoveRequest(payload)
 
-            await TaskService.removeTask(payload)
+            const task = await TaskService.removeTask(payload)
 
             callback({
                 status: true,
-                message: `Successfully removed the task`
+                message: `Successfully removed the task`,
+                payload: task,
             })
 
             return

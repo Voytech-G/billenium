@@ -6,10 +6,11 @@ window.onload = (function() {
     let moveButton = document.querySelector('.move-button')
     let testButton = document.querySelector('.test-button')
     let removeColumnButton = document.querySelector('.remove-column-button')
-
-    const column1 = '5e7617a72c0df71c482647cb'
-    const column2 = '5e7618bef4416f47802498df'
-    const invalidColumn = '5e7618bef4452f47802498df'
+    let addProjectButton = document.querySelector('.add-project-button')
+    let updateProjectButton = document.querySelector('.update-project-button')
+    let removeProjectButton = document.querySelector('.remove-project-button')
+    let signUpButton = document.querySelector('.sign-up-button')
+    let signInButton = document.querySelector('.sign-in-button')
 
     const handleUpdate = () => {
         socket.emit('update-task', {
@@ -24,9 +25,9 @@ window.onload = (function() {
         socket.emit('move-task', {
             task_id: '5e7272b551979e3accfd9e70',
             target_row_index: 0,
-            target_column_id: column1,
+            target_column_id: '5e760791c3dd0d47a850fa70',
             source_row_index: 2,
-            source_column_id: column1,
+            source_column_id: '5e760791c3dd0d47a850fa70',
         }, handleMoveResponse)
 
         return
@@ -34,9 +35,9 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-task', {
+            column_id: '5e86275b61fac5245c8c5f0c',
             content: '3task',
-            row_index: 0,
-            column_id: column2,
+            row_index: 2,
         }, handleAddResponse)
 
         return
@@ -44,9 +45,9 @@ window.onload = (function() {
 
     const handleRemove = () => {
         socket.emit('remove-task', {
-            task_id: '5e762e251aa88357e0e8ef14',
-            source_row_index: 0,
-            source_column_id: column2,
+            task_id: '5e8508f58dc804281c58f669',
+            source_row_index: 2,
+            source_column_id: '5e8507b3c360416dbc1c6306',
         }, handleRemoveResponse)
 
         return
@@ -60,15 +61,16 @@ window.onload = (function() {
         //     max_tasks: 15,
         // }, handleTestResponse)
 
-        socket.emit('create-column', {
-            name: 'col4',
-            board_index: 3,
-            max_tasks: 5,
-        }, handleTestResponse)
-
-        // socket.emit('get-column', {
-        //     column_id: '5e7fc0194e91c44688d952fb',
+        // socket.emit('create-column', {
+        //     project_id: '5e850799c360416dbc1c6305',
+        //     name: 'col1',
+        //     board_index: 0,
+        //     max_tasks: 5,
         // }, handleTestResponse)
+
+        socket.emit('get-column', {
+            column_id: '5e86275b61fac5245c8c5f0c',
+        }, handleTestResponse)
 
         // socket.emit('get-task', {
         //     task_id: '5e80fa3b5df30509884abe7a',
@@ -78,13 +80,67 @@ window.onload = (function() {
     }
 
     const handleGetAll = () => {
-        socket.emit('get-board', handleGetAllResponse)
+        // socket.emit('get-all-projects', handleGetAllResponse)
+
+        socket.emit('get-project', {
+            project_id: '5e877170c2386013906d7421',
+        }, handleGetAllResponse)
     }
 
     const handleRemoveColumn = () => {
         socket.emit('remove-column', {
-            column_id: '5e7fc0194e91c44688d952fb'
+            column_id: '5e85060e78841b24ccc2fd6a',
         }, handleRemoveColumnResponse)
+    }
+
+    const handleAddProject = () => {
+        socket.emit('create-project', {
+            project_name: 'Project 3 niook',
+            total_budget: '55600',
+        }, handleAddProjectResponse)
+    }
+
+    const handleUpdateProject = () => {
+        socket.emit('update-project', {
+            project_id: '5e8384a3c1ebd573c0346e5b',
+            project_name: 'Test update 2',
+            used_budget: 150,
+            total_budget: 500,
+        }, handleUpdateProjectResponse)
+    }
+
+    const handleRemoveProject = () => {
+        socket.emit('remove-project', {
+            project_id: '5e850799c360416dbc1c6305',
+        }, handleRemoveProjectReponse)
+    }
+
+    const handleSignIn = () => {
+        const username = document.querySelector('.username-field-login').value
+        const pin = document.querySelector('.pin-field-login').value
+
+        socket.emit('sign-in', {
+            username,
+            pin,
+        }, handleSignInResponse)
+
+        return
+    }
+
+    const handleSignUp = () => {
+        const username = document.querySelector('.username-field').value
+        const pin = document.querySelector('.pin-field').value
+        const firstName = document.querySelector('.first-name-field').value
+        const lastName = document.querySelector('.last-name-field').value
+        const userType = document.querySelector('.user-type-field').value
+
+        socket.emit('sign-up', {
+            username,
+            pin,
+            first_name: firstName,
+            last_name: lastName,
+            user_type: userType,
+        }, handleSignUpResponse)
     }
 
     addButton.addEventListener('click', handleAdd)
@@ -94,10 +150,30 @@ window.onload = (function() {
     moveButton.addEventListener('click', handleMove)
     testButton.addEventListener('click', handleTest)
     removeColumnButton.addEventListener('click', handleRemoveColumn)
-
+    addProjectButton.addEventListener('click', handleAddProject)
+    updateProjectButton.addEventListener('click', handleUpdateProject)
+    removeProjectButton.addEventListener('click', handleRemoveProject)
+    signUpButton.addEventListener('click', handleSignUp)
+    signInButton.addEventListener('click', handleSignIn)
     
     const SERVER_URL = 'http://localhost:4000'
-    let socket = io(SERVER_URL)
+    let token = localStorage.getItem('token')
+
+    console.log(token)
+    
+    let socket = io.connect(SERVER_URL, {
+        // query: { token }
+    })
+
+    socket.emit('authenticate', {
+        token,
+    }, response => {
+        console.log(response)
+    })
+
+    socket.on('error', error => {
+        console.log(error)
+    })
     
     const handleGetAllResponse = response => { 
         console.log(response)
@@ -125,5 +201,27 @@ window.onload = (function() {
 
     const handleRemoveColumnResponse = response => {
         console.log(response)
+    }
+
+    const handleAddProjectResponse = response => {
+        console.log(response)
+    }
+
+    const handleUpdateProjectResponse = response => {
+        console.log(response)
+    }
+
+    const handleRemoveProjectReponse = response => {
+        console.log(response)
+    }
+
+    const handleSignUpResponse = response => {
+        console.log(response)
+    }
+
+    const handleSignInResponse = response => {
+        const token = response.payload
+
+        localStorage.setItem('token', token)
     }
 })

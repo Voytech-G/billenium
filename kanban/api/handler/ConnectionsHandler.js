@@ -1,35 +1,71 @@
 const TaskController = require('../controller/TaskController')
-const ConnectionsService = require('../service/ConnectionsService') 
-const BoardController = require('../controller/BoardController')
+const ProjectController = require('../controller/ProjectController')
 const ColumnController = require('../controller/ColumnController')
+const AuthorizationController = require('../controller/AuthorizationController')
+const AuthorizationService = require('../service/AuthorizationService')
 
 class ConnectionsHandler {
-    /**
-     * ConnectionsHandler constructor
-     */
-    constructor() {
-        this.connectionsService = new ConnectionsService()
-    }
-
     /**
      * Setup a socket.io connection, register events
      * 
      * @param {Object} socket
      * @return {void} 
      */
-    async setupConnection(socket) {
+    static async setupConnection(socket) {
         console.log(`Socket of ID: ${socket.id} has just connected`);
-        this.addConnection(socket)
-        
-        // method run every incoming event
+
         socket.use((payload, next) => {
-            this.connectionsService.handleIncomingEvent(payload, next)
+            AuthorizationService.authenticateEvent(socket, payload, next)
+        })
+
+        socket.use((payload, next) => {
+            AuthorizationService.authorizeEvent(socket, payload, next)
+        })
+
+        socket.on('authenticate', async (payload, callback) => {
+            AuthorizationController.authenticate(socket, payload, callback)
 
             return
         })
 
-        socket.on('get-board', async callback => {
-            BoardController.getBoard(callback)
+        socket.on('sign-up', async (payload, callback) => {
+            AuthorizationController.signUp(payload, callback)
+
+            return
+        })
+
+        socket.on('sign-in', async (payload, callback) => {
+            AuthorizationController.signIn(socket, payload, callback)
+
+            return
+        })
+
+        socket.on('create-project', async (payload, callback) => {
+            ProjectController.create(payload, callback)
+
+            return
+        })
+
+        socket.on('update-project', async (payload, callback) => {
+            ProjectController.update(payload, callback)
+
+            return
+        })
+
+        socket.on('remove-project', async (payload, callback) => {
+            ProjectController.remove(payload, callback)
+
+            return
+        })
+
+        socket.on('get-project', async (payload, callback) => {
+            ProjectController.getOne(payload, callback)
+
+            return
+        })
+
+        socket.on('get-all-projects', async callback => {
+            ProjectController.getAll(callback)
 
             return
         })
@@ -86,21 +122,6 @@ class ConnectionsHandler {
             ColumnController.getOne(payload, callback)
         })
     }
-
-    /**
-     * Register new connection
-     * 
-     * @param {Object} socket 
-     * @return {void}
-     */
-    addConnection(socket) {
-        // add new socket connection
-        this.connectionsService.addConnection(socket)
-
-        this.connectionsService.showConnections()
-
-        return
-    }
 }
 
-module.exports = new ConnectionsHandler()
+module.exports = ConnectionsHandler

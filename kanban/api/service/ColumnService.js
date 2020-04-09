@@ -1,8 +1,6 @@
-const ColumnValidator = require('../validation/column/ColumnValidator')
 const ColumnRepository = require('../database/repository/ColumnRepository')
-const TaskValidator = require('../validation/task/TaskValidator')
 const TaskRepository = require('../database/repository/TaskRepository')
-const columnConfig = require('../config/column')
+const ProjectService = require('../service/ProjectService')
 
 class ColumnService {
     /**
@@ -12,11 +10,18 @@ class ColumnService {
      * @return {Object} 
      */
     static async createColumn(payload) {
+        const projectId = payload.project_id
         const name = payload.name
         const boardIndex = payload.board_index
         const maxTasks = payload.max_tasks
 
-        return await ColumnRepository.create(name, boardIndex, maxTasks)
+        // get column ID to add reference to it to target project
+        const column = await ColumnRepository.create(projectId, name, boardIndex, maxTasks)
+
+        const columnId = column.id
+        await ProjectService.assignColumnToProject(columnId, projectId)
+
+        return column
     }
 
     /**
@@ -55,13 +60,14 @@ class ColumnService {
         const targetColumn = await ColumnRepository.findById(columnId)
         
         if (targetColumn == null) {
-            throw new Error('Found no target column in\'move\' operation.')
+            throw new Error('Found no column to assign the task to')
         }
         
+        // find the task we want to assign to column
         const targetTask = await TaskRepository.findById(taskId)
 
         if (targetTask == null) {
-            throw new Error('Found no target task in \'move\' operation.')
+            throw new Error('Found no task to assign to the column')
         }
 
         // add task to target column tasks collection
@@ -78,8 +84,9 @@ class ColumnService {
      * @param {string} taskId
      * @return {void} 
      */
-    static async unassignTaskFromColumn(taskId) {
-        const column = await ColumnRepository.getColumnByTaskId(taskId)
+    static async unassignTaskFromColumn(columnId, taskId) {
+        const column = await ColumnRepository.findById(columnId)
+
         column.tasks.pull(taskId)
 
         await column.save()
@@ -93,17 +100,11 @@ class ColumnService {
      */
     static async removeColumn(payload) {
         const columnId = payload.column_id
-
-        // check if we want to remove tasks assigned to column when column is deleted
-        if (columnConfig.REMOVE_TASKS_ON_COLUMN_DELETE) {
-            await this.removeTasksAssignedToColumn(columnId)
-        }
     
         const column = await ColumnRepository.findByIdAndRemove(columnId)
 
-        if (column == null) {
-            throw new Error('Found no column of given ID to remove.')
-        }
+        const projectId = column.project
+        await ProjectService.unassignColumnFromProject(columnId, projectId)
         
         // move all columns on the right from removed column to the left so the gap is filled
         const boardIndex = column.board_index
@@ -147,22 +148,6 @@ class ColumnService {
     }
 
     /**
-     * Remove all tasks that are 
-     * 
-     * @param {Number} columnId 
-     * @return {void}
-     */
-    static async removeTasksAssignedToColumn(columnId) {
-        const filter = {
-            column: columnId,
-        }
-    
-        await TaskRepository.findManyByFilterAndRemove(filter)
-
-        return
-    }
-
-    /**
      * Get one column data
      * 
      * @param {Object} payload
@@ -170,8 +155,19 @@ class ColumnService {
      */
     static async getOne(payload) {
         const columnId = payload.column_id
+
+        const populateConfig = [
+            {
+                path: 'tasks',
+                model: 'Task',
+                // populate: {
+                //     path: 'subtasks',
+                //     model: 'Subtask',
+                // },
+            }
+        ]
         
-        return await ColumnRepository.findByIdAndPopulate(columnId, ['tasks'])
+        return await ColumnRepository.findByIdAndPopulate(columnId, populateConfig)
     }
 }
 

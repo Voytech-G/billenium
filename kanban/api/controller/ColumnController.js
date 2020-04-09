@@ -73,11 +73,12 @@ class ColumnController {
         try {
             ColumnValidator.validateRemoveRequest(payload)
 
-            await ColumnService.removeColumn(payload)
+            const column = await ColumnService.removeColumn(payload)
 
             callback({
                 status: true,
                 message: `Successfully removed the column`,
+                payload: column,
             })
 
             return

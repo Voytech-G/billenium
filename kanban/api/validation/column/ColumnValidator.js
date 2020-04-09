@@ -8,6 +8,10 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateCreateRequest(request) {
+        if (request.project_id == null) {
+            throw new Error('Project ID is required')
+        }
+
         if (request.name == null) {
             throw new Error('Column name is required')
         }
