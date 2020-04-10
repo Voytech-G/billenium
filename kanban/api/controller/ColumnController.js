@@ -46,7 +46,7 @@ class ColumnController {
     
             callback({
                 status: true,
-                column: column,
+                payload: column,
             })
 
             return

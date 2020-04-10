@@ -50,7 +50,7 @@ class ProjectService {
                 throw new Error('Found no project of given ID.')
             }
 
-            const updatedProject = await ProjectRepository.update(project, update)
+            const updatedProject = await ProjectRepository.update(projectId, update)
 
             if (updatedProject == null) {
                 throw new Error('An error occured, no projects updated.')
@@ -154,7 +154,7 @@ class ProjectService {
     static async getOneProject(payload) {
         try {
             const projectId = payload.project_id
-            const project = await ProjectRepository.findById(projectId, populateConfig)
+            const project = await ProjectRepository.findById(projectId)
 
             if (project == null) {
                 throw new Error('Found no project of given ID.')
@@ -174,7 +174,7 @@ class ProjectService {
             
             return await ProjectRepository.populate(project, populateConfig)
         } catch (exception) {
-            throw new Error(`Failed to get one project: ${exception.message}.`)
+            throw new Error(`Failed to get one project: ${exception.message}`)
         }
     }
 

@@ -28,12 +28,21 @@ class ProjectRepository {
         return await Project.find({})
     }
 
-    static async update(project, update) {
-        if (project == null) {
-            throw new Error('Cannot update an empty project.')
+    /**
+     * Update given project
+     * 
+     * @param {String} projectId
+     * @param {Object} update 
+     */
+    static async update(projectId, update) {
+        if (projectId == null || projectId == "") {
+            throw new Error('Invalid project ID.')
         }
 
-        return await project.update(update).exec()
+        return await Project.findByIdAndUpdate(projectId, update, {
+            new: projectConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: projectConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
 
     /**

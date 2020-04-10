@@ -14,8 +14,8 @@ window.onload = (function() {
 
     const handleUpdate = () => {
         socket.emit('update-task', {
-            task_id: '5e760791c3dd0d47a850fa70',
-            content: '2card updated xx',
+            task_id: '5e90e0a46d98d833703affc2',
+            content: '3task updated 4',
         }, handleUpdateResponse)
 
         return
@@ -35,7 +35,7 @@ window.onload = (function() {
 
     const handleAdd = () => {
         socket.emit('create-task', {
-            column_id: '5e86275b61fac5245c8c5f0c',
+            column_id: '5e90e06f6d98d833703affbf',
             content: '3task',
             row_index: 2,
         }, handleAddResponse)
@@ -45,32 +45,32 @@ window.onload = (function() {
 
     const handleRemove = () => {
         socket.emit('remove-task', {
-            task_id: '5e8508f58dc804281c58f669',
-            source_row_index: 2,
-            source_column_id: '5e8507b3c360416dbc1c6306',
+            task_id: '5e90e09e6d98d833703affc1',
+            source_row_index: 1,
+            source_column_id: '5e90e06f6d98d833703affbf',
         }, handleRemoveResponse)
 
         return
     }
                                                    
     const handleTest = () => {
-        // socket.emit('update-column', {
-        //     column_id: '5e7d073d2c5bc5316893611c',
-        //     name: 'col1 update update update pls',
-        //     board_index: 3,
-        //     max_tasks: 15,
-        // }, handleTestResponse)
+        socket.emit('update-column', {
+            column_id: '5e90e55b37576257647302d8',
+            name: 'col2 update 2',
+            board_index: 1,
+            max_tasks: 222,
+        }, handleTestResponse)
 
         // socket.emit('create-column', {
-        //     project_id: '5e850799c360416dbc1c6305',
-        //     name: 'col1',
-        //     board_index: 0,
+        //     project_id: '5e90df5a6d98d833703affbc',
+        //     name: 'col2',
+        //     board_index: 1,
         //     max_tasks: 5,
         // }, handleTestResponse)
 
-        socket.emit('get-column', {
-            column_id: '5e86275b61fac5245c8c5f0c',
-        }, handleTestResponse)
+        // socket.emit('get-column', {
+        //     column_id: '5e86275b61fac5245c8c5f0c',
+        // }, handleTestResponse)
 
         // socket.emit('get-task', {
         //     task_id: '5e80fa3b5df30509884abe7a',
@@ -80,30 +80,30 @@ window.onload = (function() {
     }
 
     const handleGetAll = () => {
-        // socket.emit('get-all-projects', handleGetAllResponse)
+        socket.emit('get-all-projects', handleGetAllResponse)
 
-        socket.emit('get-project', {
-            project_id: '5e877170c2386013906d7421',
-        }, handleGetAllResponse)
+        // socket.emit('get-project', {
+        //     project_id: '5e877170c2386013906d7421',
+        // }, handleGetAllResponse)
     }
 
     const handleRemoveColumn = () => {
         socket.emit('remove-column', {
-            column_id: '5e85060e78841b24ccc2fd6a',
+            column_id: '5e90dfb06d98d833703affbd',
         }, handleRemoveColumnResponse)
     }
 
     const handleAddProject = () => {
         socket.emit('create-project', {
-            project_name: 'Project 3 niook',
+            project_name: 'Project 1',
             total_budget: '55600',
         }, handleAddProjectResponse)
     }
 
     const handleUpdateProject = () => {
         socket.emit('update-project', {
-            project_id: '5e8384a3c1ebd573c0346e5b',
-            project_name: 'Test update 2',
+            project_id: '5e90df5a6d98d833703affbc',
+            project_name: 'tt update 1',
             used_budget: 150,
             total_budget: 500,
         }, handleUpdateProjectResponse)

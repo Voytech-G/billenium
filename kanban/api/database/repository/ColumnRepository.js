@@ -68,15 +68,18 @@ class ColumnRepository {
     /**
      * Update given column
      * 
-     * @param {Object} column 
+     * @param {String} columnId
      * @param {Object} update 
      */
-    static async update(column, update) {
-        if (column == null) {
-            throw new Error('Cannot update an empty column.')
+    static async update(columnId, update) {
+        if (columnId == null || columnId == "") {
+            throw new Error('Invalid column ID.')
         }
 
-        return await column.update(update).exec()
+        return await Column.findByIdAndUpdate(columnId, update, {
+            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
 
     /**

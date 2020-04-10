@@ -168,7 +168,7 @@ class TaskService {
                 throw new Error('Found no task of given ID.')
             }
 
-            const updatedTask = await TaskRepository.update(task, update)
+            const updatedTask = await TaskRepository.update(taskId, update)
 
             if (updatedTask == null) {
                 throw new Error('An error occured, no tasks updated.')

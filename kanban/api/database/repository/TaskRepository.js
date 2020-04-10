@@ -25,15 +25,32 @@ class TaskRepository {
     /**
      * Update given task
      * 
-     * @param {Object} task 
+     * @param {String} taskId
      * @param {Object} update 
      */
-    static async update(task, update) {
-        if (task == null) {
-            throw new Error('Cannot update an empty task.')
+    static async update(taskId, update) {
+        if (taskId == null || taskId == "") {
+            throw new Error('Invalid task ID.')
         }
 
-        return await task.update(update).exec()
+        return await Task.findByIdAndUpdate(taskId, update, {
+            new: taskConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
+        })
+    }
+
+    /**
+     * Remove given task
+     * 
+     * @param {Object} task
+     * @return {Object} removed task 
+     */
+    static async remove(task) {
+        if (task == null) {
+            throw new Error('Cannot remove an empty task.')
+        }
+
+        return await task.remove()
     }
 
     /**
