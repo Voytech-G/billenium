@@ -46,6 +46,16 @@ class UserRepository {
     static async findManyByFilter(filter) {
         return await User.find(filter)
     }
+
+    /**
+     * Find one user by filter
+     * 
+     * @param {Object} filter
+     * @return {Object}
+     */
+    static async findOneByFilter(filter) {
+        return await User.findOne(filter)
+    }
 }
 
 module.exports = UserRepository

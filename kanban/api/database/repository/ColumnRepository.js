@@ -4,6 +4,41 @@ const columnConfig = require('../../config/column')
 
 class ColumnRepository {
     /**
+     * Create a new column
+     * 
+     * @param {String} projectId
+     * @param {String} name
+     * @param {Number} boardIndex
+     * @param {Number} maxTasks
+     * @return {Object} 
+     */
+    static async create(projectId, name, boardIndex, maxTasks) {
+        const newColumn = new Column({
+            _id: new mongoose.Types.ObjectId(),
+            name: name,
+            board_index: boardIndex,
+            max_tasks: maxTasks,
+            project: projectId,
+        })
+
+        return await newColumn.save()
+    }
+    
+    /**
+     * Remove given column
+     * 
+     * @param {Object} column
+     * @return {Object} 
+     */
+    static async remove(column) {
+        if (column == null) {
+            throw new Error('Cannot remove an empty column.')
+        }
+
+        return await column.remove()
+    }
+
+    /**
      * Find all columns (filter not specified, returns all)
      * 
      * @return {Array}
@@ -24,49 +59,24 @@ class ColumnRepository {
 
     static async populate(column, populateConfig) {
         if (column == null) {
-            throw new Error('Failed to populate the column.')
+            throw new Error('Cannot populate an empty column.')
         }
 
         return await column.populate(populateConfig).execPopulate()
     }
 
-     /**
-     * Find column by ID and populate given field
+    /**
+     * Update given column
      * 
-     * @param {Object} columnId 
-     * @return {void}
+     * @param {Object} column 
+     * @param {Object} update 
      */
-    static async findByIdAndPopulate(columnId, populateFields) {
-        const column = await Column.findById(columnId)
-
+    static async update(column, update) {
         if (column == null) {
-            throw new Error('Failed to populate the column, found no column of given ID.')
+            throw new Error('Cannot update an empty column.')
         }
 
-        // need to call execPopulate() method as populating previously retrieved document needs 
-        // that method to get called
-        return await column.populate(populateFields).execPopulate()
-    }
-
-    /**
-     * Create a new column
-     * 
-     * @param {String} projectId
-     * @param {String} name
-     * @param {Number} boardIndex
-     * @param {Number} maxTasks
-     * @return {Object} 
-     */
-    static async create(projectId, name, boardIndex, maxTasks) {
-        const newColumn = new Column({
-            _id: new mongoose.Types.ObjectId(),
-            name: name,
-            board_index: boardIndex,
-            max_tasks: maxTasks,
-            project: projectId,
-        })
-
-        return await newColumn.save()
+        return await column.update(update).exec()
     }
 
     /**
@@ -80,29 +90,13 @@ class ColumnRepository {
     }
 
     /**
-     * Find one column by column ID and update with given update object
+     * Find one column by filter
      * 
-     * @param {String} columnId 
-     * @param {Object} update 
-     * @return {Object}
+     * @param {Object} filter
+     * @return {Object} 
      */
-    static async findByIdAndUpdate(columnId, update) {
-        const column = Column.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Failed to update the column, found no column of given ID.')
-        }
-
-        const updatedColumn = Column.findByIdAndUpdate(filter, update, {
-            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
-
-        if (updatedColumn == null) {
-            throw new Error('Failed to update the column.')
-        }
-
-        return updatedColumn
+    static async findOneByFilter(filter) {
+        return await Column.findOne(filter)
     }
 
     /**
@@ -114,36 +108,6 @@ class ColumnRepository {
      */
     static async findManyByFilterAndUpdate(filter, update) {
         return await Column.updateMany(filter, update)
-    }
-
-    /**
-     * Find one column and update it, return updated column
-     * 
-     * @param {Object} filter 
-     * @param {Object} update
-     * @return {Object}
-     */
-    static async findOneByFilterAndUpdate(filter, update) {
-        return await Column.findOneAndUpdate(filter, update, {
-            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
-    }
-
-    /**
-     * Find one column by ID and remove it
-     * 
-     * @param {Number} columnId 
-     * @return {Object} // removed column data
-     */
-    static async findByIdAndRemove(columnId) {
-        const column = await Column.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Found no column of given ID to remove.')
-        }
-
-        return await column.remove()
     }
 }
 

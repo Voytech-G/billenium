@@ -9,10 +9,20 @@ class ProjectService {
      * @return {Object} 
      */
     static async createProject(payload) {
-        const projectName = payload.project_name
-        const totalBudget = payload.total_budget
+        try {
+            const projectName = payload.project_name
+            const totalBudget = payload.total_budget
 
-        return await ProjectRepository.create(projectName, totalBudget)
+            const createdProject = await ProjectRepository.create(projectName, totalBudget)
+
+            if (createdProject == null) {
+                throw new Error('An error occured, no projects created.')
+            }
+
+            return createdProject
+        } catch (exception) {
+            throw new Error(`Failed to create a project: ${exception.message}`)
+        }
     }
 
     /**
@@ -22,18 +32,34 @@ class ProjectService {
      * @return {Object} 
      */
     static async updateProject(payload) {
-        const projectId = payload.project_id
-        const projectName = payload.project_name
-        const usedBudget = payload.used_budget
-        const totalBudget = payload.total_budget
-        
-        const update = {
-            project_name: projectName,
-            used_budget: usedBudget,
-            total_budget: totalBudget,
-        }
+        try {
+            const projectId = payload.project_id
+            const projectName = payload.project_name
+            const usedBudget = payload.used_budget
+            const totalBudget = payload.total_budget
+            
+            const update = {
+                project_name: projectName,
+                used_budget: usedBudget,
+                total_budget: totalBudget,
+            }
+    
+            const project = await ProjectRepository.findById(projectId)
 
-        return await ProjectRepository.findByIdAndUpdate(projectId, update)
+            if (project == null) {
+                throw new Error('Found no project of given ID.')
+            }
+
+            const updatedProject = await ProjectRepository.update(project, update)
+
+            if (updatedProject == null) {
+                throw new Error('An error occured, no projects updated.')
+            }
+
+            return updatedProject
+        } catch (exception) {
+            throw new Error(`Failed to update the project: ${exception.message}.`)
+        }
     }
 
     /**
@@ -43,9 +69,24 @@ class ProjectService {
      * @return {Object} 
      */
     static async removeProject(payload) {
-        const projectId = payload.project_id
+        try {
+            const projectId = payload.project_id
+            const project = await ProjectRepository.findById(projectId)
 
-        return await ProjectRepository.findByIdAndRemove(projectId)
+            if (project == null) {
+                throw new Error('Found no project of given ID.')
+            }
+
+            const removedProject = await ProjectRepository.remove(project)
+
+            if (removedProject == null) {
+                throw new Error('An error occured, no projects removed.')
+            }
+
+            return removedProject
+        } catch (exception) {
+            throw new Error(`Failed to remove the project: ${exception.message}.`)
+        }
     }
 
     /**
@@ -56,15 +97,19 @@ class ProjectService {
      * @return {void} 
      */
     static async unassignColumnFromProject(columnId, projectId) {
-        const project = await ProjectRepository.findById(projectId)
-
-        if (project == null) {
-            throw new Error('Found no project of given ID, couldn\'t unassign removed column from the project')
+        try {
+            const project = await ProjectRepository.findById(projectId)
+    
+            if (project == null) {
+                throw new Error('Found no project of given ID.')
+            }
+    
+            project.columns.pull(columnId)
+    
+            await project.save()
+        } catch (exception) {
+            throw new Error(`Failed to unassign the column from the project: ${exception.message}`)
         }
-
-        project.columns.pull(columnId)
-
-        await project.save()
     }
 
     /**
@@ -75,26 +120,29 @@ class ProjectService {
      * @return {void}
      */
     static async assignColumnToProject(columnId, projectId) {
-        // get project we want the column to assign to
-        const targetProject = await ProjectRepository.findById(projectId)
+        try {
+            // get project we want the column to assign to
+            const targetProject = await ProjectRepository.findById(projectId)
 
-        if (targetProject == null) {
-            throw new Error('Failed to assign column to the project, found no project of given ID.')
-        }
+            if (targetProject == null) {
+                throw new Error('Found no project of given ID.')
+            }
+
+            // get the column assigned to project
+            const column = await ColumnRepository.findById(columnId)
+
+            if (column == null) {
+                throw new Error('Found no column of given ID.')
+            }
+            
+            targetProject.columns.push(column)
         
-        // get the column assigned to project
-        const column = await ColumnRepository.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Failed to assign column to the project, found no column of given ID.')
+            await targetProject.save()
+            
+            return
+        } catch (exception) {
+            throw new Error(`Failed to assign the column to the project: ${exception.message}`)
         }
-
-        // push column to columns list in Project model
-        targetProject.columns.push(column)
-
-        await targetProject.save()
-
-        return
     }
 
     /**
@@ -104,27 +152,30 @@ class ProjectService {
      * @return {Object} 
      */
     static async getOneProject(payload) {
-        const projectId = payload.project_id
+        try {
+            const projectId = payload.project_id
+            const project = await ProjectRepository.findById(projectId, populateConfig)
 
-        // populate columns field, populate tasks field in every column
-        const populateConfig = [
-            {
-                path: 'columns',
-                model: 'Column',
-                populate: {
-                    path: 'tasks',
-                    model: 'Task',
+            if (project == null) {
+                throw new Error('Found no project of given ID.')
+            }
+
+            // populate columns field, populate tasks field in every column
+            const populateConfig = [
+                {
+                    path: 'columns',
+                    model: 'Column',
+                    populate: {
+                        path: 'tasks',
+                        model: 'Task',
+                    },
                 },
-            },
-        ]
-
-        const project = await ProjectRepository.findById(projectId, populateConfig)
-
-        if (project == null) {
-            throw new Error('Found no project of given ID.')
+            ]
+            
+            return await ProjectRepository.populate(project, populateConfig)
+        } catch (exception) {
+            throw new Error(`Failed to get one project: ${exception.message}.`)
         }
-
-        return await ProjectRepository.populate(project, populateConfig)
     }
 
     /**
@@ -133,7 +184,11 @@ class ProjectService {
      * @return {Array}
      */
     static async getAllProjects() {
-        return await ProjectRepository.findAll()
+        try {
+            return await ProjectRepository.findAll()
+        } catch (exception) {
+            throw new Error(`Failed to get list of all projects: ${exception.message}.`)
+        }
     }
 }
 

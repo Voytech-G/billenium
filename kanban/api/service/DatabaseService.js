@@ -19,9 +19,13 @@ class DatabaseService {
      * @return {Object}
      */
     getDatabaseConnectionConfig() {
-        const development = appConfig.development
-
-        return development === true ? databaseConfig.developmentDatabaseConnection : databaseConfig.productionDatabaseConnection
+        try {
+            const development = appConfig.development
+    
+            return development === true ? databaseConfig.developmentDatabaseConnection : databaseConfig.productionDatabaseConnection
+        } catch (exception) {
+            throw new Error(`Failed to get database connection config: ${exception.message}`)
+        }
     }
 
     /**
@@ -30,17 +34,17 @@ class DatabaseService {
      * @return {void}
      */
     async connectionOpen() {
-        // get database connection config depending on development state
-        const config = this.getDatabaseConnectionConfig()
-
-        const DB_CONTAINER_NAME = config.databaseContainerName
-        const DB_PORT = config.databasePort
-        const DB_NAME = config.databaseName
-        const DB_USERNAME = config.username
-        const DB_PASSWORD = config.password
-        const DB_OPTIONS = config.options
-
         try {
+            // get database connection config depending on development state
+            const config = this.getDatabaseConnectionConfig()
+
+            const DB_CONTAINER_NAME = config.databaseContainerName
+            const DB_PORT = config.databasePort
+            const DB_NAME = config.databaseName
+            const DB_USERNAME = config.username
+            const DB_PASSWORD = config.password
+            const DB_OPTIONS = config.options
+
             await mongoose.connect(`mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_CONTAINER_NAME}.mlab.com:${DB_PORT}/${DB_NAME}`, DB_OPTIONS)
 
             this.connection = mongoose.connection

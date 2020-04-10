@@ -24,7 +24,7 @@ class ColumnController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to create a new column: ${exception.message}`,
+                message: exception.message,
             })
 
             return
@@ -53,7 +53,7 @@ class ColumnController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to update the column: ${exception.message}`
+                message: exception.message
             })
 
             return
@@ -82,7 +82,7 @@ class ColumnController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to remove the column: ${exception.message}`
+                message: exception.message
             })
 
             return
@@ -103,14 +103,14 @@ class ColumnController {
     
             callback({
                 status: true,
-                payload: column.populate('tasks'),
+                payload: column,
             })
 
             return
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to get one column: ${exception.message}`
+                message: exception.message
             })
 
             return

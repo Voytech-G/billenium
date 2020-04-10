@@ -28,57 +28,25 @@ class ProjectRepository {
         return await Project.find({})
     }
 
-    /**
-     * Find one project by ID and update it with given values
-     * 
-     * @param {String} projectId 
-     * @param {String} projectName 
-     * @param {Number} usedBudget 
-     * @param {Number} totalBudget
-     * @return {Object} 
-     */
-    static async findByIdAndUpdate(projectId, update) {
-        const project = Project.findById(projectId)
-
+    static async update(project, update) {
         if (project == null) {
-            throw new Error('Failed to update the project, found no project of given ID')
+            throw new Error('Cannot update an empty project.')
         }
 
-        const updatedProject = await Project.findByIdAndUpdate(projectId, update, {
-            new: projectConfig.repository.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: projectConfig.repository.USE_FIND_AND_MODIFY,
-        })
-
-        if (updatedProject == null) {
-            throw new Error('Failed to update the project.')
-        }
-
-        return project
+        return await project.update(update).exec()
     }
 
     /**
-     * Find project by project ID and remove it
-     * 
-     * @param {String} projectId 
-     * @return {Object} // removed project
-     */
-    static async findByIdAndRemove(projectId) {
-        const project = await Project.findById(projectId)
-
-        if (project == null) {
-            throw new Error('Failed to remove the project, found no project of given ID.')
-        }
-
-        return await project.remove()
-    }
-
-    /**
-     * Remvove given project
+     * Remove given project
      * 
      * @param {Object} project
      * @return {Object} 
      */
     static async remove(project) {
+        if (project == null) {
+            throw new Error('Cannot remove an empty project.')
+        }
+
         return await project.remove()
     }
 
@@ -101,7 +69,7 @@ class ProjectRepository {
      */
     static async populate(project, populateFields) {
         if (project == null) {
-            throw new Error('Failed to populate the project.')
+            throw new Error('Cannot populate an empty project.')
         }
 
         // need to call execPopulate() method as populating previously retrieved document needs 

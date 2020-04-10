@@ -24,7 +24,7 @@ class TaskController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to create a new task: ${exception.message}`,
+                message: exception.message,
             })
 
             return
@@ -53,7 +53,7 @@ class TaskController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to move the task: ${exception.message}`
+                message: exception.message,
             })
 
             return
@@ -82,7 +82,7 @@ class TaskController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to update the task: ${exception.message}`
+                message: exception.message,
             })
 
             return
@@ -111,7 +111,7 @@ class TaskController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to remove task: ${exception.message}`
+                message: exception.message,
             })
 
             return
@@ -139,7 +139,7 @@ class TaskController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to get one task: ${exception.message}`,
+                message: exception.message,
             })
 
             return

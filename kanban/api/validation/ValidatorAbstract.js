@@ -9,15 +9,19 @@ class ValidatorAbstract {
      * @return {void}
      */
     static checkObjectIDValid(modelId, modelName) {
-        if (modelId == null) {
-            throw new Error(`${capitalize(modelName)} ID is required`)
+        try {
+            if (modelId == null) {
+                throw new Error(`${capitalize(modelName)} ID is required`)
+            }
+    
+            if(!mongoose.Types.ObjectId.isValid(modelId)) {
+                throw new Error(`Valid ${modelName} ID is required`)
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Mongoose object ID validation failed: ${exception.message}`)
         }
-
-        if(!mongoose.Types.ObjectId.isValid(modelId)) {
-            throw new Error(`Valid ${modelName} ID is required`)
-        }
-
-        return
     }
 }
 

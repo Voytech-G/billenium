@@ -6,11 +6,15 @@ class TokenValidator {
      * @return {void} 
      */
     static validateToken(token) {
-        if (token == null || token == "") {
-            throw new Error('Authentication token is required')
-        }
+        try {
+            if (token == null || token == "") {
+                throw new Error('Authentication token is required')
+            }
 
-        return
+            return
+        } catch (exception) {
+            throw new Error(`Token validation failed: ${exception.message}`)
+        }
     }
 }
 

@@ -32,7 +32,7 @@ class AuthorizationController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Authentication failed: ${exception.message}`,
+                message: exception.message,
             })
 
             return
@@ -62,7 +62,7 @@ class AuthorizationController {
         } catch (exception) {
             callback ({
                 status: false,
-                message: `An error occured while signing up: ${exception.message}`
+                message: exception.message,
             })
 
             return
