@@ -57,7 +57,7 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   socket.emit(
     "create-column",
     { 
-      project_id: '5e850799c360416dbc1c6305',
+      project_id: '5e90df5a6d98d833703affbc',
       name: newName, 
       board_index: columns.length,
       max_tasks: maxLimit,

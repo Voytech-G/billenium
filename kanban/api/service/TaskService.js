@@ -1,5 +1,6 @@
 const ColumnService = require('../service/ColumnService')
 const TaskRepository = require('../database/repository/TaskRepository')
+const ColumnRepository = require('../database/repository/ColumnRepository')
 
 class TaskService {
     /**
@@ -15,7 +16,6 @@ class TaskService {
             const columnId = payload.column_id
     
             const createdTask = await TaskRepository.create(content, rowIndex, columnId)
-
             if (createdTask == null) {
                 throw new Error('An error occured, no tasks created.')
             }
@@ -45,35 +45,27 @@ class TaskService {
             
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
-    
-            const update = { 
-                row_index: targetRowIndex,
-                column: targetColumnId,
-            }
-    
-            // update moved task's position to target task position
-            const task = await TaskRepository.findById(taskId)
 
-            if (movedTask == null) {
-                throw new Error('Found no tasks of given ID.')
-            }
-
-            const movedTask = await TaskRepository.update(task, update)
-
-            if (movedTask == null) {
-                throw new Error('An error occured, no tasks moved.')
-            }
-            
             // in case target column is not the same as source column we switch them
             if (targetColumnId !== sourceColumnId) {
                 await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
                 await ColumnService.assignTaskToColumn(targetColumnId, taskId)
             }
-    
+            
             // adjust all tasks in target and source columns (move tasks above in source column task down, move tasks above in target column up)
             await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
             await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
-    
+
+            const update = { 
+                row_index: targetRowIndex,
+                column: targetColumnId,
+            }
+            
+            const movedTask = await TaskRepository.update(taskId, update)
+            if (movedTask == null) {
+                throw new Error('An error occured, no tasks moved.')
+            }
+            
             return movedTask
         } catch (exception) {
             throw new Error(`Failed to move the task: ${exception.message}`)
@@ -90,6 +82,11 @@ class TaskService {
      */
     static async moveTasksAboveRowIndexDown(rowIndex, columnId, including = false) {
         try {
+            const column = await ColumnRepository.findById(columnId)
+            if (column == null) {
+                throw new Error('Found no column of given ID.')
+            }
+
             const update = {
                 $inc: { row_index: -1 },
             }
@@ -112,6 +109,11 @@ class TaskService {
      */
     static async moveTasksAboveRowIndexUp(rowIndex, columnId, including = false) {
         try {
+            const column = await ColumnRepository.findById(columnId)
+            if (column == null) {
+                throw new Error('Found no column of given ID.')
+            }
+
             const update = {
                 $inc: { row_index: 1 },
             }
@@ -158,18 +160,16 @@ class TaskService {
             const taskId = payload.task_id
             const content = payload.content
     
-            const update = { 
-                content, 
-            }
-    
             const task = await TaskRepository.findById(taskId)
-
             if (task == null) {
                 throw new Error('Found no task of given ID.')
             }
 
-            const updatedTask = await TaskRepository.update(taskId, update)
+            const update = { 
+                content, 
+            }
 
+            const updatedTask = await TaskRepository.update(taskId, update)
             if (updatedTask == null) {
                 throw new Error('An error occured, no tasks updated.')
             }
@@ -198,13 +198,11 @@ class TaskService {
             await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
     
             const task = await TaskRepository.findById(taskId)
-    
             if (task == null) {
                 throw new Error('Found no task of given ID.')
             }
     
             const removedTask = await TaskRepository.remove(task)
-    
             if (removedTask == null) {
                 throw new Error('An error occured, removed no tasks.')
             }

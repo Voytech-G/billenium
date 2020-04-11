@@ -1,24 +1,11 @@
 const AuthorizationValidator = require('../validation/authorization/AuthorizationValidator')
+const EventService = require('../service/EventService')
 const UserRepository = require('../database/repository/UserRepository')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const appConfig = require('../config/app')
 
 class AuthorizationService {
-    // TODO think about a better place for those types
-    // list of events that will not be authenticated
-    static AUTHENTICATION_EXCLUDED_EVENTS = ['sign-in', 'sign-up', 'authenticate']
-
-    /**
-     * Return true, if given event type is excluded from authentication
-     * 
-     * @param {String} eventType
-     * @return {Boolean} 
-     */
-    static isEventTypeExcludedFromAuthentication(eventType) {
-        return this.AUTHENTICATION_EXCLUDED_EVENTS.includes(eventType)
-    }
-
     /**
      * Set authenticated socket data
      * 
@@ -46,11 +33,16 @@ class AuthorizationService {
      * @return {Boolean} 
      */
     static isSocketAuthenticated(socket) {
-        if (socket.authenticated == null) {
-            return false
+        try {
+            if (socket.authenticated == null) {
+                return false
+            }
+
+            return true
+        } catch (exception) {
+            throw new Error(`Failed checking if socket connection is authenticated: ${exception.message}`)
         }
 
-        return true
     }
 
     /**
@@ -112,25 +104,29 @@ class AuthorizationService {
      * @return {void}
      */
     static authenticateEvent(socket, payload, next) {
-        const eventType = payload[0]
-
-        // if given event type is excluded from authentication stop
-        if (this.isEventTypeExcludedFromAuthentication(eventType)) {
-            next()
-
+        try {
+            const eventType = payload[0]
+    
+            // if given event type is excluded from authentication stop
+            if (!EventService.isEventAuthenticated(eventType)) {
+                next()
+    
+                return
+            }
+    
+            // if socket is authenticated
+            if (this.isSocketAuthenticated(socket)) {
+                next()
+    
+                return
+            }
+    
+            next(new Error('Socket not authenticated'))
+    
             return
+        } catch (exception) {
+            throw new Error(`Failed to authenticate incoming event: ${exception}`)
         }
-
-        // if socket is authenticated
-        if (this.isSocketAuthenticated(socket)) {
-            next()
-
-            return
-        }
-
-        next(new Error('Socket not authenticated'))
-
-        return
     }
 
     /**
@@ -164,7 +160,7 @@ class AuthorizationService {
     static async verifyAuthenticationToken(token) {
         try {
             const encryptionSecret = this.getEncryptionSecret()
-    
+
             return new Promise((resolve, reject) => {
                 jwt.verify(token, encryptionSecret, (error, decoded) => {
                     if (error) {
@@ -273,15 +269,15 @@ class AuthorizationService {
             }
     
             // true, if given password is valid
-            const passwordCorrect = await bcrypt.compare(requestPIN, databasePINHash)
+            const pinCorrect = await bcrypt.compare(requestPIN, databasePINHash)
     
-            if (!passwordCorrect) {
-                throw new Error('Invalid password.')
+            if (!pinCorrect) {
+                throw new Error('Invalid PIN.')
             }
     
             return
         } catch (exception) {
-            throw new Error(`PIN validating failed: ${exception.message}`)
+            throw new Error(`PIN validation failed: ${exception.message}`)
         }
     }
 

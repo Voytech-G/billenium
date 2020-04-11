@@ -79,14 +79,12 @@ class ColumnService {
     static async assignTaskToColumn(columnId, taskId) {
         try {
             const targetColumn = await ColumnRepository.findById(columnId)
-            
             if (targetColumn == null) {
                 throw new Error('Found no column to assign the task to.')
             }
             
             // find the task we want to assign to column
             const targetTask = await TaskRepository.findById(taskId)
-    
             if (targetTask == null) {
                 throw new Error('Found no task to assign to the column.')
             }
@@ -110,8 +108,12 @@ class ColumnService {
      */
     static async unassignTaskFromColumn(columnId, taskId) {
         try {
-            const column = await ColumnRepository.findById(columnId)
+            const task = await TaskRepository.findById(taskId)
+            if (task == null) {
+                throw new Error('Found no task of given ID.')
+            }
 
+            const column = await ColumnRepository.findById(columnId)
             if (column == null) {
                 throw new Error('Found no column of given ID.')
             }
