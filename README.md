@@ -12,6 +12,8 @@ Lista ustaleń: https://docs.google.com/document/d/1Z0csHyy9m-pUa_Q8utujgLlMtqeX
 
 Tablica od prowadzącego: https://miro.com/app/board/o9J_kvboRWI=/
 
+Figma - design apki: https://www.figma.com/file/FVyiMleMovWhyDeMRZ7cJy/Variant-Knaban?node-id=0%3A1
+
 
 W celu uruchomienia projektu należy mieć zainstalowanego node.js + jego pakiety (npm i)
 Po zainstalowaniu niezbędnych elementów należy:
