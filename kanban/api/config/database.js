@@ -1,9 +1,9 @@
 module.exports = {
   developmentDatabaseConnection: {
-    databaseContainerName: "ds239097",
-    databasePort: "39097",
-    databaseName: "kanban-ola",
-    username: "kanban-ola",
+    databaseContainerName: "ds251804",
+    databasePort: "51804",
+    databaseName: "kanban-wojtek",
+    username: "kanban-wojtek",
     password: "kinethicc69",
     options: {
       useNewUrlParser: true,
