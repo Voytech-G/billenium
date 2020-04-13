@@ -8,15 +8,19 @@ class ProjectValidator extends ValidatorAbstract {
      * @return {void} 
      */
     static validateCreateRequest(payload) {
-        if (payload.project_name == null) {
-            throw new Error('Project name is required')
+        try {
+            if (payload.project_name == null) {
+                throw new Error('Project name is required')
+            }
+    
+            if (payload.total_budget == null) {
+                throw new Error('Project total budget is required')
+            } 
+    
+            return
+        } catch (exception) {
+            throw new Error(`Create project request validation failed: ${exception.message}`)
         }
-
-        if (payload.total_budget == null) {
-            throw new Error('Project total budget is required')
-        } 
-
-        return
     }
 
     /**
@@ -26,19 +30,23 @@ class ProjectValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateUpdateRequest(payload) {
-        if (payload.project_name == null) {
-            throw new Error('Project name is required')
+        try {
+            if (payload.project_name == null) {
+                throw new Error('Project name is required')
+            }
+    
+            if (payload.used_budget == null) {
+                throw new Error('Project used budget is required')
+            }
+    
+            if (payload.total_budget == null) {
+                throw new Error('Project total budget is required')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Update project request validation failed: ${exception.message}`)
         }
-
-        if (payload.used_budget == null) {
-            throw new Error('Project used budget is required')
-        }
-
-        if (payload.total_budget == null) {
-            throw new Error('Project total budget is required')
-        }
-
-        return
     }
 
     /**
@@ -48,9 +56,13 @@ class ProjectValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateRemoveRequest(payload) {
-        this.checkObjectIDValid(payload.project_id)
-
-        return
+        try {
+            this.checkObjectIDValid(payload.project_id)
+    
+            return
+        } catch (exception) {
+            throw new Error(`Remove project request validation failed: ${exception.message}`)
+        }
     }
 
     /**
@@ -60,9 +72,13 @@ class ProjectValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateGetOneRequest(payload) {
-        this.checkObjectIDValid(payload.project_id)
-        
-        return
+        try {
+            this.checkObjectIDValid(payload.project_id)
+            
+            return
+        } catch (exception) {
+            throw new Error(`Get one project request validation failed: ${exception.message}`)
+        }
     }
 }
 

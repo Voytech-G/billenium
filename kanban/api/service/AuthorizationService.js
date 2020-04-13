@@ -1,24 +1,11 @@
 const AuthorizationValidator = require('../validation/authorization/AuthorizationValidator')
+const EventService = require('../service/EventService')
 const UserRepository = require('../database/repository/UserRepository')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const appConfig = require('../config/app')
 
 class AuthorizationService {
-    // TODO think about a better place for those types
-    // list of events that will not be authenticated
-    static AUTHENTICATION_EXCLUDED_EVENTS = ['sign-in', 'sign-up', 'authenticate']
-
-    /**
-     * Return true, if given event type is excluded from authentication
-     * 
-     * @param {String} eventType
-     * @return {Boolean} 
-     */
-    static isEventTypeExcludedFromAuthentication(eventType) {
-        return this.AUTHENTICATION_EXCLUDED_EVENTS.includes(eventType)
-    }
-
     /**
      * Set authenticated socket data
      * 
@@ -27,12 +14,16 @@ class AuthorizationService {
      * @return {void}
      */
     static setSocketAuthenticationData(socket, data) {
-        const socketData = this.createSessionDataObject(data)
-
-        socket.authenticated = true
-        socket.session_data = socketData
-
-        return
+        try {
+            const socketData = this.createSessionDataObject(data)
+    
+            socket.authenticated = true
+            socket.session_data = socketData
+    
+            return
+        } catch (exception) {
+            throw new Error(`Setting socket session data failed: ${exception.message}`)
+        }
     }
 
     /**
@@ -42,11 +33,16 @@ class AuthorizationService {
      * @return {Boolean} 
      */
     static isSocketAuthenticated(socket) {
-        if (socket.authenticated == null) {
-            return false
+        try {
+            if (socket.authenticated == null) {
+                return false
+            }
+
+            return true
+        } catch (exception) {
+            throw new Error(`Failed checking if socket connection is authenticated: ${exception.message}`)
         }
 
-        return true
     }
 
     /**
@@ -72,14 +68,18 @@ class AuthorizationService {
      * @return {Object}
      */
     static createSessionDataObject(data) {
-        AuthorizationValidator.validateCreateSessionDataObjectRequest(data)
-
-        return {
-            username: data.username,
-            first_name: data.first_name,
-            last_name: data.last_name,
-            user_type: data.user_type,
-            initials: data.initials,
+        try {
+            AuthorizationValidator.validateCreateSessionDataObjectRequest(data)
+    
+            return {
+                username: data.username,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                user_type: data.user_type,
+                initials: data.initials,
+            }
+        } catch (exception) {
+            throw new Error(`Failed to create socket session data object: ${exception.message}`)
         }
     }
 
@@ -104,25 +104,29 @@ class AuthorizationService {
      * @return {void}
      */
     static authenticateEvent(socket, payload, next) {
-        const eventType = payload[0]
-
-        // if given event type is excluded from authentication stop
-        if (this.isEventTypeExcludedFromAuthentication(eventType)) {
-            next()
-
+        try {
+            const eventType = payload[0]
+    
+            // if given event type is excluded from authentication stop
+            if (!EventService.isEventAuthenticated(eventType)) {
+                next()
+    
+                return
+            }
+    
+            // if socket is authenticated
+            if (this.isSocketAuthenticated(socket)) {
+                next()
+    
+                return
+            }
+    
+            next(new Error('Socket not authenticated'))
+    
             return
+        } catch (exception) {
+            throw new Error(`Failed to authenticate incoming event: ${exception}`)
         }
-
-        // if socket is authenticated
-        if (this.isSocketAuthenticated(socket)) {
-            next()
-
-            return
-        }
-
-        next(new Error('Socket not authenticated'))
-
-        return
     }
 
     /**
@@ -135,12 +139,16 @@ class AuthorizationService {
      * @return {Object} 
      */
     static async authenticate(socket, token) {
-        const tokenData = await this.getAuthenticationTokenData(token)
-
-        // set socket object data (user data and flag indicating that the socket is authenticated)
-        this.setSocketAuthenticationData(socket, tokenData.data)
-
-        return tokenData
+        try {
+            const tokenData = await this.verifyAuthenticationToken(token)
+            
+            // set socket object data (user data and flag indicating that the socket is authenticated)
+            this.setSocketAuthenticationData(socket, tokenData.data)
+            
+            return tokenData
+        } catch (exception) {
+            throw new Error(`Authentication failed: ${exception.message}`)
+        }
     }
 
     /**
@@ -149,18 +157,22 @@ class AuthorizationService {
      * @param {String} token
      * @return {Promise} 
      */
-    static async getAuthenticationTokenData(token) {
-        const encryptionSecret = this.getEncryptionSecret()
+    static async verifyAuthenticationToken(token) {
+        try {
+            const encryptionSecret = this.getEncryptionSecret()
 
-        return new Promise((resolve, reject) => {
-            jwt.verify(token, encryptionSecret, (error, decoded) => {
-                if (error) {
-                    reject(new Error(`Token verification failed, reason: ${error.message}`))
-                }
-
-                resolve(decoded)
+            return new Promise((resolve, reject) => {
+                jwt.verify(token, encryptionSecret, (error, decoded) => {
+                    if (error) {
+                        reject(new Error(`Token verification failed, reason: ${error.message}`))
+                    }
+    
+                    resolve(decoded)
+                })
             })
-        })
+        } catch (exception) {
+            throw new Error(`Verification of authentication token failed: ${exception.message}`)
+        }
     }
 
     /**
@@ -169,7 +181,11 @@ class AuthorizationService {
      * @return {String}
      */
     static getEncryptionSecret() {
-        return appConfig.authentication.secret
+        try {
+            return appConfig.authentication.secret
+        } catch (exception) {
+            throw new Error(`Failed to get encryption secret: ${exception.message}`)
+        }
     }
 
     /**
@@ -179,7 +195,19 @@ class AuthorizationService {
      * @return {String} 
      */
     static async getHash(plainText, saltRounds) {
-        return await bcrypt.hash(plainText, saltRounds)
+        try {
+            if (plainText == null || plainText == "") {
+                throw new Error('Cannot get hash from an empty plain text.')
+            }
+    
+            if (saltRounds == null || !Number.isInteger(saltRounds)) {
+                throw new Error('Salt rounds number is required')
+            }
+    
+            return await bcrypt.hash(plainText, saltRounds)
+        } catch (exception) {
+            throw new Error(`Failed to generate a hash: ${exception.message}`)
+        }
     }
 
     /**
@@ -190,37 +218,41 @@ class AuthorizationService {
      * @return {String} 
      */
     static async signIn(socket, payload) {
-        if (this.isSocketAuthenticated(socket)) {
-            throw new Error('You are already logged in!')
+        try {
+            if (this.isSocketAuthenticated(socket)) {
+                throw new Error('You are already logged in.')
+            }
+
+            const username = payload.username
+            const requestPIN = payload.pin
+    
+            const filter = {
+                username,
+            }
+    
+            // find one user by username
+            const result = await UserRepository.findManyByFilter(filter)
+            
+            if (result.length == 0) {
+                throw new Error('Invalid username.')
+            }
+    
+            if (result.length > 1) {
+                throw new Error('Found more than 1 user with that username.')
+            }
+    
+            const userData = result[0]
+    
+            const databasePINHash = userData.pin
+            await this.validatePIN(requestPIN, databasePINHash)
+    
+            this.setSocketAuthenticationData(socket, userData)
+    
+            // user signed in, sign JWT token
+            return await this.signJWTToken(userData)
+        } catch (exception) {
+            throw new Error(`Failed to sign in: ${exception.message}`)
         }
-
-        const username = payload.username
-        const requestPIN = payload.pin
-
-        const filter = {
-            username,
-        }
-
-        // find one user by username
-        const result = await UserRepository.findManyByFilter(filter)
-        
-        if (result.length == 0) {
-            throw new Error('Invalid username')
-        }
-
-        if (result.length > 1) {
-            throw new Error('Found more than 1 user with that username!')
-        }
-
-        const userData = result[0]
-
-        const databasePINHash = userData.pin
-        await this.validatePIN(requestPIN, databasePINHash)
-
-        this.setSocketAuthenticationData(socket, userData)
-
-        // user signed in, sign JWT token
-        return await this.signJWTToken(userData)
     }
 
     /**
@@ -231,18 +263,22 @@ class AuthorizationService {
      * @return {void} 
      */
     static async validatePIN(requestPIN, databasePINHash) {
-        if (databasePINHash == null) {
-            throw new Error('Failed to retrieve user\'s PIN code hash.')
+        try {
+            if (databasePINHash == null) {
+                throw new Error('Failed to retrieve user\'s PIN code hash.')
+            }
+    
+            // true, if given password is valid
+            const pinCorrect = await bcrypt.compare(requestPIN, databasePINHash)
+    
+            if (!pinCorrect) {
+                throw new Error('Invalid PIN.')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`PIN validation failed: ${exception.message}`)
         }
-
-        // true, if given password is valid
-        const passwordCorrect = await bcrypt.compare(requestPIN, databasePINHash)
-
-        if (!passwordCorrect) {
-            throw new Error('Invalid password')
-        }
-
-        return
     }
 
     /**
@@ -252,24 +288,28 @@ class AuthorizationService {
      * @return {String} 
      */
     static async signJWTToken(user) {
-        return new Promise((resolve, reject) => {
-            const encryptionSecret = this.getEncryptionSecret()
-            const tokenData = this.createSessionDataObject(user)
-
-            jwt.sign({
-                data: tokenData,
-            }, encryptionSecret, {
-                expiresIn: appConfig.authentication.JWTTokenExpiresInSeconds
-            }, (error, token) => {
-                if (error) {
-                    reject('Failed to sign the token')
-
-                    return
-                }
-
-                resolve(token)
+        try {
+            return new Promise((resolve, reject) => {
+                const encryptionSecret = this.getEncryptionSecret()
+                const tokenData = this.createSessionDataObject(user)
+    
+                jwt.sign({
+                    data: tokenData,
+                }, encryptionSecret, {
+                    expiresIn: appConfig.authentication.JWTTokenExpiresInSeconds
+                }, (error, token) => {
+                    if (error) {
+                        reject('Failed to sign the token')
+    
+                        return
+                    }
+    
+                    resolve(token)
+                })
             })
-        })
+        } catch (exception) {
+            throw new Error(`Failed to sign JWT Token: ${exception.message}`)
+        }
     }
 }
 

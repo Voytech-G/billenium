@@ -9,19 +9,23 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateCreateRequest(payload) {
-        if (payload.content == null) {
-            throw new Error(`Task content is required`)
-        }
+        try {
+            if (payload.content == null) {
+                throw new Error(`Task content is required`)
+            }
+        
+            if (payload.row_index == null) {
+                throw new Error(`Row index is required`)
+            }
+        
+            if (payload.column_id == null) {
+                throw new Error(`Column ID is required`)
+            }
     
-        if (payload.row_index == null) {
-            throw new Error(`Row index is required`)
+            return
+        } catch (exception) {
+            throw new Error(`Create task request validation failed: ${exception.message}`)
         }
-    
-        if (payload.column_id == null) {
-            throw new Error(`Column ID is required`)
-        }
-
-        return
     }
 
     /**
@@ -31,13 +35,17 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateUpdateRequest(payload) {
-        this.checkTaskObjectIDValid(payload.task_id)
-        
-        if (payload.content == null) {
-            throw new Error('Task content is required')
+        try {
+            this.checkTaskObjectIDValid(payload.task_id)
+            
+            if (payload.content == null) {
+                throw new Error('Task content is required')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Update task request validation failed: ${exception.message}`)
         }
-
-        return
     }
 
     /**
@@ -47,25 +55,29 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateMoveRequest(payload) {
-        this.checkTaskObjectIDValid(payload.task_id)
-
-        if (payload.target_row_index == null) {
-            throw new Error('Task target row index is required')
+        try {
+            this.checkTaskObjectIDValid(payload.task_id)
+    
+            if (payload.target_row_index == null) {
+                throw new Error('Task target row index is required')
+            }
+    
+            if (payload.target_column_id == null) {
+                throw new Error('Task target column ID is required')
+            }
+    
+            if (payload.source_row_index == null) {
+                throw new Error('Task source row index is required')
+            }
+    
+            if (payload.source_column_id == null) {
+                throw new Error('Task source column ID is required')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Move task request validation failed: ${exception.message}`)
         }
-
-        if (payload.target_column_id == null) {
-            throw new Error('Task target column ID is required')
-        }
-
-        if (payload.source_row_index == null) {
-            throw new Error('Task source row index is required')
-        }
-
-        if (payload.source_column_id == null) {
-            throw new Error('Task source column ID is required')
-        }
-
-        return
     }
 
     /**
@@ -75,17 +87,21 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateRemoveRequest(payload) {
-        this.checkTaskObjectIDValid(payload.task_id)
-
-        if (payload.source_row_index == null) {
-            throw new Error('Task row index is required')
+        try {
+            this.checkTaskObjectIDValid(payload.task_id)
+    
+            if (payload.source_row_index == null) {
+                throw new Error('Task row index is required')
+            }
+    
+            if (payload.source_column_id == null) {
+                throw new Error('Task column ID is required')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Remove task request validation failed: ${exception.message}`)
         }
-
-        if (payload.source_column_id == null) {
-            throw new Error('Task column ID is required')
-        }
-
-        return
     }
 
     /**
@@ -95,9 +111,13 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateGetOneRequest(payload) {
-        this.checkTaskObjectIDValid(payload.task_id)
-
-        return
+        try {
+            this.checkTaskObjectIDValid(payload.task_id)
+    
+            return
+        } catch (exception) {
+            throw new Error(`Get one task request validation failed: ${exception.message}`)
+        }
     }
 
     /**
@@ -107,9 +127,13 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static checkTaskObjectIDValid(taskId) {
-        this.checkObjectIDValid(taskId, 'task')
-
-        return
+        try {
+            this.checkObjectIDValid(taskId, 'task')
+    
+            return
+        } catch (exception) {
+            throw new Error(`Checking task object ID failed: ${exception.message}`)
+        }
     }
 }
 

@@ -11,17 +11,25 @@ class UserService {
      * @return {Object} 
      */
     static async createUser(payload) {
-        const username = payload.username
-        const pin = await this.getPinHash(payload.pin)
-        const firstName = payload.first_name
-        const lastName = payload.last_name
-        const userType = payload.user_type
-        const initials = this.getUserInitials(firstName, lastName)
+        try {
+            const username = payload.username
+            const pin = await this.getPinHash(payload.pin)
+            const firstName = payload.first_name
+            const lastName = payload.last_name
+            const userType = payload.user_type
+            const initials = this.getUserInitials(firstName, lastName)
+            
+            this.validateUserType(userType)
+            await this.validateUsernameNotTaken(username)
+    
+            const createdUser = await UserRepository.createUser(username, pin, firstName, lastName, userType, initials)
         
-        this.validateUserType(userType)
-        await this.validateUsernameNotTaken(username)
-
-        return await UserRepository.createUser(username, pin, firstName, lastName, userType, initials)
+            if (createdUser == null) {
+                throw new Error('An error occured, no user created.')
+            }
+        } catch (exception) {
+            throw new Error(`Failed to create a user: ${exception.message}`)
+        }
     }
 
     /**
@@ -30,13 +38,17 @@ class UserService {
      * @param {String} type 
      */
     static validateUserType(type) {
-        const userTypes = UserTypes.getKeysArray()
-
-        if (userTypes.includes(type)) {
+        try {
+            const userTypes = UserTypes.getKeysArray()
+    
+            if (!userTypes.includes(type)) {
+                throw new Error('Given user type is invalid')
+            }
+            
             return
+        } catch (exception) {
+            throw new Error(`User type validation failed: ${exception.message}`)
         }
-        
-        throw new Error('Given user type is invalid')
     }
 
     /**
@@ -46,9 +58,13 @@ class UserService {
      * @return {String} 
      */
     static async getPinHash(pin) {
-        const saltRounds = appConfig.authentication.userPINHashSaltRounds
-
-        return await AuthorizationService.getHash(pin, saltRounds)
+        try {
+            const saltRounds = appConfig.authentication.userPINHashSaltRounds
+    
+            return await AuthorizationService.getHash(pin, saltRounds)
+        } catch (exception) {
+            throw new Error(`Failed to get PIN hash: ${exception.message}`)
+        }
     }
 
     /**
@@ -69,19 +85,23 @@ class UserService {
      * @return {void}
      */
     static async validateUsernameNotTaken(username) {
-        const filter = {
-            username
+        try {
+            const filter = {
+                username
+            }
+            
+            // find all users with given username
+            const users = await UserRepository.findManyByFilter(filter)
+    
+            // check if found no users with given username
+            if (users.length == 0) {
+                return
+            }
+    
+            throw new Error(`Username: ${username} is taken`)
+        } catch (exception) {
+            throw new Error(`Username availability validation failed: ${exception.message}`)
         }
-        
-        // find all users with given username
-        const users = await UserRepository.findManyByFilter(filter)
-
-        // check if found no users with given username
-        if (users.length == 0) {
-            return
-        }
-
-        throw new Error(`Username: ${username} is taken`)
     }
 }
 

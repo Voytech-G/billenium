@@ -23,13 +23,43 @@ class TaskRepository {
     }
 
     /**
-     * Get one task with specified parameters as filter
+     * Update given task
      * 
-     * @param {Object} filter
-     * @return {Object}
+     * @param {String} taskId
+     * @param {Object} update 
      */
-    static async findOneByFilter(filter) {
-        return await Task.findOne(filter)
+    static async update(taskId, update) {
+        if (taskId == null || taskId == "") {
+            throw new Error('Invalid task ID.')
+        }
+
+        return await Task.findByIdAndUpdate(taskId, update, {
+            new: taskConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
+        })
+    }
+
+    /**
+     * Remove given task
+     * 
+     * @param {Object} task
+     * @return {Object} removed task 
+     */
+    static async remove(task) {
+        if (task == null) {
+            throw new Error('Cannot remove an empty task.')
+        }
+
+        return await task.remove()
+    }
+
+    /**
+     * Get all tasks (filter not specified, returns all of them)
+     * 
+     * @return {Array}
+     */
+    static async findAll() {
+        return await Task.find({})
     }
 
     /**
@@ -43,27 +73,13 @@ class TaskRepository {
     }
 
     /**
-     * Get all tasks (filter not specified, returns all of them)
+     * Find one task by filter
      * 
-     * @return {Array}
-     */
-    static async findAll() {
-        return await Task.find({})
-    }
-
-    /**
-     * Find one task and update it, in case more than one task 
-     * passes the filter only the first one is updated
-     * 
-     * @param {Object} filter 
-     * @param {Object} update 
+     * @param {Object} filter
      * @return {Object}
      */
-    static async findOneByFilterAndUpdate(filter, update) {
-        return await Task.findOneAndUpdate(filter, update, {
-            new: taskConfig.repository.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
-        })
+    static async findOneByFilter(filter) {
+        return await Task.findOne(filter)
     }
 
     /**
@@ -90,18 +106,6 @@ class TaskRepository {
     }
 
     /**
-     * Find one task by ID and remove it
-     * 
-     * @param {String} taskId
-     * @return {Object} 
-     */
-    static async findByIdAndRemove(taskId) {
-       const task = await Task.findById(taskId)
-
-       return await task.remove()
-    }
-
-    /**
      * Find one task by ID
      * 
      * @param {string} taskId
@@ -112,22 +116,17 @@ class TaskRepository {
     }
 
     /**
-     * Get one task by given task ID, populate given fields
+     * Populate selected fields in given task
      * 
-     * @param {String} taskId 
-     * @param {Array} populateFields
-     * @return {Object}
+     * @param {Object} task 
+     * @param {Object} populateConfig 
      */
-    static async findByIdAndPopulate(taskId, populateFields) {
-        let task = await Task.findById(taskId)
-
+    static async populate(task, populateConfig) {
         if (task == null) {
-            throw new Error('Failed to populate the task, found no task of given ID')
+            throw new Error('Cannot populate an empty task.')
         }
 
-        // need to call execPopulate() method as populating previously retrieved document needs 
-        // that method to get called
-        return await task.populate(populateFields).execPopulate()
+        return await task.populate(populateConfig).execPopulate()
     }
 }
 

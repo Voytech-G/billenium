@@ -8,27 +8,31 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateCreateRequest(request) {
-        if (request.project_id == null) {
-            throw new Error('Project ID is required')
+        try {
+            if (request.project_id == null) {
+                throw new Error('Project ID is required')
+            }
+    
+            if (request.name == null) {
+                throw new Error('Column name is required')
+            }
+    
+            if (request.board_index == null) {
+                throw new Error('Column board index is required')
+            }
+    
+            if (typeof request.board_index != 'number') {
+                throw new Error('Column board index has to be a number')
+            }
+    
+            if (request.max_tasks == null) {
+                throw new Error('Column max tasks number is required')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Create column request validation failed: ${exception.message}`)
         }
-
-        if (request.name == null) {
-            throw new Error('Column name is required')
-        }
-
-        if (request.board_index == null) {
-            throw new Error('Column board index is required')
-        }
-
-        if (typeof request.board_index != 'number') {
-            throw new Error('Column board index has to be a number')
-        }
-
-        if (request.max_tasks == null) {
-            throw new Error('Column max tasks number is required')
-        }
-
-        return
     }
 
     /**
@@ -38,23 +42,27 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateUpdateRequest(payload) {
-        if (payload.column_id == null) {
-            throw new Error('Column ID is required')
+        try {
+            if (payload.column_id == null) {
+                throw new Error('Column ID is required')
+            }
+    
+            if (payload.name == null) {
+                throw new Error('Column name is required')
+            }
+    
+            if (payload.board_index == null) {
+                throw new Error('Column board index is required')
+            }
+    
+            if (payload.max_tasks == null) {
+                throw new Error('Column max tasks number is required')
+            }
+    
+            return
+        } catch (exception) {
+            throw new Error(`Update column request validation failed: ${exception.message}`)
         }
-
-        if (payload.name == null) {
-            throw new Error('Column name is required')
-        }
-
-        if (payload.board_index == null) {
-            throw new Error('Column board index is required')
-        }
-
-        if (payload.max_tasks == null) {
-            throw new Error('Column max tasks number is required')
-        }
-
-        return
     }
 
     /**
@@ -64,9 +72,13 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static checkColumnObjectIDValid(columnId) {
-        this.checkObjectIDValid(columnId, 'column')
-
-        return
+        try {
+            this.checkObjectIDValid(columnId, 'column')
+    
+            return
+        } catch (exception) {
+            throw new Error(`Column object ID validation failed: ${exception.message}`)
+        }
     }
        
     /**
@@ -76,11 +88,15 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateRemoveRequest(payload) {
-        if (payload.column_id == null) {
-            throw new Error('Column ID is required')
-        } 
-        
-        return
+        try {
+            if (payload.column_id == null) {
+                throw new Error('Column ID is required')
+            } 
+            
+            return
+        } catch (exception) {
+            throw new Error(`Column remove request validation failed: ${exception.message}`)
+        }
     }
 
     /**
@@ -90,9 +106,13 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void}
      */
     static validateGetOneRequest(payload) {
-        this.checkColumnObjectIDValid(payload.column_id)
-
-        return
+        try {
+            this.checkColumnObjectIDValid(payload.column_id)
+    
+            return
+        } catch (exception) {
+            throw new Error(`Get one column request validation failed: ${exception.message}`)
+        }
     }
 }
 
