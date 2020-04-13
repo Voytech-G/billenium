@@ -9,26 +9,45 @@ const App = () => {
   const { setColumns, addCard } = useContext(GlobalContext);
 
   useEffect(() => {
-    console.log("witam");
+    const username = prompt("Please enter your username.");
+    const pin = prompt("Please enter your PIN code.");
+
     socket.emit(
-      "get-project",
+      "sign-in",
       {
-        project_id: "5e877170c2386013906d7421",
+        username: username,
+        pin: pin,
       },
       (data) => {
-        const columnsWithItems = data.payload.columns.map((column) => ({
-          id: column._id,
-          name: column.name,
-          board_index: column.board_index,
-          max_tasks: column.max_tasks,
-          items: column.tasks.map((task) => ({
-            id: task._id,
-            content: task.content,
-            row_index: task.row_index,
-          })),
-        }));
-        // console.log(columnsWithItems);
-        setColumns(columnsWithItems);
+        if (data.status == true) {
+          alert("signed in!");
+
+          socket.emit(
+            "get-project",
+            {
+              project_id: "5e90df5a6d98d833703affbc",
+            },
+            (data) => {
+              const columnsWithItems = data.payload.columns.map((column) => ({
+                id: column._id,
+                name: column.name,
+                board_index: column.board_index,
+                max_tasks: column.max_tasks,
+                items: column.tasks.map((task) => ({
+                  id: task._id,
+                  content: task.content,
+                  row_index: task.row_index,
+                })),
+              }));
+              // console.log(columnsWithItems);
+              setColumns(columnsWithItems);
+            }
+          );
+
+          return;
+        } else {
+          alert(`not signed in: ${data.message}`);
+        }
       }
     );
   }, []);

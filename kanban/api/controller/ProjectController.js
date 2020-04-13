@@ -17,7 +17,6 @@ class ProjectController {
 
             callback({
                 status: true,
-                message: 'Successfully created a project',
                 payload: project,
             })
 
@@ -25,7 +24,7 @@ class ProjectController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to create a project: ${exception.message}`,
+                message: exception.message,
             })
 
             return
@@ -47,7 +46,6 @@ class ProjectController {
 
             callback({
                 status: true,
-                message: 'Successfully updated the project',
                 payload: project,
             })
 
@@ -55,7 +53,7 @@ class ProjectController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to update the project: ${exception.message}`,
+                message: exception.message,
             })
 
             return
@@ -77,7 +75,6 @@ class ProjectController {
 
             callback({
                 status: true,
-                message: 'Successfully removed the project',
                 payload: project,
             })
 
@@ -85,7 +82,7 @@ class ProjectController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `Failed to remove the project: ${exception.message}`,
+                message: exception.message,
             })
 
             return
@@ -114,7 +111,7 @@ class ProjectController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `An error occured while getting the project: ${exception.message}`
+                message: exception.message,
             })
 
             return
@@ -140,7 +137,7 @@ class ProjectController {
         } catch (exception) {
             callback({
                 status: false,
-                message: `An error occured while getting list of all projects: ${exception.message}`,
+                message: exception.message,
             })
             
             return

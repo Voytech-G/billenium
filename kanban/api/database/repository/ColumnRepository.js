@@ -4,43 +4,6 @@ const columnConfig = require('../../config/column')
 
 class ColumnRepository {
     /**
-     * Find all columns (filter not specified, returns all)
-     * 
-     * @return {Array}
-     */
-    static async findAll() {
-        return await Column.find({})
-    }
-
-    /**
-     * Find column by ID
-     * 
-     * @param {Object} columnId 
-     * @return {void}
-     */
-    static async findById(columnId) {
-        return await Column.findById(columnId)
-    }
-
-     /**
-     * Find column by ID and populate given field
-     * 
-     * @param {Object} columnId 
-     * @return {void}
-     */
-    static async findByIdAndPopulate(columnId, populateFields) {
-        let column = await Column.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Failed to populate the column, found no column of given ID')
-        }
-
-        // need to call execPopulate() method as populating previously retrieved document needs 
-        // that method to get called
-        return await column.populate(populateFields).execPopulate()
-    }
-
-    /**
      * Create a new column
      * 
      * @param {String} projectId
@@ -60,6 +23,64 @@ class ColumnRepository {
 
         return await newColumn.save()
     }
+    
+    /**
+     * Remove given column
+     * 
+     * @param {Object} column
+     * @return {Object} 
+     */
+    static async remove(column) {
+        if (column == null) {
+            throw new Error('Cannot remove an empty column.')
+        }
+
+        return await column.remove()
+    }
+
+    /**
+     * Find all columns (filter not specified, returns all)
+     * 
+     * @return {Array}
+     */
+    static async findAll() {
+        return await Column.find({})
+    }
+
+    /**
+     * Find column by ID
+     * 
+     * @param {Object} columnId 
+     * @return {void}
+     */
+    static async findById(columnId) {
+        return await Column.findById(columnId)
+    }
+
+    static async populate(column, populateConfig) {
+        if (column == null) {
+            throw new Error('Cannot populate an empty column.')
+        }
+
+        return await column.populate(populateConfig).execPopulate()
+    }
+
+    /**
+     * Update given column
+     * 
+     * @param {String} columnId
+     * @param {Object} update 
+     */
+    static async update(columnId, update) {
+        if (columnId == null || columnId == "") {
+            throw new Error('Invalid column ID.')
+        }
+
+        return await Column.findByIdAndUpdate(columnId, update, {
+            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
+        })
+    }
 
     /**
      * Find many columns with specified parameters as filter
@@ -72,6 +93,16 @@ class ColumnRepository {
     }
 
     /**
+     * Find one column by filter
+     * 
+     * @param {Object} filter
+     * @return {Object} 
+     */
+    static async findOneByFilter(filter) {
+        return await Column.findOne(filter)
+    }
+
+    /**
      * Get columns by filter and update
      * 
      * @param {Object} filter 
@@ -80,36 +111,6 @@ class ColumnRepository {
      */
     static async findManyByFilterAndUpdate(filter, update) {
         return await Column.updateMany(filter, update)
-    }
-
-    /**
-     * Find one column and update it, return updated column
-     * 
-     * @param {Object} filter 
-     * @param {Object} update
-     * @return {Object}
-     */
-    static async findOneByFilterAndUpdate(filter, update) {
-        return await Column.findOneAndUpdate(filter, update, {
-            new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
-            useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,
-        })
-    }
-
-    /**
-     * Find one column by ID and remove it
-     * 
-     * @param {Number} columnId 
-     * @return {Object} // removed column data
-     */
-    static async findByIdAndRemove(columnId) {
-        const column = await Column.findById(columnId)
-
-        if (column == null) {
-            throw new Error('Found no column of given ID to remove.')
-        }
-
-        return await column.remove()
     }
 }
 

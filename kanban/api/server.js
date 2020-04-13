@@ -6,7 +6,7 @@ const server = http.createServer(app)
 const io = socketIo(server)
 const appConfig = require('./config/app')
 const DatabaseService = require('./service/DatabaseService')
-const ConnectionsHandler = require('./handler/ConnectionsHandler')
+const EventsHandler = require('./handler/EventsHandler')
 const ServerHandler = require('./handler/ServerHandler')
 
 DatabaseService.connectionOpen()
@@ -16,7 +16,7 @@ io.use(async (socket, next) => {
   next()
 })
 .on('connection', async socket => {
-  ConnectionsHandler.setupConnection(socket)
+    EventsHandler.setupEvents(socket)
 })
 
 const PORT = appConfig.port
