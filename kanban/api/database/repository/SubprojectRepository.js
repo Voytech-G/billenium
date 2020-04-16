@@ -66,6 +66,20 @@ class SubprojectRepository {
     static async findManyByFilter(filter) {
         return await Subproject.find(filter)
     }
+
+    /**
+     * Populate given subproject's selected fields
+     * 
+     * @param {Object} subproject 
+     * @param {Object} populateConfig 
+     */
+    static async populate(subproject, populateConfig) {
+        if (subproject == null) {
+            throw new Error('Cannot populate an empty subproject')
+        }
+
+        return await subproject.populate(populateConfig).execPopulate()
+    }
 }
 
 module.exports = SubprojectRepository

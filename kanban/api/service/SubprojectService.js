@@ -88,13 +88,40 @@ class SubprojectService {
         }
     }
 
-    // static async getOneSubproject(payload) {
-    //     try {
+    static async getOneSubproject(payload) {
+        try {
+            const subprojectId = payload.subproject_id
 
-    //     } catch (exception) {
-    //         throw new Error(`Failed to get one subproject: ${exception.message}`)
-    //     }
-    // }
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no subproject of given ID.')
+            }
+
+            // populate columns field, populate tasks field in every column
+            const populateConfig = [
+                {
+                    path: 'project',
+                    model: 'Project',
+                    populate: {
+                        path: 'tasks',
+                        model: 'Task',
+                    },
+                },
+                // {
+                //     path: 'tasks',
+                //     model: 'Task',
+                //     populate: {
+                //         path: 'subtasks',
+                //         model: 'Subtask',
+                //     },
+                // }
+            ]
+            
+            return await SubprojectRepository.populate(subproject, populateConfig)
+        } catch (exception) {
+            throw new Error(`Failed to get one subproject: ${exception.message}`)
+        }
+    }
 }
 
 module.exports = SubprojectService

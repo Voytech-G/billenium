@@ -57,9 +57,15 @@ const App = () => {
             //     console.log(data)
             // })
 
-            socket.emit('remove-subproject', {
-                subproject_id: '5e98b0dab1b4ab474090034d',
-                project_id: '5e98b06eb1b4ab474090034b',
+            // socket.emit('remove-subproject', {
+            //     subproject_id: '5e98b0dab1b4ab474090034d',
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            socket.emit('get-one-subproject', {
+                subproject_id: '5e98b0c0b1b4ab474090034c',
             }, data => {
                 console.log(data)
             })
