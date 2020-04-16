@@ -1,4 +1,5 @@
 const ProjectService = require('../service/ProjectService')
+const TaskRepository = require('../database/repository/TaskRepository')
 const SubprojectRepository = require('../database/repository/SubprojectRepository')
 
 class SubprojectService {
@@ -88,6 +89,12 @@ class SubprojectService {
         }
     }
 
+    /**
+     * Get one subproject, populate selected fields
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
     static async getOneSubproject(payload) {
         try {
             const subprojectId = payload.subproject_id
@@ -102,24 +109,86 @@ class SubprojectService {
                 {
                     path: 'project',
                     model: 'Project',
-                    populate: {
-                        path: 'tasks',
-                        model: 'Task',
-                    },
+                    // populate: {
+                    //     path: 'tasks',
+                    //     model: 'Task',
+                    // },
                 },
-                // {
-                //     path: 'tasks',
-                //     model: 'Task',
-                //     populate: {
-                //         path: 'subtasks',
-                //         model: 'Subtask',
-                //     },
-                // }
+                {
+                    path: 'tasks',
+                    model: 'Task',
+                    // populate: {
+                    //     path: 'subtasks',
+                    //     model: 'Subtask',
+                    // },
+                }
             ]
             
             return await SubprojectRepository.populate(subproject, populateConfig)
         } catch (exception) {
             throw new Error(`Failed to get one subproject: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Assign task to subproject
+     * 
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static async assignTaskToSubproject(payload) {
+        try {
+            const subprojectId = payload.subproject_id
+            const taskId = payload.task_id
+
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no subproject of given ID')
+            }
+
+            const task = await TaskRepository.findById(taskId)
+            if (task == null) {
+                throw new Error('Found no task of given ID')
+            }
+
+            task.subproject = subproject
+            await task.save()
+
+            subproject.tasks.push(task)
+            await subproject.save()
+        } catch (exception) {
+            throw new Error(`Failed to assign task to subproject: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Unassign given task from a subproject
+     * 
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static async unssignTaskFromSubproject(payload) {
+        try {
+            const subprojectId = payload.subproject_id
+            const taskId = payload.task_id
+
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no subproject of given ID')
+            }
+
+            const task = await TaskRepository.findById(taskId)
+            if (task == null) {
+                throw new Error('Found no task of given ID')
+            }
+
+            task.subproject = null
+            await task.save()
+
+            subproject.tasks.pull(taskId)
+            await subproject.save()
+        } catch (exception) {
+            throw new Error(`Failed to unassign task from subproject: ${exception.message}`)
         }
     }
 }

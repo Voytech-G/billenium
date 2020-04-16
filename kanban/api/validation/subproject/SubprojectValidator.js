@@ -1,4 +1,5 @@
 const ProjectValidator = require('../project/ProjectValidator')
+const TaskValidator = require('../task/TaskValidator')
 const ValidatorAbstract = require('../ValidatorAbstract')
 
 class SubprojectValidator extends ValidatorAbstract {
@@ -53,6 +54,9 @@ class SubprojectValidator extends ValidatorAbstract {
             const subprojectId = payload.subproject_id
             this.checkSubprojectObjectIDValid(subprojectId)
 
+            const projectId = payload.project_id
+            ProjectValidator.checkProjectObjectIDValid(projectId)
+
             return
         } catch (exception) {
             throw new Error(`Subproject remove request validation failed: ${exception.message}`)
@@ -73,6 +77,24 @@ class SubprojectValidator extends ValidatorAbstract {
             return
         } catch (exception) {
             throw new Error(`Get one subproject request validation failed: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static validateChangeTaskAssignedToSubprojectStateRequest(payload) {
+        try {
+            const subprojectId = payload.subproject_id
+            this.checkSubprojectObjectIDValid(subprojectId)
+
+            const taskId = payload.task_id
+            TaskValidator.checkTaskObjectIDValid(taskId)
+
+            return
+        } catch (exception) {
+            throw new Error(`Change task assigned to subproject state request validation failed: ${exception.message}`)
         }
     }
 

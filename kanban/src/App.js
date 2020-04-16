@@ -50,6 +50,30 @@ const App = () => {
             //     console.log(data)
             // })
 
+            // socket.emit('create-subproject', {
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            //     subproject_name: 'second subproject',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-column', {
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            //     name: 'col1',
+            //     board_index: 0,
+            //     max_tasks: 3,
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-task', {
+            //     content: 'task 2 content',
+            //     row_index: 0,
+            //     column_id: '5e98c578544bf95ea0a90a0d',
+            // }, data => {
+            //     console.log(data)
+            // })
+
             // socket.emit('update-subproject', {
             //     subproject_id: '5e98b0c0b1b4ab474090034c',
             //     subproject_name: 'first subproject updated updated',
@@ -64,11 +88,18 @@ const App = () => {
             //     console.log(data)
             // })
 
-            socket.emit('get-one-subproject', {
-                subproject_id: '5e98b0c0b1b4ab474090034c',
-            }, data => {
-                console.log(data)
-            })
+            // socket.emit('get-one-subproject', {
+            //     subproject_id: '5e98b0c0b1b4ab474090034c',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('subproject-unassign-task', {
+            //     task_id: '5e98cb1f96f9725bcc67f980',
+            //     subproject_id: '5e98c0b0053f86414499c40f', 
+            // }, data => {
+            //     console.log(data)
+            // })
 
             return
         } else {

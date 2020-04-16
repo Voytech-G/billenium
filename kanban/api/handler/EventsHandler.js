@@ -120,6 +120,22 @@ class EventsHandler {
             authenticate: true,
         })
 
+        EventService.registerEvent(socket, 'subproject-assign-task', (payload, callback) => {
+            SubprojectController.assignTask(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'subproject-unassign-task', (payload, callback) => {
+            SubprojectController.unassignTask(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
         EventService.registerEvent(socket, 'create-task', (payload, callback) => {
             TaskController.create(payload, callback)
 

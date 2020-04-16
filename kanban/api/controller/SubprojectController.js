@@ -117,6 +117,62 @@ class SubprojectController {
             return
         }
     }
+
+   /**
+     * Assign task to subproject
+     * 
+     * @param {Object} payload
+     * @param {Function} callback
+     * @return {void}
+     */
+    static async assignTask(payload, callback) {
+        try {
+            SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
+
+            await SubprojectService.assignTaskToSubproject(payload)
+
+            callback({
+                status: true,
+            })
+            
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: exception.message
+            })
+
+            return
+        }
+    }
+
+    /**
+     * Unassign task from subproject
+     * 
+     * @param {Object} payload
+     * @param {Function} callback
+     * @return {void}
+     */
+    static async unassignTask(payload, callback) {
+        try {
+            SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
+
+            await SubprojectService.unssignTaskFromSubproject(payload)
+
+            callback({
+                status: true,
+            })
+            
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: exception.message
+            })
+
+            return
+        }
+    }
 }
 
 module.exports = SubprojectController

@@ -131,7 +131,7 @@ class ColumnValidator extends ValidatorAbstract {
      * @return {void} 
      */
     static validateBoardIndex(index) {
-        if (index == null || index == '') {
+        if (index == null) {
             throw new Error('Board index is required')
         }
 
