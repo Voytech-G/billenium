@@ -7,7 +7,10 @@ const ProjectSchema = new mongoose.Schema({
   used_budget: { type: Number, required: false, default: 0 },
   total_budget: { type: Number, required: [true, 'Total budget is required'] },
   columns: [
-      { type: mongoose.Schema.Types.ObjectId, ref: 'Column' },
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Column' },
+  ],
+  subprojects: [
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Subproject' },
   ],
 //   teams: [
 //       { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },

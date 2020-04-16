@@ -19,23 +19,29 @@ const App = () => {
         if (data.status == true) {
             alert('signed in!');
 
-            socket.emit("get-project", {
-                project_id: '5e90df5a6d98d833703affbc',
+            // socket.emit("get-project", {
+            //     project_id: '5e90df5a6d98d833703affbc',
+            // }, data => {
+            // const columnsWithItems = data.payload.columns.map(column => ({
+            //     id: column._id,
+            //     name: column.name,
+            //     board_index: column.board_index,
+            //     max_tasks: column.max_tasks,
+            //     items: column.tasks.map(task => ({
+            //         id: task._id,
+            //         content: task.content,
+            //         row_index: task.row_index
+            //     }))
+            // }));
+            // // console.log(columnsWithItems);
+            // setColumns(columnsWithItems);
+            // });
+
+            socket.emit('remove-project', {
+                project_id: '5e98abc5f17ff537f44574b1',
             }, data => {
-            const columnsWithItems = data.payload.columns.map(column => ({
-                id: column._id,
-                name: column.name,
-                board_index: column.board_index,
-                max_tasks: column.max_tasks,
-                items: column.tasks.map(task => ({
-                    id: task._id,
-                    content: task.content,
-                    row_index: task.row_index
-                }))
-            }));
-            // console.log(columnsWithItems);
-            setColumns(columnsWithItems);
-            });
+                console.log(data)
+            })
 
             return
         } else {

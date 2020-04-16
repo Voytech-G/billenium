@@ -16,4 +16,4 @@ const SubprojectSchema = new mongoose.Schema({
 //     SubprojectHandler.handleSubprojectRemoved(subproject)
 // })
 
-module.exports = mongoose.model("Subproject", Subproject);
+module.exports = mongoose.model("Subproject", SubprojectSchema);

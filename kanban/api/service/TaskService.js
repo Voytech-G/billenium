@@ -17,7 +17,7 @@ class TaskService {
     
             const createdTask = await TaskRepository.create(content, rowIndex, columnId)
             if (createdTask == null) {
-                throw new Error('An error occured, no tasks created.')
+                throw new Error('An error occured, no tasks created')
             }
     
             const taskId = createdTask.id
@@ -63,7 +63,7 @@ class TaskService {
             
             const movedTask = await TaskRepository.update(taskId, update)
             if (movedTask == null) {
-                throw new Error('An error occured, no tasks moved.')
+                throw new Error('An error occured, no tasks moved')
             }
             
             return movedTask
@@ -84,7 +84,7 @@ class TaskService {
         try {
             const column = await ColumnRepository.findById(columnId)
             if (column == null) {
-                throw new Error('Found no column of given ID.')
+                throw new Error('Found no column of given ID')
             }
 
             const update = {
@@ -111,7 +111,7 @@ class TaskService {
         try {
             const column = await ColumnRepository.findById(columnId)
             if (column == null) {
-                throw new Error('Found no column of given ID.')
+                throw new Error('Found no column of given ID')
             }
 
             const update = {
@@ -162,7 +162,7 @@ class TaskService {
     
             const task = await TaskRepository.findById(taskId)
             if (task == null) {
-                throw new Error('Found no task of given ID.')
+                throw new Error('Found no task of given ID')
             }
 
             const update = { 
@@ -171,7 +171,7 @@ class TaskService {
 
             const updatedTask = await TaskRepository.update(taskId, update)
             if (updatedTask == null) {
-                throw new Error('An error occured, no tasks updated.')
+                throw new Error('An error occured, no tasks updated')
             }
 
             return updatedTask
@@ -199,12 +199,12 @@ class TaskService {
     
             const task = await TaskRepository.findById(taskId)
             if (task == null) {
-                throw new Error('Found no task of given ID.')
+                throw new Error('Found no task of given ID')
             }
     
             const removedTask = await TaskRepository.remove(task)
             if (removedTask == null) {
-                throw new Error('An error occured, removed no tasks.')
+                throw new Error('An error occured, removed no tasks')
             }
     
             return removedTask
@@ -225,7 +225,7 @@ class TaskService {
             const task = await TaskRepository.findById(taskId)
 
             if (task == null) {
-                throw new Error('Found no task of given ID.')
+                throw new Error('Found no task of given ID')
             }
     
             const populateConfig = [

@@ -1,4 +1,5 @@
 const ProjectRepository = require('../database/repository/ProjectRepository')
+const SubprojectRepository = require('../database/repository/SubprojectRepository')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 
 class ProjectService {
@@ -14,7 +15,6 @@ class ProjectService {
             const totalBudget = payload.total_budget
 
             const createdProject = await ProjectRepository.create(projectName, totalBudget)
-
             if (createdProject == null) {
                 throw new Error('An error occured, no projects created.')
             }
@@ -45,13 +45,11 @@ class ProjectService {
             }
     
             const project = await ProjectRepository.findById(projectId)
-
             if (project == null) {
                 throw new Error('Found no project of given ID.')
             }
 
             const updatedProject = await ProjectRepository.update(projectId, update)
-
             if (updatedProject == null) {
                 throw new Error('An error occured, no projects updated.')
             }
@@ -71,14 +69,13 @@ class ProjectService {
     static async removeProject(payload) {
         try {
             const projectId = payload.project_id
-            const project = await ProjectRepository.findById(projectId)
 
+            const project = await ProjectRepository.findById(projectId)
             if (project == null) {
                 throw new Error('Found no project of given ID.')
             }
 
             const removedProject = await ProjectRepository.remove(project)
-
             if (removedProject == null) {
                 throw new Error('An error occured, no projects removed.')
             }
@@ -99,7 +96,6 @@ class ProjectService {
     static async unassignColumnFromProject(columnId, projectId) {
         try {
             const project = await ProjectRepository.findById(projectId)
-    
             if (project == null) {
                 throw new Error('Found no project of given ID.')
             }
@@ -123,14 +119,12 @@ class ProjectService {
         try {
             // get project we want the column to assign to
             const targetProject = await ProjectRepository.findById(projectId)
-
             if (targetProject == null) {
                 throw new Error('Found no project of given ID.')
             }
 
             // get the column assigned to project
             const column = await ColumnRepository.findById(columnId)
-
             if (column == null) {
                 throw new Error('Found no column of given ID.')
             }
@@ -146,6 +140,35 @@ class ProjectService {
     }
 
     /**
+     * Assign given subproject to parent project
+     * 
+     * @param {String} subprojectid 
+     * @param {String} projectId
+     * @return {void}
+     */
+    static async assignSubprojectToProject(subprojectId, projectId) {
+        try {
+            const project = await ProjectRepository.findById(projectId)
+            if (project == null) {
+                throw new Error('Found no project of given ID')
+            }
+
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no subproject of given ID')
+            }
+
+            project.subprojects.push(subproject)
+
+            await project.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to assign subproject to project: ${exception.message}`)
+        }
+    }
+
+    /**
      * Get one project, populate it
      * 
      * @param {Object} payload
@@ -154,8 +177,8 @@ class ProjectService {
     static async getOneProject(payload) {
         try {
             const projectId = payload.project_id
-            const project = await ProjectRepository.findById(projectId)
 
+            const project = await ProjectRepository.findById(projectId)
             if (project == null) {
                 throw new Error('Found no project of given ID.')
             }
