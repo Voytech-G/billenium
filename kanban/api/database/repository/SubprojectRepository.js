@@ -34,6 +34,20 @@ class SubprojectRepository {
     }
 
     /**
+     * Remove subproject of given ID
+     * 
+     * @param {Object} subproject
+     * @return {Object} 
+     */
+    static async remove(subproject) {
+        if (subproject == null) {
+            throw new Error('Cannot remove an empty subproject')
+        }
+
+        return await subproject.remove()
+    }
+
+    /**
      * Find one subproject by ID
      * 
      * @param {String} subprojectId

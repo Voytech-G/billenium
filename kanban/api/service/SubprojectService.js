@@ -59,13 +59,34 @@ class SubprojectService {
         }
     }
 
-    // static async removeSubproject(payload) {
-    //     try {
+    /**
+     * Remove project of given ID
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async removeSubproject(payload) {
+        try {
+            const subprojectId = payload.subproject_id
+            const parentProjectId = payload.project_id
 
-    //     } catch (exception) {
-    //         throw new Error(`Failed to remove the subproject: ${exception.message}`)
-    //     }
-    // }
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no project of given ID')
+            }
+
+            await ProjectService.unassignSubprojectFromProject(subprojectId, parentProjectId)
+
+            const removedSubproject = await SubprojectRepository.remove(subproject)
+            if (removedSubproject == null) {
+                throw new Error('An error occured, removed no subprojects')
+            }
+
+            return removedSubproject
+        } catch (exception) {
+            throw new Error(`Failed to remove the subproject: ${exception.message}`)
+        }
+    }
 
     // static async getOneSubproject(payload) {
     //     try {

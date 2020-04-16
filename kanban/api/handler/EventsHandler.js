@@ -104,6 +104,14 @@ class EventsHandler {
             authenticate: true,
         })
 
+        EventService.registerEvent(socket, 'remove-subproject', (payload, callback) => {
+            SubprojectController.remove(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
         EventService.registerEvent(socket, 'create-task', (payload, callback) => {
             TaskController.create(payload, callback)
 

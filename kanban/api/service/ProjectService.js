@@ -95,9 +95,14 @@ class ProjectService {
      */
     static async unassignColumnFromProject(columnId, projectId) {
         try {
+            const column = await ColumnRepository.findById(columnId)
+            if (column == null) {
+                throw new Error('Found no column of given ID')
+            }
+
             const project = await ProjectRepository.findById(projectId)
             if (project == null) {
-                throw new Error('Found no project of given ID.')
+                throw new Error('Found no project of given ID')
             }
     
             project.columns.pull(columnId)
@@ -165,6 +170,35 @@ class ProjectService {
             return
         } catch (exception) {
             throw new Error(`Failed to assign subproject to project: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Unassign subproject of given ID from project of given ID
+     * 
+     * @param {String} subprojectId 
+     * @param {String} projectId
+     * @return {void} 
+     */
+    static async unassignSubprojectFromProject(subprojectId, projectId) {
+        try {
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no subproject of given ID')
+            }
+
+            const project = await ProjectRepository.findById(projectId)
+            if (project == null) {
+                throw new Error('Found no project of given ID')
+            }
+
+            project.subprojects.pull(subprojectId)
+
+            await project.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to unassign subproject from project: ${exception.message}`)
         }
     }
 

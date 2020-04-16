@@ -50,9 +50,16 @@ const App = () => {
             //     console.log(data)
             // })
 
-            socket.emit('update-subproject', {
-                subproject_id: '5e98b0c0b1b4ab474090034c',
-                subproject_name: 'first subproject updated',
+            // socket.emit('update-subproject', {
+            //     subproject_id: '5e98b0c0b1b4ab474090034c',
+            //     subproject_name: 'first subproject updated updated',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            socket.emit('remove-subproject', {
+                subproject_id: '5e98b0dab1b4ab474090034d',
+                project_id: '5e98b06eb1b4ab474090034b',
             }, data => {
                 console.log(data)
             })
