@@ -52,13 +52,11 @@ class ColumnService {
             }
 
             const column = await ColumnRepository.findById(columnId)
-
             if (column == null) {
                 throw new Error('Found no column of given ID.')
             }
 
             const updatedColumn = await ColumnRepository.update(columnId, update)
-
             if (updatedColumn == null) {
                 throw new Error('An error occured, no columns updated.')
             }

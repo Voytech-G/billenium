@@ -37,8 +37,22 @@ const App = () => {
             // setColumns(columnsWithItems);
             // });
 
-            socket.emit('remove-project', {
-                project_id: '5e98abc5f17ff537f44574b1',
+            // socket.emit('remove-project', {
+            //     project_id: '5e98abc5f17ff537f44574b1',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-project', {
+            //     project_name: 'first project',
+            //     total_budget: 2500,
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            socket.emit('update-subproject', {
+                subproject_id: '5e98b0c0b1b4ab474090034c',
+                subproject_name: 'first subproject updated',
             }, data => {
                 console.log(data)
             })

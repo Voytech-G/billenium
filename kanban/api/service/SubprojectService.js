@@ -27,13 +27,37 @@ class SubprojectService {
         }
     }
 
-    // static async updateSubproject(payload) {
-    //     try {
+    /**
+     * Update subproject found by given subproject ID
+     * 
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async updateSubproject(payload) {
+        try {
+            const subprojectId = payload.subproject_id
+            const subprojectName = payload.subproject_name
 
-    //     } catch (exception) {
-    //         throw new Error(`Failed to update the subproject: ${exception.message}`)
-    //     }
-    // }
+            // check if subproject of given ID exists
+            const subproject = await SubprojectRepository.findById(subprojectId)
+            if (subproject == null) {
+                throw new Error('Found no subproject of given ID')
+            }
+
+            const update = {
+                subproject_name: subprojectName,
+            }
+
+            const updatedSubproject = await SubprojectRepository.update(subprojectId, update)
+            if (updatedSubproject == null) {
+                throw new Error('An error occured, no subprojects updated.')
+            }
+
+            return updatedSubproject
+        } catch (exception) {
+            throw new Error(`Failed to update the subproject: ${exception.message}`)
+        }
+    }
 
     // static async removeSubproject(payload) {
     //     try {

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Subproject = require('../model/Subproject')
+const subprojectConfig = require('../../config/subproject')
 
 class SubprojectRepository {
     /**
@@ -16,6 +17,20 @@ class SubprojectRepository {
         })
 
         return await newProject.save()
+    }
+
+    /**
+     * Update one subproject by given subproject ID
+     * 
+     * @param {String} subprojectId 
+     * @param {Object} update
+     * @return {Object|null} 
+     */
+    static async update(subprojectId, update) {
+        return await Subproject.findByIdAndUpdate(subprojectId, update, {
+            new: subprojectConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: subprojectConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
 
     /**
