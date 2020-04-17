@@ -57,7 +57,8 @@ class ProjectValidator extends ValidatorAbstract {
      */
     static validateRemoveRequest(payload) {
         try {
-            this.checkObjectIDValid(payload.project_id)
+            const projectId = payload.project_id
+            this.checkProjectObjectIDValid(projectId)
     
             return
         } catch (exception) {
@@ -73,12 +74,21 @@ class ProjectValidator extends ValidatorAbstract {
      */
     static validateGetOneRequest(payload) {
         try {
-            this.checkObjectIDValid(payload.project_id)
+            const projectId = payload.project_id
+            this.checkProjectObjectIDValid(projectId)
             
             return
         } catch (exception) {
             throw new Error(`Get one project request validation failed: ${exception.message}`)
         }
+    }
+
+    /**
+     * @param {String} id
+     * @return {void} 
+     */
+    static checkProjectObjectIDValid(id) {
+        this.checkObjectIDValid(id, 'project')
     }
 }
 

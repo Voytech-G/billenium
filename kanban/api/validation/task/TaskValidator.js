@@ -1,4 +1,5 @@
 // const taskConfig = require("../../config/task");
+const ColumnValidator = require('../column/ColumnValidator')
 const ValidatorAbstract = require('../ValidatorAbstract')
 
 class TaskValidator extends ValidatorAbstract {
@@ -10,17 +11,14 @@ class TaskValidator extends ValidatorAbstract {
      */
     static validateCreateRequest(payload) {
         try {
-            if (payload.content == null) {
-                throw new Error(`Task content is required`)
-            }
-        
-            if (payload.row_index == null) {
-                throw new Error(`Row index is required`)
-            }
-        
-            if (payload.column_id == null) {
-                throw new Error(`Column ID is required`)
-            }
+            const content = payload.content
+            this.validateTaskContent(content)
+
+            const rowIndex = payload.row_index
+            this.validateRowIndex(rowIndex)
+
+            const columnId = payload.column_id
+            ColumnValidator.checkColumnObjectIDValid(columnId)
     
             return
         } catch (exception) {
@@ -36,12 +34,12 @@ class TaskValidator extends ValidatorAbstract {
      */
     static validateUpdateRequest(payload) {
         try {
-            this.checkTaskObjectIDValid(payload.task_id)
+            const taskId = payload.task_id
+            this.checkTaskObjectIDValid(taskId)
+
+            const taskContent = payload.content
+            this.validateTaskContent(taskContent)
             
-            if (payload.content == null) {
-                throw new Error('Task content is required')
-            }
-    
             return
         } catch (exception) {
             throw new Error(`Update task request validation failed: ${exception.message}`)
@@ -56,23 +54,20 @@ class TaskValidator extends ValidatorAbstract {
      */
     static validateMoveRequest(payload) {
         try {
-            this.checkTaskObjectIDValid(payload.task_id)
+            const taskId = payload.task_id
+            this.checkTaskObjectIDValid(taskId)
     
-            if (payload.target_row_index == null) {
-                throw new Error('Task target row index is required')
-            }
-    
-            if (payload.target_column_id == null) {
-                throw new Error('Task target column ID is required')
-            }
-    
-            if (payload.source_row_index == null) {
-                throw new Error('Task source row index is required')
-            }
-    
-            if (payload.source_column_id == null) {
-                throw new Error('Task source column ID is required')
-            }
+            const targetRowIndex = payload.target_row_index
+            this.validateRowIndex(targetRowIndex)
+
+            const targetColumnId = payload.target_column_id
+            ColumnValidator.checkColumnObjectIDValid(targetColumnId)
+
+            const sourceRowIndex = payload.source_row_index
+            this.validateRowIndex(sourceRowIndex)
+
+            const sourceColumnId = payload.source_column_id
+            ColumnValidator.checkColumnObjectIDValid(sourceColumnId)
     
             return
         } catch (exception) {
@@ -88,15 +83,14 @@ class TaskValidator extends ValidatorAbstract {
      */
     static validateRemoveRequest(payload) {
         try {
-            this.checkTaskObjectIDValid(payload.task_id)
+            const taskId = payload.task_id
+            this.checkTaskObjectIDValid(taskId)
     
-            if (payload.source_row_index == null) {
-                throw new Error('Task row index is required')
-            }
-    
-            if (payload.source_column_id == null) {
-                throw new Error('Task column ID is required')
-            }
+            const sourceRowIndex = payload.source_row_index
+            this.validateRowIndex(sourceRowIndex)
+
+            const sourceColumnId = payload.source_column_id
+            ColumnValidator.checkColumnObjectIDValid(sourceColumnId)
     
             return
         } catch (exception) {
@@ -112,7 +106,8 @@ class TaskValidator extends ValidatorAbstract {
      */
     static validateGetOneRequest(payload) {
         try {
-            this.checkTaskObjectIDValid(payload.task_id)
+            const taskId = payload.task_id
+            this.checkTaskObjectIDValid(taskId)
     
             return
         } catch (exception) {
@@ -127,13 +122,37 @@ class TaskValidator extends ValidatorAbstract {
      * @return {void}
      */
     static checkTaskObjectIDValid(taskId) {
-        try {
-            this.checkObjectIDValid(taskId, 'task')
-    
-            return
-        } catch (exception) {
-            throw new Error(`Checking task object ID failed: ${exception.message}`)
+        this.checkObjectIDValid(taskId, 'task')
+    }
+
+     /**
+     * @param {String} content
+     * @return {void} 
+     */
+    static validateTaskContent(content) {
+        if (content == null || content == '') {
+            throw new Error('Task content is required')
         }
+
+        return
+    }
+
+    /**
+     * Validate row index used in ordering of tasks in column
+     * 
+     * @param {String|Number} rowIndex
+     * @return {void}
+     */
+    static validateRowIndex(rowIndex) {
+        if (rowIndex == null) {
+            throw new Error('Row index is required')
+        }
+
+        if (isNaN(rowIndex)) {
+            throw new Error('Row index is invalid')
+        }
+
+        return
     }
 }
 

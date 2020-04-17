@@ -35,10 +35,6 @@ class ProjectRepository {
      * @param {Object} update 
      */
     static async update(projectId, update) {
-        if (projectId == null || projectId == "") {
-            throw new Error('Invalid project ID.')
-        }
-
         return await Project.findByIdAndUpdate(projectId, update, {
             new: projectConfig.repository.RETURN_NEW_AFTER_UPDATE,
             useFindAndModify: projectConfig.repository.USE_FIND_AND_MODIFY,
