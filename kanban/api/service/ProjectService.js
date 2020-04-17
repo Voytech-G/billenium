@@ -16,7 +16,7 @@ class ProjectService {
 
             const createdProject = await ProjectRepository.create(projectName, totalBudget)
             if (createdProject == null) {
-                throw new Error('An error occured, no projects created.')
+                throw new Error('An error occured, no projects created')
             }
 
             return createdProject
@@ -46,12 +46,12 @@ class ProjectService {
     
             const project = await ProjectRepository.findById(projectId)
             if (project == null) {
-                throw new Error('Found no project of given ID.')
+                throw new Error('Found no project of given ID')
             }
 
             const updatedProject = await ProjectRepository.update(projectId, update)
             if (updatedProject == null) {
-                throw new Error('An error occured, no projects updated.')
+                throw new Error('An error occured, no projects updated')
             }
 
             return updatedProject
@@ -72,12 +72,12 @@ class ProjectService {
 
             const project = await ProjectRepository.findById(projectId)
             if (project == null) {
-                throw new Error('Found no project of given ID.')
+                throw new Error('Found no project of given ID')
             }
 
             const removedProject = await ProjectRepository.remove(project)
             if (removedProject == null) {
-                throw new Error('An error occured, no projects removed.')
+                throw new Error('An error occured, no projects removed')
             }
 
             return removedProject
