@@ -13,8 +13,9 @@ class SubprojectService {
         try {
             const parentProjectId = payload.project_id
             const subprojectName = payload.subproject_name
+            const rowIndex = payload.row_index
             
-            const createdSubproject = await SubprojectRepository.create(subprojectName, parentProjectId)
+            const createdSubproject = await SubprojectRepository.create(subprojectName, parentProjectId, rowIndex)
             if (createdSubproject == null) {
                 throw new Error('An error occured, no subprojects created')
             }

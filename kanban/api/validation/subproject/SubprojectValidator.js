@@ -17,6 +17,9 @@ class SubprojectValidator extends ValidatorAbstract {
             const parentProjectId = payload.project_id
             ProjectValidator.checkProjectObjectIDValid(parentProjectId)
 
+            const rowIndex = payload.row_index
+            this.validateRowIndex(rowIndex)
+
             return
         } catch (exception) {
             throw new Error(`Subproject create request validation failed: ${exception.message}`)
@@ -118,6 +121,21 @@ class SubprojectValidator extends ValidatorAbstract {
      */
     static checkSubprojectObjectIDValid(id) {
         this.checkObjectIDValid(id, 'subproject')
+    }
+
+    /**
+     * @param {String|Number} index 
+     */
+    static validateRowIndex(index) {
+        if (index == null) {
+            throw new Error('Row index is required')
+        }
+
+        if (isNaN(index)) {
+            throw new Error('Row index is invalid')
+        }
+
+        return
     }
 }
 

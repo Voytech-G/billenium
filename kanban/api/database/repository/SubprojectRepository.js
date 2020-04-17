@@ -9,11 +9,12 @@ class SubprojectRepository {
      * @param {String} subprojectName 
      * @return {Object}
      */
-    static async create(subprojectName, parentProjectId) {
+    static async create(subprojectName, parentProjectId, rowIndex) {
         const newProject = new Subproject({
             _id: new mongoose.Types.ObjectId(),
             subproject_name: subprojectName,
             project: parentProjectId,
+            row_index: rowIndex,
         })
 
         return await newProject.save()
