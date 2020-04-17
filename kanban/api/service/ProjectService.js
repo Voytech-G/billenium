@@ -227,6 +227,14 @@ class ProjectService {
                         model: 'Task',
                     },
                 },
+                {
+                    path: 'subprojects',
+                    model: 'Subproject',
+                    populate: {
+                        path: 'tasks',
+                        model: 'Task',
+                    },
+                },
             ]
             
             return await ProjectRepository.populate(project, populateConfig)

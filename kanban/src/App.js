@@ -19,23 +19,23 @@ const App = () => {
         if (data.status == true) {
             alert('signed in!');
 
-            // socket.emit("get-project", {
-            //     project_id: '5e90df5a6d98d833703affbc',
-            // }, data => {
-            // const columnsWithItems = data.payload.columns.map(column => ({
-            //     id: column._id,
-            //     name: column.name,
-            //     board_index: column.board_index,
-            //     max_tasks: column.max_tasks,
-            //     items: column.tasks.map(task => ({
-            //         id: task._id,
-            //         content: task.content,
-            //         row_index: task.row_index
-            //     }))
-            // }));
-            // // console.log(columnsWithItems);
-            // setColumns(columnsWithItems);
-            // });
+            socket.emit("get-project", {
+                project_id: '5e98b06eb1b4ab474090034b',
+            }, data => {
+            const columnsWithItems = data.payload.columns.map(column => ({
+                id: column._id,
+                name: column.name,
+                board_index: column.board_index,
+                max_tasks: column.max_tasks,
+                items: column.tasks.map(task => ({
+                    id: task._id,
+                    content: task.content,
+                    row_index: task.row_index
+                }))
+            }));
+            // console.log(columnsWithItems);
+            setColumns(columnsWithItems);
+            });
 
             // socket.emit('remove-project', {
             //     project_id: '5e98abc5f17ff537f44574b1',
@@ -94,9 +94,9 @@ const App = () => {
             //     console.log(data)
             // })
 
-            // socket.emit('subproject-unassign-task', {
+            // socket.emit('subproject-assign-task', {
             //     task_id: '5e98cb1f96f9725bcc67f980',
-            //     subproject_id: '5e98c0b0053f86414499c40f', 
+            //     subproject_id: '5e98c091053f86414499c40e', 
             // }, data => {
             //     console.log(data)
             // })
