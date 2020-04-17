@@ -22,6 +22,7 @@ export const GlobalProvider = ({ children }) => {
       payload: columns,
     });
   }
+
   function setSubprojects(subprojects) {
     dispatch({
       type: "SET_SUBPROJECTS",
