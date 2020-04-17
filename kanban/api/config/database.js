@@ -7,8 +7,8 @@ module.exports = {
     password: "kinethicc69",
     options: {
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
+      useUnifiedTopology: true,
+    },
   },
   productionDatabaseConnection: {
     databaseContainerName: process.env.DATABASE_CONTAINER_NAME || "ds147946",
@@ -18,7 +18,7 @@ module.exports = {
     password: process.env.PASSWORD || "kinethicc69",
     options: {
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
-  }
-}
+      useUnifiedTopology: true,
+    },
+  },
+};

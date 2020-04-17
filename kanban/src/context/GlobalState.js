@@ -5,7 +5,8 @@ import socketIOClient from "socket.io-client";
 
 const initialState = {
   socket: undefined,
-  columns: []
+  columns: [],
+  subprojects: [],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -18,7 +19,13 @@ export const GlobalProvider = ({ children }) => {
   function setColumns(columns) {
     dispatch({
       type: "SET_COLUMNS",
-      payload: columns
+      payload: columns,
+    });
+  }
+  function setSubprojects(subprojects) {
+    dispatch({
+      type: "SET_SUBPROJECTS",
+      payload: subprojects,
     });
   }
 
@@ -36,8 +43,8 @@ export const GlobalProvider = ({ children }) => {
         source_column_id: sourceColumnId,
         dest_column_id: destColumnId,
         source_card_index: sourceCardIndex,
-        dest_card_index: destCardIndex
-      }
+        dest_card_index: destCardIndex,
+      },
     });
   }
 
@@ -48,10 +55,10 @@ export const GlobalProvider = ({ children }) => {
         card: {
           id: card._id,
           content: card.content,
-          row_index: card.row_index
+          row_index: card.row_index,
         },
-        column_id: columnId
-      }
+        column_id: columnId,
+      },
     });
   }
   function addColumn(columnId, newName, maxLimit, columnsItems) {
@@ -62,10 +69,10 @@ export const GlobalProvider = ({ children }) => {
           id: columnId,
           name: newName,
           board_index: columnsItems.length,
-          items: [],
-          max_tasks: parseInt(maxLimit)
-        }
-      }
+          tasks: [],
+          max_tasks: parseInt(maxLimit),
+        },
+      },
     });
   }
   function editCard(cardId, cardIndex, columnId, content) {
@@ -75,10 +82,10 @@ export const GlobalProvider = ({ children }) => {
         card: {
           id: cardId,
           content,
-          row_index: cardIndex
+          row_index: cardIndex,
         },
-        column_id: columnId
-      }
+        column_id: columnId,
+      },
     });
   }
   function editColumn(columnId, name, boardIndex, maxTasks) {
@@ -89,10 +96,10 @@ export const GlobalProvider = ({ children }) => {
           id: columnId,
           name: name,
           board_index: boardIndex,
-          max_tasks: maxTasks
+          max_tasks: maxTasks,
         },
-        column_id: columnId
-      }
+        column_id: columnId,
+      },
     });
   }
   function removeCard(cardId, cardIndex, columnId) {
@@ -101,10 +108,10 @@ export const GlobalProvider = ({ children }) => {
       payload: {
         card: {
           id: cardId,
-          row_index: cardIndex
+          row_index: cardIndex,
         },
-        column_id: columnId
-      }
+        column_id: columnId,
+      },
     });
   }
   function removeColumn(columnId, boardIndex) {
@@ -113,9 +120,9 @@ export const GlobalProvider = ({ children }) => {
       payload: {
         column: {
           id: columnId,
-          board_index: boardIndex
-        }
-      }
+          board_index: boardIndex,
+        },
+      },
     });
   }
   function setItems(columnId, items) {
@@ -123,14 +130,15 @@ export const GlobalProvider = ({ children }) => {
       type: "SET_ITEMS",
       payload: {
         column_id: columnId,
-        items
-      }
+        items,
+      },
     });
   }
   return (
     <GlobalContext.Provider
       value={{
         setColumns,
+        setSubprojects,
         moveCard,
         addCard,
         setItems,
@@ -140,7 +148,8 @@ export const GlobalProvider = ({ children }) => {
         removeColumn,
         editColumn,
         socket: state.socket,
-        columns: state.columns
+        columns: state.columns,
+        subprojects: state.subprojects,
       }}
     >
       {children}

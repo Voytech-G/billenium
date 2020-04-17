@@ -6,6 +6,37 @@ import { GlobalContext } from "../context/GlobalState";
 
 import Card from "./Card";
 
+const handleClick_addCard = (
+  e,
+  columnId,
+  addCard,
+  socket,
+  columnItems,
+  setColumns
+) => {
+  e.preventDefault();
+
+  const cardContent = prompt("Type task name to add");
+  const newCard = {
+    // _id: "",
+    content: cardContent,
+    row_index: columnItems.length,
+  };
+
+  socket.emit(
+    "create-task",
+    { ...newCard, column_id: columnId, max_tasks: 3 },
+    (res) => {
+      if (res.status) {
+        newCard._id = res.payload._id;
+        addCard(newCard, columnId);
+        console.log(res.payload._id);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
+};
 const Amount = ({ amount, maxTasks }) => {
   return (
     <h5
@@ -142,51 +173,81 @@ const ChangeMaxLimitBtn = ({
     </button>
   );
 };
-const Column = ({ column }) => {
-  const { id, name, tasks, max_tasks, board_index } = column;
-  const { socket, removeColumn, editColumn } = useContext(GlobalContext);
+const Subproject = ({ subproject }) => {
+  const id = uuid();
+  const {
+    columns,
+    socket,
+    addCard,
+    setColumns,
+    removeColumn,
+    editColumn,
+  } = useContext(GlobalContext);
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        border: "2px solid blue",
       }}
       key={id}
     >
       <div style={{ margin: 8 }}>
-        <div style={{ display: "flex" }}>
-          <ChangeMaxLimitBtn
-            editColumn={editColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-            btnName={"limit"}
-            maxTasks={max_tasks}
-            columnName={name}
-          ></ChangeMaxLimitBtn>
-          <ChangeColumnNameBtn
-            editColumn={editColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-            btnName={"name"}
-            maxTasks={max_tasks}
-            columnName={name}
-          ></ChangeColumnNameBtn>
-          <DeleteColumnBtn
-            removeColumn={removeColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-          ></DeleteColumnBtn>
-        </div>
+        <Droppable
+          droppableId={id}
+          key={id}
+          className="taskLimitColumn"
+          style={{ backgroundColor: "red" }}
+        >
+          {/* {(provided, snapshot) => {
+            return (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  background: snapshot.isDraggingOver
+                    ? "lightblue"
+                    : "lightgrey",
+                  padding: 4,
+                  width: 250,
+                  minHeight: 500,
+                }}
+              >
+                {tasks
+                  .sort((a, b) => a.row_index - b.row_index)
+                  .map((item) => (
+                    <Card card={item} columnId={column.id} />
+                  ))}
+                <form
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <button
+                    onClick={(e) =>
+                      handleClick_addCard(
+                        e,
+                        column.id,
+                        addCard,
+                        socket,
+                        column.tasks,
+                        setColumns
+                      )
+                    }
+                    type="submit"
+                  >
+                    Add task
+                  </button>
+                </form>
+                {provided.placeholder}
+              </div>
+            );
+          }} */}
+        </Droppable>
       </div>
-      <h3>{name}</h3>
-      <Amount amount={tasks.length} maxTasks={max_tasks}></Amount>
     </div>
   );
 };
 
-export default Column;
+export default Subproject;

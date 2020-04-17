@@ -3,6 +3,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 
 import { GlobalContext } from "../context/GlobalState";
 
+import Subproject from "./Subproject";
 import Column from "./Column";
 
 const onDragEnd = (result, columns, moveCard, socket) => {
@@ -11,9 +12,9 @@ const onDragEnd = (result, columns, moveCard, socket) => {
   const { draggableId, source, destination } = result;
 
   const card = columns
-    .map(column => column.items.filter(item => item.id === draggableId))
+    .map((column) => column.items.filter((item) => item.id === draggableId))
     .flat()[0];
-  let flag = columns.filter(column => column.id === destination.droppableId);
+  let flag = columns.filter((column) => column.id === destination.droppableId);
   console.log(flag.flat()[0].items.length);
 
   moveCard(
@@ -34,9 +35,9 @@ const onDragEnd = (result, columns, moveCard, socket) => {
       target_column_id: destination.droppableId,
 
       source_row_index: source.index,
-      source_column_id: source.droppableId
+      source_column_id: source.droppableId,
     },
-    res => {
+    (res) => {
       if (!res.status) {
         moveCard(
           card,
@@ -56,13 +57,13 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const maxLimit = prompt("Type max tasks limit: ");
   socket.emit(
     "create-column",
-    { 
-      project_id: '5e90df5a6d98d833703affbc',
-      name: newName, 
+    {
+      project_id: "5e98b06eb1b4ab474090034b",
+      name: newName,
       board_index: columns.length,
       max_tasks: maxLimit,
     },
-    res => {
+    (res) => {
       if (res.status) {
         addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
         setColumns([
@@ -71,9 +72,9 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
             id: res.payload._id,
             name: newName,
             max_tasks: maxLimit,
-            items: [],
-            board_index: columns.length
-          }
+            tasks: [],
+            board_index: columns.length,
+          },
         ]);
       } else {
         alert("Error: server returned false status");
@@ -93,26 +94,33 @@ const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
     </button>
   );
 };
-const Columns = ({ columns }) => {
-  const { socket, moveCard, addColumn, setColumns } = useContext(GlobalContext);
+const Subprojects = ({ subprojects }) => {
+  const { columns, socket, moveCard, addColumn, setColumns } = useContext(
+    GlobalContext
+  );
 
   return (
     <DragDropContext
-      onDragEnd={result => onDragEnd(result, columns, moveCard, socket)}
+      onDragEnd={(result) => onDragEnd(result, columns, moveCard, socket)}
     >
+      {columns
+        .sort((a, b) => a.board_index - b.board_index)
+        .map((column) => (
+          <Column column={column} />
+        ))}
+      {/* {subprojects
+        .sort((a, b) => a.row_index - b.row_index)
+        .map((subproject) => (
+          <Subproject subproject={subproject} />
+        ))} */}
       <AddColumnBtn
         columnsItems={columns}
         addColumnFunc={addColumn}
         socket={socket}
         setColumns={setColumns}
       ></AddColumnBtn>
-      {columns
-        .sort((a, b) => a.board_index - b.board_index)
-        .map(column => (
-          <Column column={column} />
-        ))}
     </DragDropContext>
   );
 };
 
-export default Columns;
+export default Subprojects;
