@@ -138,16 +138,16 @@ class ColumnService {
 
             const column = await ColumnRepository.findById(columnId)
             if (column == null) {
-                throw new Error('Found no column of given ID.')
+                throw new Error('Found no column of given ID')
             }
+
+            const projectId = column.project
+            await ProjectService.unassignColumnFromProject(columnId, projectId)
 
             const removedColumn = await ColumnRepository.remove(column)
             if (removedColumn == null) {
-                throw new Error('An error occured, no columns removed.')
+                throw new Error('An error occured, no columns removed')
             }
-            
-            const projectId = column.project
-            await ProjectService.unassignColumnFromProject(columnId, projectId)
         
             // move all columns on the right from removed column to the left so the gap is filled
             const boardIndex = column.board_index
