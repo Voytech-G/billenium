@@ -32,6 +32,18 @@ class UserService {
         }
     }
 
+    static async updateUser(payload) {
+
+    }
+
+    static async removeUser(payload) {
+
+    }
+
+    static async getOneUser(payload) {
+        
+    }
+
     /**
      * Check if given user type key is a valid available type
      * 

@@ -5,6 +5,7 @@ const ColumnController = require('../controller/ColumnController')
 const AuthorizationController = require('../controller/AuthorizationController')
 const AuthorizationService = require('../service/AuthorizationService')
 const EventService = require('../service/EventService')
+const UserController = require('../controller/UserController')
 
 class EventsHandler {
     /**
@@ -46,6 +47,30 @@ class EventsHandler {
             return
         }, {
             authenticate: false,
+        })
+
+        EventService.registerEvent(socket, 'update-user', (payload, callback) => {
+            UserController.update(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'remove-user', (payload, callback) => {
+            UserController.remove(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'get-one-user', (payload, callback) => {
+            UserController.getOne(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
         })
 
         EventService.registerEvent(socket, 'create-project', (payload, callback) => {
