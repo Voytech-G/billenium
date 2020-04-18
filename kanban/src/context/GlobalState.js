@@ -69,9 +69,22 @@ export const GlobalProvider = ({ children }) => {
         column: {
           id: columnId,
           name: newName,
-          board_index: columnsItems.length,
+          board_index: columnsItems,
           tasks: [],
           max_tasks: parseInt(maxLimit),
+        },
+      },
+    });
+  }
+  function addSubproject(subprojectId, newName, subprojectsItems) {
+    dispatch({
+      type: "ADD_SUBPROJECT",
+      payload: {
+        column: {
+          id: subprojectId,
+          name: newName,
+          row_index: subprojectsItems,
+          tasks: [],
         },
       },
     });
@@ -146,6 +159,7 @@ export const GlobalProvider = ({ children }) => {
         removeCard,
         editCard,
         addColumn,
+        addSubproject,
         removeColumn,
         editColumn,
         socket: state.socket,

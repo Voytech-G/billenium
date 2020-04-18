@@ -96,7 +96,14 @@ const Project = () => {
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        height: "100%",
+        border: "2px solid gray",
+      }}
+    >
       <Subprojects subprojects={subprojects} />
     </div>
   );

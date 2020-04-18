@@ -12,12 +12,18 @@ const rearrangeCards = (cardArray) =>
 const rearrangeColumns = (columnArray) =>
   columnArray.map((column, idx) => ({ ...column, board_index: idx }));
 
+const rearrangeSuprojects = (subprojectArray) =>
+  subprojectArray.map((subproject, idx) => ({ ...subproject, row_index: idx }));
+
 Array.prototype.rearrangeCards = function () {
   return rearrangeCards(this);
 };
 
 Array.prototype.rearrangeColumns = function () {
   return rearrangeColumns(this);
+};
+Array.prototype.rearrangeSubprojects = function () {
+  return rearrangeSuprojects(this);
 };
 
 export default (state, action) => {
@@ -81,6 +87,14 @@ export default (state, action) => {
       return {
         ...state,
         columns: [...state.columns, action.payload.column].rearrangeColumns(),
+      };
+    case "ADD_SUBPROJECT":
+      return {
+        ...state,
+        subprojects: [
+          ...state.subprojects,
+          action.payload.subproject,
+        ].rearrangeSubprojects(),
       };
     case "REMOVE_CARD":
       return {

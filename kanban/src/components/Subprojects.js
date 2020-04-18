@@ -65,6 +65,7 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
     },
     (res) => {
       if (res.status) {
+        console.log(res);
         addColumnFunc(res.payload._id, newName, maxLimit, columns.length);
         setColumns([
           ...columns,
@@ -74,6 +75,41 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
             max_tasks: maxLimit,
             tasks: [],
             board_index: columns.length,
+            projectId: res.payload.project,
+          },
+        ]);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
+};
+const addNewSubproject = (
+  subprojects,
+  socket,
+  addSubprojectFunc,
+  setSubprojects
+) => {
+  const newName = prompt("Type subproject name: ");
+  socket.emit(
+    "create-subproject",
+    {
+      project_id: "5e98b06eb1b4ab474090034b",
+      subproject_name: newName,
+      row_index: subprojects.length,
+    },
+    (res) => {
+      if (res.status) {
+        console.log(res.payload);
+        addSubprojectFunc(res.payload._id, newName, subprojects.length);
+        setSubprojects([
+          ...subprojects,
+          {
+            id: res.payload._id,
+            name: newName,
+            tasks: [],
+            board_index: subprojects.length,
+            projectId: res.payload.project,
           },
         ]);
       } else {
@@ -94,31 +130,81 @@ const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
     </button>
   );
 };
-const Subprojects = ({ subprojects }) => {
-  const { columns, socket, moveCard, addColumn, setColumns } = useContext(
-    GlobalContext
+const AddSubprojectBtn = ({
+  subprojectsItems,
+  socket,
+  addSubprojectFunc,
+  setSubprojects,
+}) => {
+  return (
+    <button
+      onClick={() =>
+        addNewSubproject(
+          subprojectsItems,
+          socket,
+          addSubprojectFunc,
+          setSubprojects
+        )
+      }
+      style={{ height: "40px" }}
+    >
+      Add new subproject
+    </button>
   );
+};
+const Subprojects = ({ subprojects }) => {
+  const {
+    columns,
+    socket,
+    moveCard,
+    addColumn,
+    addSubproject,
+    setColumns,
+    setSubprojects,
+  } = useContext(GlobalContext);
 
   return (
     <DragDropContext
       onDragEnd={(result) => onDragEnd(result, columns, moveCard, socket)}
     >
-      {columns
-        .sort((a, b) => a.board_index - b.board_index)
-        .map((column) => (
-          <Column column={column} />
-        ))}
-      {/* {subprojects
-        .sort((a, b) => a.row_index - b.row_index)
-        .map((subproject) => (
-          <Subproject subproject={subproject} />
-        ))} */}
-      <AddColumnBtn
-        columnsItems={columns}
-        addColumnFunc={addColumn}
-        socket={socket}
-        setColumns={setColumns}
-      ></AddColumnBtn>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex" }}>
+          {columns
+            .sort((a, b) => a.board_index - b.board_index)
+            .map((column) => (
+              <Column column={column} />
+            ))}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            border: "2px solid yellow",
+            flexDirection: "column",
+          }}
+        >
+          {subprojects
+            .sort((a, b) => a.row_index - b.row_index)
+            .map((subproject) => (
+              <Subproject subproject={subproject} />
+            ))}
+        </div>
+        <div style={{ display: "flex" }}>
+          <AddSubprojectBtn
+            subprojectsItems={subprojects}
+            addSubprojectFunc={addSubproject}
+            socket={socket}
+            setSubprojects={setSubprojects}
+          ></AddSubprojectBtn>
+        </div>
+      </div>
+      <div>
+        <AddColumnBtn
+          columnsItems={columns}
+          addColumnFunc={addColumn}
+          socket={socket}
+          setColumns={setColumns}
+        ></AddColumnBtn>
+      </div>
     </DragDropContext>
   );
 };

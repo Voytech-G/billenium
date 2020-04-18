@@ -184,67 +184,78 @@ const Subproject = ({ subproject }) => {
     editColumn,
   } = useContext(GlobalContext);
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-      key={id}
-    >
-      <div style={{ margin: 8 }}>
-        <Droppable
-          droppableId={id}
-          key={id}
-          className="taskLimitColumn"
-          style={{ backgroundColor: "red" }}
-        >
-          {/* {(provided, snapshot) => {
-            return (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{
-                  background: snapshot.isDraggingOver
-                    ? "lightblue"
-                    : "lightgrey",
-                  padding: 4,
-                  width: 250,
-                  minHeight: 500,
-                }}
-              >
-                {tasks
-                  .sort((a, b) => a.row_index - b.row_index)
-                  .map((item) => (
-                    <Card card={item} columnId={column.id} />
-                  ))}
-                <form
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <button
-                    onClick={(e) =>
-                      handleClick_addCard(
-                        e,
-                        column.id,
-                        addCard,
-                        socket,
-                        column.tasks,
-                        setColumns
-                      )
-                    }
-                    type="submit"
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex" }}>
+          <h4> {subproject.name}</h4>
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          border: "2px solid red",
+          justifyContent: "space-between",
+        }}
+        key={id}
+      >
+        {columns.map((column) => (
+          <div
+            style={{
+              margin: 8,
+              backgroundColor: "green",
+              border: "2px solid green",
+              display: "flex",
+            }}
+          >
+            <Droppable droppableId={id} key={id}>
+              {(provided, snapshot) => {
+                return (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={{
+                      background: snapshot.isDraggingOver
+                        ? "lightblue"
+                        : "lightgrey",
+                      padding: 4,
+                      width: 250,
+                      minHeight: 200,
+                    }}
                   >
-                    Add task
-                  </button>
-                </form>
-                {provided.placeholder}
-              </div>
-            );
-          }} */}
-        </Droppable>
+                    {/* {tasks
+                      .sort((a, b) => a.row_index - b.row_index)
+                      .map((item) => (
+                        <Card card={item} columnId={column.id} />
+                      ))}*/}
+                    <form
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <button
+                        onClick={(e) =>
+                          handleClick_addCard(
+                            e,
+                            column.id,
+                            addCard,
+                            socket,
+                            column.tasks,
+                            setColumns
+                          )
+                        }
+                        type="submit"
+                      >
+                        Add task
+                      </button>
+                    </form>
+                    {provided.placeholder}
+                  </div>
+                );
+              }}
+            </Droppable>
+          </div>
+        ))}
       </div>
     </div>
   );
