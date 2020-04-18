@@ -9,6 +9,9 @@ Array.prototype.insert = function (index) {
 const rearrangeCards = (cardArray) =>
   cardArray.map((card, idx) => ({ ...card, row_index: idx }));
 
+const rearrangeCardsSubproject = (cardArray) =>
+  cardArray.map((card, idx) => ({ ...card, row_index: idx }));
+
 const rearrangeColumns = (columnArray) =>
   columnArray.map((column, idx) => ({ ...column, board_index: idx }));
 
@@ -17,6 +20,9 @@ const rearrangeSuprojects = (subprojectArray) =>
 
 Array.prototype.rearrangeCards = function () {
   return rearrangeCards(this);
+};
+Array.prototype.rearrangeCardsSubproject = function () {
+  return rearrangeCardsSubproject(this);
 };
 
 Array.prototype.rearrangeColumns = function () {
@@ -37,6 +43,11 @@ export default (state, action) => {
       return {
         ...state,
         subprojects: action.payload,
+      };
+    case "SET_SUBCOLITEMS":
+      return {
+        ...state,
+        subColItems: action.payload,
       };
     case "MOVE_CARD":
       return {
@@ -66,22 +77,45 @@ export default (state, action) => {
               : column
           ),
       };
-    case "ADD_CARD":
+    case "ADD_CARD_COLUMN":
       return {
         ...state,
-        columns: state.columns
-          .map((column) =>
+        columns: [
+          ...state.columns.map((column) =>
             column.id === action.payload.column_id
               ? {
                   ...column,
-                  items: [
-                    ...column.items,
-                    { ...action.payload.card, row_index: column.items.length },
+                  tasks: [
+                    ...column.tasks,
+                    {
+                      ...action.payload.card,
+                      row_index: action.payload.card.row_index,
+                    },
                   ],
                 }
               : column
-          )
-          .rearrangeCards(),
+          ),
+        ],
+      };
+    case "ADD_CARD_SUBPROJECT":
+      return {
+        ...state,
+        subprojects: [
+          ...state.subprojects.map((subproject) =>
+            subproject.id === action.payload.subproject_id
+              ? {
+                  ...subproject,
+                  tasks: [
+                    ...subproject.tasks,
+                    {
+                      ...action.payload.card,
+                      row_index: action.payload.card.row_index,
+                    },
+                  ],
+                }
+              : subproject
+          ),
+        ].rearrangeCardsSubproject(),
       };
     case "ADD_COLUMN":
       return {

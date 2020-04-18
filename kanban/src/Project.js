@@ -35,7 +35,7 @@ const getProject = (socket, setColumns, setSubprojects) => {
       project_id: "5e98b06eb1b4ab474090034b",
     },
     (data) => {
-      console.log(data.payload);
+      // console.log(data.payload);
       const columnsWithTasks = data.payload.columns.map((column) => ({
         id: column._id,
         name: column.name,
@@ -85,7 +85,7 @@ const Project = () => {
       const userToken = localStorage.getItem("userToken");
       socket.emit("authenticate", { token: userToken }, (data) => {
         if (data.status === true) {
-          console.log(data.status);
+          // console.log(data.status);
           getProject(socket, setColumns, setSubprojects);
         } else {
           alert(`Authentication error ${data.message}`);

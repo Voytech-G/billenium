@@ -7,6 +7,7 @@ const initialState = {
   socket: undefined,
   columns: [],
   subprojects: [],
+  subColItems: [],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -29,6 +30,12 @@ export const GlobalProvider = ({ children }) => {
       payload: subprojects,
     });
   }
+  function setSubColItems(subColItems) {
+    dispatch({
+      type: "SET_SUBCOLITEMS",
+      payload: subColItems,
+    });
+  }
 
   function moveCard(
     card,
@@ -49,27 +56,42 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  function addCard(card, columnId) {
+  function addCard(card, columnId, subprojectId) {
     dispatch({
-      type: "ADD_CARD",
+      type: "ADD_CARD_COLUMN",
       payload: {
         card: {
           id: card._id,
           content: card.content,
           row_index: card.row_index,
+          column_id: columnId,
+          subproject_id: subprojectId,
         },
         column_id: columnId,
       },
     });
+    dispatch({
+      type: "ADD_CARD_SUBPROJECT",
+      payload: {
+        card: {
+          id: card._id,
+          content: card.content,
+          row_index: card.row_index,
+          column_id: columnId,
+          subproject_id: subprojectId,
+        },
+        subproject_id: subprojectId,
+      },
+    });
   }
-  function addColumn(columnId, newName, maxLimit, columnsItems) {
+  function addColumn(columnId, newName, maxLimit, subprojectColItems) {
     dispatch({
       type: "ADD_COLUMN",
       payload: {
         column: {
           id: columnId,
           name: newName,
-          board_index: columnsItems,
+          board_index: subprojectColItems,
           tasks: [],
           max_tasks: parseInt(maxLimit),
         },
@@ -80,7 +102,7 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "ADD_SUBPROJECT",
       payload: {
-        column: {
+        subproject: {
           id: subprojectId,
           name: newName,
           row_index: subprojectsItems,
@@ -153,6 +175,7 @@ export const GlobalProvider = ({ children }) => {
       value={{
         setColumns,
         setSubprojects,
+        setSubColItems,
         moveCard,
         addCard,
         setItems,
