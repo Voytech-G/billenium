@@ -20,7 +20,7 @@ const App = () => {
             alert('signed in!');
 
             socket.emit("get-project", {
-                project_id: '5e90df5a6d98d833703affbc',
+                project_id: '5e98b06eb1b4ab474090034b',
             }, data => {
             const columnsWithItems = data.payload.columns.map(column => ({
                 id: column._id,
@@ -36,6 +36,70 @@ const App = () => {
             // console.log(columnsWithItems);
             setColumns(columnsWithItems);
             });
+
+            // socket.emit('remove-project', {
+            //     project_id: '5e98abc5f17ff537f44574b1',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-project', {
+            //     project_name: 'first project',
+            //     total_budget: 2500,
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-subproject', {
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            //     subproject_name: 'second subproject',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-column', {
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            //     name: 'col1',
+            //     board_index: 0,
+            //     max_tasks: 3,
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('create-task', {
+            //     content: 'task 2 content',
+            //     row_index: 0,
+            //     column_id: '5e98c578544bf95ea0a90a0d',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('update-subproject', {
+            //     subproject_id: '5e98b0c0b1b4ab474090034c',
+            //     subproject_name: 'first subproject updated updated',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('remove-subproject', {
+            //     subproject_id: '5e98b0dab1b4ab474090034d',
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('get-one-subproject', {
+            //     subproject_id: '5e98b0c0b1b4ab474090034c',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('subproject-assign-task', {
+            //     task_id: '5e98cb1f96f9725bcc67f980',
+            //     subproject_id: '5e98c091053f86414499c40e', 
+            // }, data => {
+            //     console.log(data)
+            // })
 
             return
         } else {

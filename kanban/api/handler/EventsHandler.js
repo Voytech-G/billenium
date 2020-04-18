@@ -1,5 +1,6 @@
 const TaskController = require('../controller/TaskController')
 const ProjectController = require('../controller/ProjectController')
+const SubprojectController = require('../controller/SubprojectController')
 const ColumnController = require('../controller/ColumnController')
 const AuthorizationController = require('../controller/AuthorizationController')
 const AuthorizationService = require('../service/AuthorizationService')
@@ -81,6 +82,54 @@ class EventsHandler {
 
         EventService.registerEvent(socket, 'get-all-projects', callback => {
             ProjectController.getAll(callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'create-subproject', (payload, callback) => {
+            SubprojectController.create(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'update-subproject', (payload, callback) => {
+            SubprojectController.update(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'remove-subproject', (payload, callback) => {
+            SubprojectController.remove(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'get-one-subproject', (payload, callback) => {
+            SubprojectController.getOne(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'subproject-assign-task', (payload, callback) => {
+            SubprojectController.assignTask(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'subproject-unassign-task', (payload, callback) => {
+            SubprojectController.unassignTask(payload, callback)
 
             return
         }, {

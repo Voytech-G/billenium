@@ -52,13 +52,11 @@ class ColumnService {
             }
 
             const column = await ColumnRepository.findById(columnId)
-
             if (column == null) {
                 throw new Error('Found no column of given ID.')
             }
 
             const updatedColumn = await ColumnRepository.update(columnId, update)
-
             if (updatedColumn == null) {
                 throw new Error('An error occured, no columns updated.')
             }
@@ -121,6 +119,8 @@ class ColumnService {
             column.tasks.pull(taskId)
 
             await column.save()
+
+            return
         } catch (exception) {
             throw new Error(`Failed to unassign the task from column: ${exception.message}`)
         }
@@ -135,20 +135,19 @@ class ColumnService {
     static async removeColumn(payload) {
         try {
             const columnId = payload.column_id
+
             const column = await ColumnRepository.findById(columnId)
-
             if (column == null) {
-                throw new Error('Found no column of given ID.')
+                throw new Error('Found no column of given ID')
             }
 
-            const removedColumn = await ColumnRepository.remove(column)
-
-            if (removedColumn == null) {
-                throw new Error('An error occured, no columns removed.')
-            }
-            
             const projectId = column.project
             await ProjectService.unassignColumnFromProject(columnId, projectId)
+
+            const removedColumn = await ColumnRepository.remove(column)
+            if (removedColumn == null) {
+                throw new Error('An error occured, no columns removed')
+            }
         
             // move all columns on the right from removed column to the left so the gap is filled
             const boardIndex = column.board_index

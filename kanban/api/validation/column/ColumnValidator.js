@@ -1,33 +1,26 @@
 const ValidatorAbstract = require('../ValidatorAbstract')
+const ProjectValidator = require('../project/ProjectValidator')
 
 class ColumnValidator extends ValidatorAbstract {
     /**
      * Validate create column request data
      * 
-     * @param {Object} request 
+     * @param {Object} payload
      * @return {void}
      */
-    static validateCreateRequest(request) {
+    static validateCreateRequest(payload) {
         try {
-            if (request.project_id == null) {
-                throw new Error('Project ID is required')
-            }
-    
-            if (request.name == null) {
-                throw new Error('Column name is required')
-            }
-    
-            if (request.board_index == null) {
-                throw new Error('Column board index is required')
-            }
-    
-            if (typeof request.board_index != 'number') {
-                throw new Error('Column board index has to be a number')
-            }
-    
-            if (request.max_tasks == null) {
-                throw new Error('Column max tasks number is required')
-            }
+            const projectId = payload.project_id
+            ProjectValidator.checkProjectObjectIDValid(projectId)
+
+            const columnName = payload.name
+            this.validateColumnName(columnName)
+
+            const boardIndex = payload.board_index
+            this.validateBoardIndex(boardIndex)
+            
+            const maxTasks = payload.max_tasks
+            this.validateMaxTasks(maxTasks)            
     
             return
         } catch (exception) {
@@ -43,41 +36,21 @@ class ColumnValidator extends ValidatorAbstract {
      */
     static validateUpdateRequest(payload) {
         try {
-            if (payload.column_id == null) {
-                throw new Error('Column ID is required')
-            }
+            const columnId = payload.column_id
+            this.checkColumnObjectIDValid(columnId)
+
+            const columnName = payload.name
+            this.validateColumnName(columnName)
     
-            if (payload.name == null) {
-                throw new Error('Column name is required')
-            }
-    
-            if (payload.board_index == null) {
-                throw new Error('Column board index is required')
-            }
-    
-            if (payload.max_tasks == null) {
-                throw new Error('Column max tasks number is required')
-            }
+            const boardIndex = payload.board_index
+            this.validateBoardIndex(boardIndex)
+
+            const maxTasks = payload.max_tasks
+            this.validateMaxTasks(maxTasks)
     
             return
         } catch (exception) {
             throw new Error(`Update column request validation failed: ${exception.message}`)
-        }
-    }
-
-    /**
-     * Check if given column ID is valid mongoose object ID
-     * 
-     * @param {string} columnId
-     * @return {void}
-     */
-    static checkColumnObjectIDValid(columnId) {
-        try {
-            this.checkObjectIDValid(columnId, 'column')
-    
-            return
-        } catch (exception) {
-            throw new Error(`Column object ID validation failed: ${exception.message}`)
         }
     }
        
@@ -89,9 +62,8 @@ class ColumnValidator extends ValidatorAbstract {
      */
     static validateRemoveRequest(payload) {
         try {
-            if (payload.column_id == null) {
-                throw new Error('Column ID is required')
-            } 
+            const columnId = payload.column_id
+            this.checkColumnObjectIDValid(columnId)
             
             return
         } catch (exception) {
@@ -107,12 +79,67 @@ class ColumnValidator extends ValidatorAbstract {
      */
     static validateGetOneRequest(payload) {
         try {
-            this.checkColumnObjectIDValid(payload.column_id)
+            const columnId = payload.column_id
+            this.checkColumnObjectIDValid(columnId)
     
             return
         } catch (exception) {
             throw new Error(`Get one column request validation failed: ${exception.message}`)
         }
+    }
+
+    /**
+     * @param {String} name
+     * @return {void} 
+     */
+    static validateColumnName(name) {
+        if (name == null || name == '') {
+            throw new Error('Column name is required')
+        }
+
+        return
+    }
+
+    /**
+     * @param {String|Number} maxTasks
+     * @return {void} 
+     */
+    static validateMaxTasks(maxTasks) {
+        if (maxTasks == null || maxTasks == '') {
+            throw new Error('Max tasks number is required')
+        }
+
+        if (isNaN(maxTasks)) {
+            throw new Error('Max tasks number is invalid')
+        }
+
+        return
+    }
+
+    /**
+     * Check if given column ID is valid mongoose object ID
+     * 
+     * @param {string} columnId
+     * @return {void}
+     */
+    static checkColumnObjectIDValid(columnId) {
+        this.checkObjectIDValid(columnId, 'column')
+    }
+
+    /**
+     * @param {String|Number} index
+     * @return {void} 
+     */
+    static validateBoardIndex(index) {
+        if (index == null) {
+            throw new Error('Board index is required')
+        }
+
+        if (isNaN(index)) {
+            throw new Error('Board index is invalid')
+        }
+
+        return
     }
 }
 

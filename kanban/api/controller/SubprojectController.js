@@ -1,9 +1,9 @@
-const ProjectValidator = require('../validation/project/ProjectValidator')
-const ProjectService = require('../service/ProjectService')
+const SubprojectValidator = require('../validation/subproject/SubprojectValidator')
+const SubprojectService = require('../service/SubprojectService')
 
-class ProjectController {
+class SubprojectController {
     /**
-     * Create a project
+     * Create a subproject
      * 
      * @param {Object} payload 
      * @param {Function} callback 
@@ -11,13 +11,13 @@ class ProjectController {
      */
     static async create(payload, callback) {
         try {
-            ProjectValidator.validateCreateRequest(payload)
+            SubprojectValidator.validateCreateRequest(payload)
 
-            const project = await ProjectService.createProject(payload)
+            const subproject = await SubprojectService.createSubproject(payload)
 
             callback({
                 status: true,
-                payload: project,
+                payload: subproject,
             })
 
             return
@@ -32,7 +32,7 @@ class ProjectController {
     }
 
     /**
-     * Update a project
+     * Update a subproject
      * 
      * @param {Object} payload 
      * @param {Function} callback 
@@ -40,13 +40,13 @@ class ProjectController {
      */
     static async update(payload, callback) {
         try {
-            ProjectValidator.validateUpdateRequest(payload)
+            SubprojectValidator.validateUpdateRequest(payload)
 
-            const project = await ProjectService.updateProject(payload)
+            const subproject = await SubprojectService.updateSubproject(payload)
 
             callback({
                 status: true,
-                payload: project,
+                payload: subproject,
             })
 
             return
@@ -61,7 +61,7 @@ class ProjectController {
     }
 
     /**
-     * Remove a project
+     * Remove a subproject
      * 
      * @param {Object} payload 
      * @param {Function} callback
@@ -69,13 +69,13 @@ class ProjectController {
      */
     static async remove(payload, callback) {
         try {
-            ProjectValidator.validateRemoveRequest(payload)
+            SubprojectValidator.validateRemoveRequest(payload)
 
-            const project = await ProjectService.removeProject(payload)
+            const subproject = await SubprojectService.removeSubproject(payload)
 
             callback({
                 status: true,
-                payload: project,
+                payload: subproject,
             })
 
             return
@@ -90,7 +90,7 @@ class ProjectController {
     }
 
     /**
-     * Get single project
+     * Get single subproject
      * 
      * @param {Object} payload
      * @param {Function} callback
@@ -98,13 +98,13 @@ class ProjectController {
      */
     static async getOne(payload, callback) {
         try {
-            ProjectValidator.validateGetOneRequest(payload)
+            SubprojectValidator.validateGetOneRequest(payload)
 
-            const project = await ProjectService.getOneProject(payload)
+            const subproject = await SubprojectService.getOneSubproject(payload)
         
             callback({
                 status: true,
-                payload: project,
+                payload: subproject,
             })
 
             return
@@ -112,6 +112,34 @@ class ProjectController {
             callback({
                 status: false,
                 message: exception.message,
+            })
+
+            return
+        }
+    }
+
+   /**
+     * Assign task to subproject
+     * 
+     * @param {Object} payload
+     * @param {Function} callback
+     * @return {void}
+     */
+    static async assignTask(payload, callback) {
+        try {
+            SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
+
+            await SubprojectService.assignTaskToSubproject(payload)
+
+            callback({
+                status: true,
+            })
+            
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: exception.message
             })
 
             return
@@ -119,30 +147,32 @@ class ProjectController {
     }
 
     /**
-     * Get array of all projects
+     * Unassign task from subproject
      * 
+     * @param {Object} payload
      * @param {Function} callback
-     * @return {void} 
+     * @return {void}
      */
-    static async getAll(callback) {
+    static async unassignTask(payload, callback) {
         try {
-            const projects = await ProjectService.getAllProjects()
+            SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
+
+            await SubprojectService.unssignTaskFromSubproject(payload)
 
             callback({
                 status: true,
-                payload: projects,
             })
             
             return
         } catch (exception) {
             callback({
                 status: false,
-                message: exception.message,
+                message: exception.message
             })
-            
+
             return
         }
     }
 }
 
-module.exports = ProjectController
+module.exports = SubprojectController

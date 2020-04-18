@@ -72,10 +72,6 @@ class ColumnRepository {
      * @param {Object} update 
      */
     static async update(columnId, update) {
-        if (columnId == null || columnId == "") {
-            throw new Error('Invalid column ID.')
-        }
-
         return await Column.findByIdAndUpdate(columnId, update, {
             new: columnConfig.repository.RETURN_NEW_AFTER_UPDATE,
             useFindAndModify: columnConfig.repository.USE_FIND_AND_MODIFY,

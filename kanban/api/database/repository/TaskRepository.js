@@ -29,10 +29,6 @@ class TaskRepository {
      * @param {Object} update 
      */
     static async update(taskId, update) {
-        if (taskId == null || taskId == "") {
-            throw new Error('Invalid task ID.')
-        }
-
         return await Task.findByIdAndUpdate(taskId, update, {
             new: taskConfig.repository.RETURN_NEW_AFTER_UPDATE,
             useFindAndModify: taskConfig.repository.USE_FIND_AND_MODIFY,
