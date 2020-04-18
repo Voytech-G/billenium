@@ -8,6 +8,9 @@ class UserValidator extends ValidatorAbstract {
      */
     static validateUpdateUserRequest(payload) {
         try {
+            const userId = payload.user_id
+            this.checkUserObjectIDValid(userId)
+
             const username = payload.username
             this.validateUsername(username)
     
@@ -23,9 +26,6 @@ class UserValidator extends ValidatorAbstract {
             const userType = payload.user_type
             this.validateUserType(userType)
             
-            const initials = payload.initials
-            this.validateInitials(initials)
-    
             const maxWorkInProgressTasks = payload.max_work_in_progress_tasks
             this.validateMaxWorkInProgressTasks(maxWorkInProgressTasks)
     
@@ -160,6 +160,24 @@ class UserValidator extends ValidatorAbstract {
         const firstNameLength = firstName.length
         if (firstNameLength > userConfig.validation.maxFirstNameLength || firstNameLength < userConfig.validation.minFirstNameLength) {
             throw new Error('Invalid first name length')
+        }
+
+        return
+    }
+
+    /**
+     * @param {String|Number} maxWorkInProgressTasks 
+     * @return {void}
+     */
+    static validateMaxWorkInProgressTasks(maxWorkInProgressTasks) {
+        // max work in progress tasks is optional, if does not exist in request payload simply do not validate
+        if (maxWorkInProgressTasks == null) {
+            return
+        }
+
+        // check if is numeric
+        if (isNaN(maxWorkInProgressTasks)) {
+            throw new Error('Max work in progress tasks number should be a number')
         }
 
         return

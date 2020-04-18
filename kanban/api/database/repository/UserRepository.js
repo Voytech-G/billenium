@@ -1,4 +1,5 @@
 const User = require('../model/User')
+const userConfig = require('../../config/user')
 const mongoose = require('mongoose')
 
 class UserRepository {
@@ -55,6 +56,31 @@ class UserRepository {
      */
     static async findOneByFilter(filter) {
         return await User.findOne(filter)
+    }
+
+    /**
+     * @param {Object} user
+     * @return {Object} 
+     */
+    static async remove(user) {
+        if (user == null) {
+            throw new Error('Cannot remove an empty user')
+        }
+
+        return await user.remove()
+    }
+
+    /**
+     * Update given user
+     * 
+     * @param {String} userId
+     * @param {Object} update 
+     */
+    static async update(userId, update) {
+        return await User.findByIdAndUpdate(userId, update, {
+            new: userConfig.repository.RETURN_NEW_AFTER_UPDATE,
+            useFindAndModify: userConfig.repository.USE_FIND_AND_MODIFY,
+        })
     }
 }
 

@@ -201,6 +201,8 @@ class TaskService {
             if (task == null) {
                 throw new Error('Found no task of given ID')
             }
+
+            // TODO unassign task from subproject
     
             const removedTask = await TaskRepository.remove(task)
             if (removedTask == null) {
