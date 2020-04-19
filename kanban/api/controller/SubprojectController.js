@@ -129,7 +129,9 @@ class SubprojectController {
         try {
             SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
 
-            await SubprojectService.assignTaskToSubproject(payload)
+            const subprojectId = payload.subproject_id
+            const taskId = payload.task_id
+            await SubprojectService.assignTaskToSubproject(subprojectId, taskId)
 
             callback({
                 status: true,
@@ -156,8 +158,10 @@ class SubprojectController {
     static async unassignTask(payload, callback) {
         try {
             SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
-
-            await SubprojectService.unassignTaskFromSubproject(payload)
+            
+            const subprojectId = payload.subproject_id
+            const taskId = payload.task_id
+            await SubprojectService.unassignTaskFromSubproject(subprojectId, taskId)
 
             callback({
                 status: true,
