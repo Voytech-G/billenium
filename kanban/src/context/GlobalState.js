@@ -138,15 +138,25 @@ export const GlobalProvider = ({ children }) => {
       },
     });
   }
-  function removeCard(cardId, cardIndex, columnId) {
+  function removeCard(cardId, cardIndex, columnId, subprojectId) {
     dispatch({
-      type: "REMOVE_CARD",
+      type: "REMOVE_CARD_COLUMN",
       payload: {
         card: {
           id: cardId,
           row_index: cardIndex,
         },
         column_id: columnId,
+      },
+    });
+    dispatch({
+      type: "REMOVE_CARD_SUBPROJECT",
+      payload: {
+        card: {
+          id: cardId,
+          row_index: cardIndex,
+        },
+        subproject_id: subprojectId,
       },
     });
   }

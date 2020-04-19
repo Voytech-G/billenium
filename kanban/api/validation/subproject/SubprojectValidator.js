@@ -121,6 +121,8 @@ class SubprojectValidator extends ValidatorAbstract {
      */
     static checkSubprojectObjectIDValid(id) {
         this.checkObjectIDValid(id, 'subproject')
+
+        return
     }
 
     /**

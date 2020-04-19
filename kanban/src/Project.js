@@ -49,7 +49,6 @@ const getProject = (socket, setColumns, setSubprojects) => {
           subproject_id: task.subproject,
         })),
       }));
-      setColumns(columnsWithTasks);
       const subprojectsWithTasks = data.payload.subprojects.map(
         (subproject) => ({
           id: subproject._id,
@@ -64,6 +63,7 @@ const getProject = (socket, setColumns, setSubprojects) => {
           })),
         })
       );
+      setColumns(columnsWithTasks);
       setSubprojects(subprojectsWithTasks);
     }
   );

@@ -17,12 +17,12 @@ const handleClick_addCard = (
   e.preventDefault();
   const cardContent = prompt("Type task name to add");
   let itemCount = 0;
-
   {
     tasks
       .sort((a, b) => a.row_index - b.row_index)
       .filter((task) => task.column_id === columnId)
-      .map((item) => {
+      .map((item, idx) => {
+        itemCount = ++idx;
         console.log(item);
       });
   }

@@ -184,8 +184,8 @@ const Subprojects = ({ subprojects }) => {
         >
           {subprojects
             .sort((a, b) => a.row_index - b.row_index)
-            .map((subproject) => (
-              <Subproject subproject={subproject} />
+            .map((subprojectItem) => (
+              <Subproject subproject={subprojectItem} />
             ))}
         </div>
         <div style={{ display: "flex" }}>

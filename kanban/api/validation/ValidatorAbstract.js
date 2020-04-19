@@ -13,7 +13,7 @@ class ValidatorAbstract {
             if (modelId == null) {
                 throw new Error(`${capitalize(modelName)} ID is required`)
             }
-    
+
             if(!mongoose.Types.ObjectId.isValid(modelId)) {
                 throw new Error(`Valid ${modelName} ID is required`)
             }

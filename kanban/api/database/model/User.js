@@ -8,9 +8,9 @@ const UserSchema = new mongoose.Schema({
     pin: { type: String, required: [true, 'PIN is required'] },
     first_name: { type: String, required: [true, 'First name is required'] },
     last_name: { type: String, required: [true, 'Last name is required'] },
-    user_type: { type: String, enum: userConfig.userTypes, required: [true, 'User type is required'] }, // type of user, permissions depend on it
-    initials: { type: String, required: false }, // first letter of firstname and first letter of lastname concatenated
-    // max_work_in_progress_tasks: { type: Number, required: false, default: 3 },
+    user_type: { type: String, enum: userConfig.userTypes, required: [true, 'User type is required'] },
+    initials: { type: String, required: [true, 'User initials are required'] },
+    max_work_in_progress_tasks: { type: Number, required: false, default: 3 },
     // teams: [
     //     { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
     // ],

@@ -52,7 +52,7 @@ class SubprojectService {
 
             const updatedSubproject = await SubprojectRepository.update(subprojectId, update)
             if (updatedSubproject == null) {
-                throw new Error('An error occured, no subprojects updated.')
+                throw new Error('An error occured, no subprojects updated')
             }
 
             return updatedSubproject
@@ -78,11 +78,16 @@ class SubprojectService {
             }
 
             await ProjectService.unassignSubprojectFromProject(subprojectId, parentProjectId)
-
+            await this.unassignSubprojectFromTasks(subprojectId)
+            
             const removedSubproject = await SubprojectRepository.remove(subproject)
             if (removedSubproject == null) {
                 throw new Error('An error occured, removed no subprojects')
             }
+
+            // move all subprojects above removed subprojects down to remove gaps in row_indexes
+            const removedSubprojectRowIndex = removedSubproject.row_index
+            await this.moveSubprojectsAboveRowIndexDown(parentProjectId, removedSubprojectRowIndex) 
 
             return removedSubproject
         } catch (exception) {
@@ -118,16 +123,59 @@ class SubprojectService {
                 {
                     path: 'tasks',
                     model: 'Task',
-                    // populate: {
-                    //     path: 'subtasks',
-                    //     model: 'Subtask',
-                    // },
                 }
             ]
             
             return await SubprojectRepository.populate(subproject, populateConfig)
         } catch (exception) {
             throw new Error(`Failed to get one subproject: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Move all subprojects above given row_index down
+     * 
+     * @param {String} projectId 
+     * @param {Number|String} rowIndex 
+     */
+    static async moveSubprojectsAboveRowIndexDown(projectId, rowIndex) {
+        try {
+            const filter = {
+                project: projectId,
+                row_index: { $gt: rowIndex },
+            }
+            
+            const update = {
+                $inc: { row_index: -1 },
+            }
+
+            return await SubprojectRepository.findManyByFilterAndUpdate(filter, update)
+        } catch (exception) {
+            throw new Error(`Failed to move subprojects above row index down: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Remove reference to this subproject from all tasks assigned to it
+     * 
+     * @param {String} subprojectId
+     * @return {void} 
+     */
+    static async unassignSubprojectFromTasks(subprojectId) {
+        try {
+            const filter = {
+                subproject: subprojectId,
+            }
+
+            const update = {
+                subproject: null,
+            }
+
+            await TaskRepository.findManyByFilterAndUpdate(filter, update)
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to unassign subproject from tasks assigned to it: ${exception.message}`)
         }
     }
 
@@ -157,6 +205,8 @@ class SubprojectService {
 
             subproject.tasks.push(task)
             await subproject.save()
+
+            return
         } catch (exception) {
             throw new Error(`Failed to assign task to subproject: ${exception.message}`)
         }
@@ -168,7 +218,7 @@ class SubprojectService {
      * @param {Object} payload
      * @return {void} 
      */
-    static async unssignTaskFromSubproject(payload) {
+    static async unassignTaskFromSubproject(payload) {
         try {
             const subprojectId = payload.subproject_id
             const taskId = payload.task_id
@@ -188,6 +238,8 @@ class SubprojectService {
 
             subproject.tasks.pull(taskId)
             await subproject.save()
+
+            return
         } catch (exception) {
             throw new Error(`Failed to unassign task from subproject: ${exception.message}`)
         }
