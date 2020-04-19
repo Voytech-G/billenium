@@ -68,15 +68,30 @@ const App = () => {
             // })
 
             // socket.emit('create-task', {
-            //     content: 'task 11111',
+            //     content: 'task 1 boi',
             //     row_index: 0,
-            //     column_id: '5e9ae6b84fc8d830e4081d87',
+            //     column_id: '5e9add5a4da6df2a7c2fcbc5',
             // }, data => {
             //     console.log(data)
             // })
 
-            socket.emit('get-one-task', {
-                task_id: '5e9c38d07c72ec481c081d8f',
+            // socket.emit('remove-task', {
+            //     task_id: '5e9c38d07c72ec481c081d8f',
+            //     source_row_index: 0,
+            //     source_column_id: '5e9ae6b84fc8d830e4081d87',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('get-one-task', {
+            //     task_id: '5e9c38d07c72ec481c081d8f',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            socket.emit('task-unassign-user', {
+                task_id: '5e9c547b4a75c81f1019b195',
+                user_id: '5e8f7483d2f2946a0028212d',
             }, data => {
                 console.log(data)
             })
