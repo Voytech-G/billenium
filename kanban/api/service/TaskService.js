@@ -207,6 +207,8 @@ class TaskService {
             // remove reference to this task from its subproject, remove reference to subproject from task
             const subprojectId = task.subproject
             await SubprojectService.unassignTaskFromSubproject(taskId, subprojectId)
+
+            await this.unassignTaskFromUsers(taskId)
     
             const removedTask = await TaskRepository.remove(task)
             if (removedTask == null) {
@@ -248,6 +250,45 @@ class TaskService {
             return await TaskRepository.populate(task, populateConfig)
         } catch (exception) {
             throw new Error(`Failed to get one task: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Iterate over all users of given task, remove reference to that task
+     * 
+     * @param {String} taskId
+     * @return {void} 
+     */
+    static async unassignTaskFromUsers(taskId) {
+        try {
+            let task = await TaskRepository.findById(taskId)
+            if (task == null) {
+                throw new Error('Found no task of given ID')
+            }
+
+            const populateConfig = [
+                {
+                    path: 'users',
+                    model: 'User',
+                },
+            ]
+
+            let populatedTask = TaskRepository.populate(task, populateConfig)
+            let users = populatedTask.users
+
+            // iterate over all users, remove reference to this task from user, remove reference to user from this task
+            users.forEach(async user => {
+                user.tasks.pull(task)
+                await user.save()
+
+                task.users.pull(user)
+            })
+
+            await task.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to unassign task from users: ${exception.message}`)
         }
     }
 

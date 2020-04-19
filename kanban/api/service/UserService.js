@@ -92,6 +92,8 @@ class UserService {
 
             // TODO unassign user from team
 
+            await this.unassignUserFromTasks(userId)
+
             // remove the user
             const removedUser = await UserRepository.remove(user)
             if (removedUser == null) {
@@ -139,6 +141,44 @@ class UserService {
             return
         } catch (exception) {
             throw new Error(`User type validation failed: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Unassign user from all his tasks
+     * 
+     * @param {String} userId
+     * @return {void} 
+     */
+    static async unassignUserFromTasks(userId) {
+        try {
+            let user = await UserRepository.findById(userId)
+            if (user == null) {
+                throw new Error('Found no user of given ID')
+            }
+
+            const populateConfig = [
+                {
+                    path: 'tasks',
+                    ref: 'Task',
+                }
+            ]
+
+            let populatedUser = await UserRepository.populate(user, populateConfig)
+            let tasks = populatedUser.tasks
+
+            tasks.forEach(async task => {
+                task.users.pull(user)
+                await task.save()
+
+                user.tasks.pull(task)
+            })
+
+            await user.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to unassign user from his tasks: ${exception.message}`)
         }
     }
 
