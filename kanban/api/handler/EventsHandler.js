@@ -205,12 +205,16 @@ class EventsHandler {
             TaskController.assignUser(payload, callback)
 
             return
+        }, {
+            authenticate: true,
         })
 
         EventService.registerEvent(socket, 'task-unassign-user', (payload, callback) => {
             TaskController.unassignUser(payload, callback)
 
             return
+        }, {
+            authenticate: true,
         })
 
         EventService.registerEvent(socket, 'create-column', (payload, callback) => {
