@@ -75,6 +75,12 @@ const App = () => {
             //     console.log(data)
             // })
 
+            socket.emit('get-one-task', {
+                task_id: '5e9c38d07c72ec481c081d8f',
+            }, data => {
+                console.log(data)
+            })
+
             // socket.emit('update-subproject', {
             //     subproject_id: '5e98b0c0b1b4ab474090034c',
             //     subproject_name: 'first subproject updated updated',
@@ -82,12 +88,12 @@ const App = () => {
             //     console.log(data)
             // })
 
-            socket.emit('remove-subproject', {
-                subproject_id: '5e9c4187a7525467188ac04d',
-                project_id: '5e98b06eb1b4ab474090034b',
-            }, data => {
-                console.log(data)
-            })
+            // socket.emit('remove-subproject', {
+            //     subproject_id: '5e9c4187a7525467188ac04d',
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            // }, data => {
+            //     console.log(data)
+            // })
 
             // socket.emit('get-one-subproject', {
             //     subproject_id: '5e98b0c0b1b4ab474090034c',

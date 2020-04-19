@@ -235,14 +235,42 @@ class TaskService {
     
             const populateConfig = [
                 {
-                    path: 'columns',
-                    model: 'Column',
-                }
+                    path: 'subproject',
+                    model: 'Subproject',
+                },
+                {
+                    path: 'users',
+                    model: 'User',
+                },
             ]
     
             return await TaskRepository.populate(task, populateConfig)
         } catch (exception) {
             throw new Error(`Failed to get one task: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static async assignUserToTask(payload) {
+        try {
+            
+        } catch (exception) {
+            throw new Error(`Failed to assign user to task: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static async unassignUserFromTask(payload) {
+        try {
+
+        } catch (exception) {
+            throw new Error(`Failed to unassign user from task: ${exception.message}`)
         }
     }
 }
