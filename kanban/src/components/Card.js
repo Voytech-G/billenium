@@ -13,21 +13,22 @@ const handleClick_removeCard = (
 ) => {
   e.preventDefault();
   console.log(cardId, cardIndex, columnId, subprojectId);
-  socket.emit(
-    "remove-task",
-    {
-      task_id: cardId,
-      source_row_index: cardIndex,
-      source_column_id: columnId,
-    },
-    (res) => {
-      if (res.status) {
-        removeCard(cardId, cardIndex, columnId, subprojectId);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  removeCard(cardId, cardIndex, columnId, subprojectId);
+  // socket.emit(
+  //   "remove-task",
+  //   {
+  //     task_id: cardId,
+  //     source_row_index: cardIndex,
+  //     source_column_id: columnId,
+  //   },
+  //   (res) => {
+  //     if (res.status) {
+  //       removeCard(cardId, cardIndex, columnId, subprojectId);
+  //     } else {
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 const handleClick_editCard = (
   e,
@@ -35,24 +36,26 @@ const handleClick_editCard = (
   socket,
   setColumns,
   cardId,
-  cardIndex,
+  rowIndex,
   columnId,
+  subprojectId,
   content
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
-  console.log(cardContent);
-  socket.emit(
-    "update-task",
-    { task_id: cardId, content: cardContent },
-    (res) => {
-      if (res.status) {
-        editCard(cardId, cardIndex, columnId, cardContent);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
+
+  // socket.emit(
+  //   "update-task",
+  //   { task_id: cardId, content: cardContent },
+  //   (res) => {
+  //     if (res.status) {
+  //       editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
+  //     } else {
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 
 const Card = ({ card, columnId, subprojectId }) => {
@@ -106,6 +109,7 @@ const Card = ({ card, columnId, subprojectId }) => {
                     id,
                     row_index,
                     columnId,
+                    subprojectId,
                     content
                   )
                 }

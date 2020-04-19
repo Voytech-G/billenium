@@ -182,24 +182,39 @@ export default (state, action) => {
           ),
         ].rearrangeColumns(),
       };
-    case "EDIT_CARD":
+    case "EDIT_CARD_COLUMN":
       return {
         ...state,
-        columns: state.columns
-          .map((column) =>
-            column.id === action.payload.column_id
-              ? {
-                  ...column,
-                  items: [
-                    ...column.items.filter(
-                      (task) => task.id !== action.payload.card.id
-                    ),
-                    { ...action.payload.card },
-                  ],
-                }
-              : column
-          )
-          .rearrangeCards(),
+        columns: state.columns.map((column) =>
+          column.id === action.payload.column_id
+            ? {
+                ...column,
+                tasks: [
+                  ...column.tasks.filter(
+                    (task) => task.id !== action.payload.card.id
+                  ),
+                  { ...action.payload.card },
+                ],
+              }
+            : column
+        ),
+      };
+    case "EDIT_CARD_SUBPROJECT":
+      return {
+        ...state,
+        subprojects: state.subprojects.map((subproject) =>
+          subproject.id === action.payload.subproject_id
+            ? {
+                ...subproject,
+                tasks: [
+                  ...subproject.tasks.filter(
+                    (task) => task.id !== action.payload.card.id
+                  ),
+                  { ...action.payload.card },
+                ],
+              }
+            : subproject
+        ),
       };
     case "EDIT_COLUMN":
       return {

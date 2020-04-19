@@ -111,16 +111,31 @@ export const GlobalProvider = ({ children }) => {
       },
     });
   }
-  function editCard(cardId, cardIndex, columnId, content) {
+  function editCard(cardId, cardIndex, columnId, subprojectId, content) {
     dispatch({
-      type: "EDIT_CARD",
+      type: "EDIT_CARD_COLUMN",
       payload: {
         card: {
           id: cardId,
           content,
           row_index: cardIndex,
+          column_id: columnId,
+          subproject_id: subprojectId,
         },
         column_id: columnId,
+      },
+    });
+    dispatch({
+      type: "EDIT_CARD_SUBPROJECT",
+      payload: {
+        card: {
+          id: cardId,
+          content,
+          row_index: cardIndex,
+          column_id: columnId,
+          subproject_id: subprojectId,
+        },
+        subproject_id: subprojectId,
       },
     });
   }
