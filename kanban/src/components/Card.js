@@ -8,19 +8,21 @@ const handleClick_removeCard = (
   setColumns,
   cardId,
   cardIndex,
-  columnId
+  columnId,
+  subprojectId
 ) => {
   e.preventDefault();
+  console.log(cardId, cardIndex, columnId, subprojectId);
   socket.emit(
     "remove-task",
     {
       task_id: cardId,
       source_row_index: cardIndex,
-      source_column_id: columnId
+      source_column_id: columnId,
     },
-    res => {
+    (res) => {
       if (res.status) {
-        removeCard(cardId, cardIndex, columnId);
+        removeCard(cardId, cardIndex, columnId, subprojectId);
       } else {
         alert("Error: server returned false status");
       }
@@ -40,20 +42,28 @@ const handleClick_editCard = (
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
   console.log(cardContent);
-  socket.emit("update-task", { task_id: cardId, content: cardContent }, res => {
-    if (res.status) {
-      editCard(cardId, cardIndex, columnId, cardContent);
-    } else {
-      alert("Error: server returned false status");
+  socket.emit(
+    "update-task",
+    { task_id: cardId, content: cardContent },
+    (res) => {
+      if (res.status) {
+        editCard(cardId, cardIndex, columnId, cardContent);
+      } else {
+        alert("Error: server returned false status");
+      }
     }
-  });
+  );
 };
 
-const Card = ({ card, columnId }) => {
+const Card = ({ card, columnId, subprojectId }) => {
   const { id, content, row_index } = card;
-  const { socket, removeCard, setColumns, editCard } = useContext(
-    GlobalContext
-  );
+  const {
+    socket,
+    removeCard,
+    editCard,
+    setColumns,
+    setSubprojects,
+  } = useContext(GlobalContext);
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
@@ -75,19 +85,19 @@ const Card = ({ card, columnId }) => {
               padding: "10px",
               minHeight: "100px",
               justifyContent: "space-between",
-              ...provided.draggableProps.style
+              ...provided.draggableProps.style,
             }}
           >
             {content}
             <form
               style={{
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               <button
                 style={{}}
-                onClick={e =>
+                onClick={(e) =>
                   handleClick_editCard(
                     e,
                     editCard,
@@ -105,7 +115,7 @@ const Card = ({ card, columnId }) => {
               </button>
               <button
                 style={{}}
-                onClick={e =>
+                onClick={(e) =>
                   handleClick_removeCard(
                     e,
                     removeCard,
@@ -113,7 +123,8 @@ const Card = ({ card, columnId }) => {
                     setColumns,
                     id,
                     row_index,
-                    columnId
+                    columnId,
+                    subprojectId
                   )
                 }
                 type="submit"
