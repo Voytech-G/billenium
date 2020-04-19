@@ -33,6 +33,97 @@ class UserService {
     }
 
     /**
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async updateUser(payload) {
+        try {
+            const userId = payload.user_id
+            const username = payload.username
+            const pin = await this.getPinHash(payload.pin)
+            const firstName = payload.first_name
+            const lastName = payload.last_name
+            const userType = payload.user_type
+            const initials = this.getUserInitials(firstName, lastName)
+
+            this.validateUserType(userType)
+            await this.validateUsernameNotTaken(username)
+
+            // get user to update, check if it exists
+            const user = await UserRepository.findById(userId)
+            if (user == null) {
+                throw new Error('Found no user of given ID')
+            }
+
+            const update = {
+                username,
+                pin,
+                first_name: firstName,
+                last_name: lastName,
+                user_type: userType,
+                initials,
+            }
+
+            // update given user, check if updated any
+            const updatedUser = await UserRepository.update(userId, update)
+            if (updatedUser == null) {
+                throw new Error(`An error occured, no users updated`)
+            }
+
+            return updatedUser
+        } catch (exception) {
+            throw new Error(`Failed to update the user: ${exception}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async removeUser(payload) {
+        try {
+            const userId = payload.user_id
+
+            // find user to be removed
+            const user = await UserRepository.findById(userId)
+            if (user == null) {
+                throw new Error('Found no user of given ID')
+            }
+
+            // TODO unassign user from team
+
+            // remove the user
+            const removedUser = await UserRepository.remove(user)
+            if (removedUser == null) {
+                throw new Error('An error occured, no users removed')
+            }
+
+            return removedUser
+        } catch (exception) {
+            throw new Error(`Failed to remove the user: ${exception}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {Object} 
+     */
+    static async getOneUser(payload) {
+        try {
+            const userId = payload.user_id
+
+            const user = await UserRepository.findById(userId)
+            if (user == null) {
+                throw new Error('Found no user of given ID')
+            }
+
+            return user
+        } catch (exception) {
+            throw new Error(`Failed to get the user: ${exception}`)
+        }
+    }
+
+    /**
      * Check if given user type key is a valid available type
      * 
      * @param {String} type 

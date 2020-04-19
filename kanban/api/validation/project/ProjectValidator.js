@@ -89,6 +89,8 @@ class ProjectValidator extends ValidatorAbstract {
      */
     static checkProjectObjectIDValid(id) {
         this.checkObjectIDValid(id, 'project')
+    
+        return
     }
 }
 

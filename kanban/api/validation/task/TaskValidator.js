@@ -123,6 +123,8 @@ class TaskValidator extends ValidatorAbstract {
      */
     static checkTaskObjectIDValid(taskId) {
         this.checkObjectIDValid(taskId, 'task')
+
+        return
     }
 
      /**

@@ -52,7 +52,7 @@ class SubprojectService {
 
             const updatedSubproject = await SubprojectRepository.update(subprojectId, update)
             if (updatedSubproject == null) {
-                throw new Error('An error occured, no subprojects updated.')
+                throw new Error('An error occured, no subprojects updated')
             }
 
             return updatedSubproject
@@ -78,6 +78,8 @@ class SubprojectService {
             }
 
             await ProjectService.unassignSubprojectFromProject(subprojectId, parentProjectId)
+
+            // TODO unassign subproject from tasks that were in it
 
             const removedSubproject = await SubprojectRepository.remove(subproject)
             if (removedSubproject == null) {

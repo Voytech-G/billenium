@@ -124,6 +124,8 @@ class ColumnValidator extends ValidatorAbstract {
      */
     static checkColumnObjectIDValid(columnId) {
         this.checkObjectIDValid(columnId, 'column')
+
+        return
     }
 
     /**
