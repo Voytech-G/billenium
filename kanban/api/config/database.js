@@ -1,14 +1,14 @@
 module.exports = {
   developmentDatabaseConnection: {
-    databaseContainerName: "ds151014",
-    databasePort: "51014",
-    databaseName: "kanban-variant-development",
-    username: "kanban-test-user",
+    databaseContainerName: "ds157864",
+    databasePort: "57864",
+    databaseName: "kanban-wojtek-development",
+    username: "wojtek",
     password: "kinethicc69",
     options: {
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
+      useUnifiedTopology: true,
+    },
   },
   productionDatabaseConnection: {
     databaseContainerName: process.env.DATABASE_CONTAINER_NAME || "ds147946",
@@ -18,7 +18,7 @@ module.exports = {
     password: process.env.PASSWORD || "kinethicc69",
     options: {
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
-  }
-}
+      useUnifiedTopology: true,
+    },
+  },
+};

@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import Project from "./Project";
 
 import { GlobalProvider } from "./context/GlobalState";
 
 ReactDOM.render(
   <GlobalProvider>
-    <App />
+    <Project />
   </GlobalProvider>,
   document.getElementById("root")
 );

@@ -44,19 +44,27 @@ class TaskService {
                 
             const targetRowIndex = payload.target_row_index
             const targetColumnId = payload.target_column_id
+            const targetSubprojectId = payload.target_subproject_id
             
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
+            const sourceSubprojectId = payload.source_subproject_id
 
             // in case target column is not the same as source column we switch them
             if (targetColumnId !== sourceColumnId) {
                 await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
                 await ColumnService.assignTaskToColumn(targetColumnId, taskId)
             }
+
+            // if user wants to change given tasks subproject
+            if (targetSubprojectId !== sourceSubprojectId) {
+                await SubprojectService.unassignTaskFromSubproject(sourceSubprojectId, taskId)
+                await SubprojectService.assignTaskToSubproject(targetSubprojectId, taskId)
+            }
             
             // adjust all tasks in target and source columns (move tasks above in source column task down, move tasks above in target column up)
-            await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
-            await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, true)
+            await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId, sourceSubprojectId)
+            await this.moveTasksAboveRowIndexUp(targetRowIndex, targetColumnId, targetSubprojectId, true)
 
             const update = { 
                 row_index: targetRowIndex,
@@ -82,7 +90,7 @@ class TaskService {
      * @param {Boolean} including 
      * @return {void}
      */
-    static async moveTasksAboveRowIndexDown(rowIndex, columnId, including = false) {
+    static async moveTasksAboveRowIndexDown(rowIndex, columnId, subprojectId, including = false) {
         try {
             const column = await ColumnRepository.findById(columnId)
             if (column == null) {
@@ -93,7 +101,7 @@ class TaskService {
                 $inc: { row_index: -1 },
             }
     
-            await this.changeColumnTasksRowIndexes(update, rowIndex, columnId, including)
+            await this.changeColumnTasksRowIndexes(update, rowIndex, columnId, subprojectId, including)
 
             return
         } catch (exception) {
@@ -109,7 +117,7 @@ class TaskService {
      * @param {Boolean} including
      * @return {void}
      */
-    static async moveTasksAboveRowIndexUp(rowIndex, columnId, including = false) {
+    static async moveTasksAboveRowIndexUp(rowIndex, columnId, subprojectId, including = false) {
         try {
             const column = await ColumnRepository.findById(columnId)
             if (column == null) {
@@ -120,7 +128,7 @@ class TaskService {
                 $inc: { row_index: 1 },
             }
     
-            await this.changeColumnTasksRowIndexes(update, rowIndex, columnId, including)
+            await this.changeColumnTasksRowIndexes(update, rowIndex, columnId, subprojectId, including)
     
             return
         } catch (exception) {
@@ -137,10 +145,11 @@ class TaskService {
      * @param {Boolean} including 
      * @return {void}
      */
-    static async changeColumnTasksRowIndexes(update, rowIndex, columnId, including = false) {
+    static async changeColumnTasksRowIndexes(update, rowIndex, columnId, subprojectId, including = false) {
         try {
             const filter = {
                 column: columnId,
+                subproject: subprojectId,
             }
     
             filter.row_index = including === true ? { $gte: rowIndex } : { $gt: rowIndex }
@@ -191,6 +200,7 @@ class TaskService {
     static async removeTask(payload) {
         try {
             const taskId = payload.task_id
+            const sourceSubprojectId = payload.source_subproject_id
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
     
@@ -202,7 +212,7 @@ class TaskService {
             await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
     
             // after we remove the task we move all tasks above it to fill the created gap
-            await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
+            await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId, sourceSubprojectId)
 
             // remove reference to this task from its subproject, remove reference to subproject from task
             const subprojectId = task.subproject

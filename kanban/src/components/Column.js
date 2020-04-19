@@ -6,37 +6,6 @@ import { GlobalContext } from "../context/GlobalState";
 
 import Card from "./Card";
 
-const handleClick_addCard = (
-  e,
-  columnId,
-  addCard,
-  socket,
-  columnItems,
-  setColumns
-) => {
-  e.preventDefault();
-
-  const cardContent = prompt("Type task name to add");
-  const newCard = {
-    // _id: "",
-    content: cardContent,
-    row_index: columnItems.length
-  };
-
-  socket.emit(
-    "create-task",
-    { ...newCard, column_id: columnId, max_tasks: 3 },
-    res => {
-      if (res.status) {
-        newCard._id = res.payload._id;
-        addCard(newCard, columnId);
-        console.log(res.payload._id);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
-};
 const Amount = ({ amount, maxTasks }) => {
   return (
     <h5
@@ -51,7 +20,7 @@ const deleteColumn = (removeColumn, socket, id, boardIndex) => {
   socket.emit(
     "remove-column",
     { column_id: id, board_index: boardIndex },
-    res => {
+    (res) => {
       if (res.status) {
         removeColumn(id, boardIndex);
       } else {
@@ -87,9 +56,9 @@ const updateColumn = (
         column_id: columnId,
         board_index: boardIndex,
         name: new_name,
-        max_tasks: maxTasks
+        max_tasks: maxTasks,
       },
-      res => {
+      (res) => {
         if (res.status) {
           editColumn(columnId, new_name, boardIndex, maxTasks);
         } else {
@@ -105,9 +74,9 @@ const updateColumn = (
         column_id: columnId,
         board_index: boardIndex,
         name: columnName,
-        max_tasks: new_maxTasks
+        max_tasks: new_maxTasks,
       },
-      res => {
+      (res) => {
         if (res.status) {
           editColumn(columnId, columnName, boardIndex, new_maxTasks);
         } else {
@@ -124,7 +93,7 @@ const ChangeColumnNameBtn = ({
   columnName,
   boardIndex,
   maxTasks,
-  btnName
+  btnName,
 }) => {
   return (
     <button
@@ -152,7 +121,7 @@ const ChangeMaxLimitBtn = ({
   columnName,
   boardIndex,
   maxTasks,
-  btnName
+  btnName,
 }) => {
   return (
     <button
@@ -174,74 +143,19 @@ const ChangeMaxLimitBtn = ({
   );
 };
 const Column = ({ column }) => {
-  const { id, name, items, max_tasks, board_index } = column;
-  const { socket, addCard, setColumns, removeColumn, editColumn } = useContext(
-    GlobalContext
-  );
+  const { id, name, tasks, max_tasks, board_index } = column;
+  const { socket, removeColumn, editColumn } = useContext(GlobalContext);
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        border: "2px solid blue",
       }}
       key={id}
     >
-      <h3>{name}</h3>
-      <Amount amount={items.length} maxTasks={max_tasks}></Amount>
       <div style={{ margin: 8 }}>
-        <Droppable
-          droppableId={id}
-          key={id}
-          className="taskLimitColumn"
-          style={{ backgroundColor: "red" }}
-        >
-          {(provided, snapshot) => {
-            return (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{
-                  background: snapshot.isDraggingOver
-                    ? "lightblue"
-                    : "lightgrey",
-                  padding: 4,
-                  width: 250,
-                  minHeight: 500
-                }}
-              >
-                {items
-                  .sort((a, b) => a.row_index - b.row_index)
-                  .map(item => (
-                    <Card card={item} columnId={column.id} />
-                  ))}
-                <form
-                  style={{
-                    display: "flex",
-                    flexDirection: "column"
-                  }}
-                >
-                  <button
-                    onClick={e =>
-                      handleClick_addCard(
-                        e,
-                        column.id,
-                        addCard,
-                        socket,
-                        column.items,
-                        setColumns
-                      )
-                    }
-                    type="submit"
-                  >
-                    Add task
-                  </button>
-                </form>
-                {provided.placeholder}
-              </div>
-            );
-          }}
-        </Droppable>
         <div style={{ display: "flex" }}>
           <ChangeMaxLimitBtn
             editColumn={editColumn}
@@ -269,6 +183,8 @@ const Column = ({ column }) => {
           ></DeleteColumnBtn>
         </div>
       </div>
+      <h3>{name}</h3>
+      <Amount amount={tasks.length} maxTasks={max_tasks}></Amount>
     </div>
   );
 };

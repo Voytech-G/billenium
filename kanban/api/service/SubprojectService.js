@@ -185,11 +185,8 @@ class SubprojectService {
      * @param {Object} payload
      * @return {void} 
      */
-    static async assignTaskToSubproject(payload) {
+    static async assignTaskToSubproject(subprojectId, taskId) {
         try {
-            const subprojectId = payload.subproject_id
-            const taskId = payload.task_id
-
             const subproject = await SubprojectRepository.findById(subprojectId)
             if (subproject == null) {
                 throw new Error('Found no subproject of given ID')
@@ -218,11 +215,8 @@ class SubprojectService {
      * @param {Object} payload
      * @return {void} 
      */
-    static async unassignTaskFromSubproject(payload) {
+    static async unassignTaskFromSubproject(subprojectId, taskId) {
         try {
-            const subprojectId = payload.subproject_id
-            const taskId = payload.task_id
-
             const subproject = await SubprojectRepository.findById(subprojectId)
             if (subproject == null) {
                 throw new Error('Found no subproject of given ID')
