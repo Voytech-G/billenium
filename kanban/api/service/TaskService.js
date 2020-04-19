@@ -44,14 +44,21 @@ class TaskService {
                 
             const targetRowIndex = payload.target_row_index
             const targetColumnId = payload.target_column_id
+            const targetSubprojectId = payload.target_subproject_id
             
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
+            const sourceSubprojectId = payload.source_subproject_id
 
             // in case target column is not the same as source column we switch them
             if (targetColumnId !== sourceColumnId) {
                 await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
                 await ColumnService.assignTaskToColumn(targetColumnId, taskId)
+            }
+
+            if (targetSubprojectId !== sourceSubprojectId) {
+                await SubprojectService.unassignTaskFromSubproject(sourceSubprojectId, taskId)
+                await SubprojectService.assignTaskToSubproject(targetSubprojectId, taskId)
             }
             
             // adjust all tasks in target and source columns (move tasks above in source column task down, move tasks above in target column up)
