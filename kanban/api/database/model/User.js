@@ -11,6 +11,9 @@ const UserSchema = new mongoose.Schema({
     user_type: { type: String, enum: userConfig.userTypes, required: [true, 'User type is required'] },
     initials: { type: String, required: [true, 'User initials are required'] },
     max_work_in_progress_tasks: { type: Number, required: false, default: 3 },
+    tasks: [
+        { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
+    ],
     // teams: [
     //     { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
     // ],

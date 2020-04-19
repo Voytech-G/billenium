@@ -193,8 +193,24 @@ class EventsHandler {
             authenticate: true,
         })
 
-        EventService.registerEvent(socket, 'get-task', (payload, callback) => {
+        EventService.registerEvent(socket, 'get-one-task', (payload, callback) => {
             TaskController.getOne(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'task-assign-user', (payload, callback) => {
+            TaskController.assignUser(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'task-unassign-user', (payload, callback) => {
+            TaskController.unassignUser(payload, callback)
 
             return
         }, {

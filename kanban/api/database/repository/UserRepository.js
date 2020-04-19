@@ -82,6 +82,20 @@ class UserRepository {
             useFindAndModify: userConfig.repository.USE_FIND_AND_MODIFY,
         })
     }
+
+    /**
+     * Populate selected fields in given user
+     * 
+     * @param {Object} user 
+     * @param {Object} populateConfig 
+     */
+    static async populate(user, populateConfig) {
+        if (user == null) {
+            throw new Error('Cannot populate an empty user')
+        }
+
+        return await user.populate(populateConfig).execPopulate()
+    }
 }
 
 module.exports = UserRepository
