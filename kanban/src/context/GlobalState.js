@@ -147,6 +147,7 @@ export const GlobalProvider = ({ children }) => {
           row_index: cardIndex,
         },
         column_id: columnId,
+        subproject_id: subprojectId,
       },
     });
     dispatch({
@@ -157,6 +158,7 @@ export const GlobalProvider = ({ children }) => {
           row_index: cardIndex,
         },
         subproject_id: subprojectId,
+        column_id: columnId,
       },
     });
   }

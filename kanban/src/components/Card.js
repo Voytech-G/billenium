@@ -8,9 +8,11 @@ const handleClick_removeCard = (
   setColumns,
   cardId,
   cardIndex,
-  columnId
+  columnId,
+  subprojectId
 ) => {
   e.preventDefault();
+  console.log(cardId, cardIndex, columnId, subprojectId);
   socket.emit(
     "remove-task",
     {
@@ -20,7 +22,7 @@ const handleClick_removeCard = (
     },
     (res) => {
       if (res.status) {
-        removeCard(cardId, cardIndex, columnId);
+        removeCard(cardId, cardIndex, columnId, subprojectId);
       } else {
         alert("Error: server returned false status");
       }
@@ -121,7 +123,8 @@ const Card = ({ card, columnId, subprojectId }) => {
                     setColumns,
                     id,
                     row_index,
-                    columnId
+                    columnId,
+                    subprojectId
                   )
                 }
                 type="submit"

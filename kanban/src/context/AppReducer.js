@@ -115,7 +115,7 @@ export default (state, action) => {
                 }
               : subproject
           ),
-        ].rearrangeCardsSubproject(),
+        ],
       };
     case "ADD_COLUMN":
       return {
@@ -130,7 +130,7 @@ export default (state, action) => {
           action.payload.subproject,
         ].rearrangeSubprojects(),
       };
-    case "REMOVE_CARD":
+    case "REMOVE_CARD_COLUMN":
       return {
         ...state,
         columns: state.columns
@@ -138,13 +138,38 @@ export default (state, action) => {
             column.id === action.payload.column_id
               ? {
                   ...column,
-                  items: [
-                    ...column.items.filter(
+                  tasks: [
+                    ...column.tasks.filter(
                       (task) => task.id !== action.payload.card.id
                     ),
                   ],
                 }
               : column
+          )
+          .filter(
+            (chosenTask) =>
+              chosenTask.subproject_id === action.payload.subproject_id
+          )
+          .rearrangeCards(),
+      };
+    case "REMOVE_CARD_SUBPROJECT":
+      return {
+        ...state,
+        subprojects: state.subprojects
+          .map((subproject) =>
+            subproject.id === action.payload.subproject_id
+              ? {
+                  ...subproject,
+                  tasks: [
+                    ...subproject.tasks.filter(
+                      (task) => task.id !== action.payload.card.id
+                    ),
+                  ],
+                }
+              : subproject
+          )
+          .filter(
+            (chosenTask) => chosenTask.column_id === action.payload.column_id
           )
           .rearrangeCards(),
       };
