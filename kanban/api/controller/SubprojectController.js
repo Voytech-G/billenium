@@ -157,7 +157,7 @@ class SubprojectController {
         try {
             SubprojectValidator.validateChangeTaskAssignedToSubprojectStateRequest(payload)
 
-            await SubprojectService.unssignTaskFromSubproject(payload)
+            await SubprojectService.unassignTaskFromSubproject(payload)
 
             callback({
                 status: true,
