@@ -145,6 +145,58 @@ class TaskController {
             return
         }
     }
+
+    /**
+     * @param {Object} payload 
+     * @param {Function} callback 
+     * @return {void}
+     */
+    static async assignUser(payload, callback) {
+        try {
+            TaskValidator.validateAssignUserToTaskRequest(payload)
+
+            await TaskService.assignUserToTask(payload)
+        
+            callback({
+                status: true,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: exception.message,
+            })
+
+            return
+        }
+    }
+
+    /**
+     * @param {Object} payload 
+     * @param {Function} callback 
+     * @return {void}
+     */
+    static async unassignUser(payload, callback) {
+        try {
+            TaskValidator.validateUnassignUserFromTaskRequest(payload)
+
+            await TaskService.unassignUserFromTask(payload)
+        
+            callback({
+                status: true,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: exception.message,
+            })
+
+            return
+        }
+    }
 }
 
 module.exports = TaskController

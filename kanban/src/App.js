@@ -68,12 +68,33 @@ const App = () => {
             // })
 
             // socket.emit('create-task', {
-            //     content: 'task 11111',
+            //     content: 'task 1 boi',
             //     row_index: 0,
-            //     column_id: '5e9ae6b84fc8d830e4081d87',
+            //     column_id: '5e9add5a4da6df2a7c2fcbc5',
             // }, data => {
             //     console.log(data)
             // })
+
+            // socket.emit('remove-task', {
+            //     task_id: '5e9c38d07c72ec481c081d8f',
+            //     source_row_index: 0,
+            //     source_column_id: '5e9ae6b84fc8d830e4081d87',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            // socket.emit('get-one-task', {
+            //     task_id: '5e9c38d07c72ec481c081d8f',
+            // }, data => {
+            //     console.log(data)
+            // })
+
+            socket.emit('task-unassign-user', {
+                task_id: '5e9c547b4a75c81f1019b195',
+                user_id: '5e8f7483d2f2946a0028212d',
+            }, data => {
+                console.log(data)
+            })
 
             // socket.emit('update-subproject', {
             //     subproject_id: '5e98b0c0b1b4ab474090034c',
@@ -82,12 +103,12 @@ const App = () => {
             //     console.log(data)
             // })
 
-            socket.emit('remove-subproject', {
-                subproject_id: '5e9c4187a7525467188ac04d',
-                project_id: '5e98b06eb1b4ab474090034b',
-            }, data => {
-                console.log(data)
-            })
+            // socket.emit('remove-subproject', {
+            //     subproject_id: '5e9c4187a7525467188ac04d',
+            //     project_id: '5e98b06eb1b4ab474090034b',
+            // }, data => {
+            //     console.log(data)
+            // })
 
             // socket.emit('get-one-subproject', {
             //     subproject_id: '5e98b0c0b1b4ab474090034c',

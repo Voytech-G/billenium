@@ -1,5 +1,6 @@
 // const taskConfig = require("../../config/task");
 const ColumnValidator = require('../column/ColumnValidator')
+const UserValidator = require('../user/UserValidator')
 const ValidatorAbstract = require('../ValidatorAbstract')
 
 class TaskValidator extends ValidatorAbstract {
@@ -112,6 +113,42 @@ class TaskValidator extends ValidatorAbstract {
             return
         } catch (exception) {
             throw new Error(`Get one task request validation failed: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static validateAssignUserToTaskRequest(payload) {
+        try {
+            const userId = payload.user_id
+            UserValidator.checkUserObjectIDValid(userId)
+            
+            const taskId = payload.task_id
+            this.checkTaskObjectIDValid(taskId)
+
+            return
+        } catch (exception) {
+            throw new Error(`Assign user to task request validation failed: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static validateUnassignUserFromTaskRequest(payload) {
+        try {
+            const userId = payload.user_id
+            UserValidator.checkUserObjectIDValid(userId)
+            
+            const taskId = payload.task_id
+            this.checkTaskObjectIDValid(taskId)
+
+            return
+        } catch (exception) {
+            throw new Error(`Assign user to task request validation failed: ${exception.message}`)
         }
     }
 

@@ -1,5 +1,6 @@
 const ColumnService = require('../service/ColumnService')
 const TaskRepository = require('../database/repository/TaskRepository')
+const UserRepository = require('../database/repository/UserRepository')
 const SubprojectService = require('../service/SubprojectService')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 
@@ -206,6 +207,8 @@ class TaskService {
             // remove reference to this task from its subproject, remove reference to subproject from task
             const subprojectId = task.subproject
             await SubprojectService.unassignTaskFromSubproject(taskId, subprojectId)
+
+            await this.unassignTaskFromUsers(taskId)
     
             const removedTask = await TaskRepository.remove(task)
             if (removedTask == null) {
@@ -235,14 +238,121 @@ class TaskService {
     
             const populateConfig = [
                 {
-                    path: 'columns',
-                    model: 'Column',
-                }
+                    path: 'subproject',
+                    model: 'Subproject',
+                },
+                {
+                    path: 'users',
+                    model: 'User',
+                },
             ]
     
             return await TaskRepository.populate(task, populateConfig)
         } catch (exception) {
             throw new Error(`Failed to get one task: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Iterate over all users of given task, remove reference to that task
+     * 
+     * @param {String} taskId
+     * @return {void} 
+     */
+    static async unassignTaskFromUsers(taskId) {
+        try {
+            let task = await TaskRepository.findById(taskId)
+            if (task == null) {
+                throw new Error('Found no task of given ID')
+            }
+
+            const populateConfig = [
+                {
+                    path: 'users',
+                    model: 'User',
+                },
+            ]
+
+            let populatedTask = TaskRepository.populate(task, populateConfig)
+            let users = populatedTask.users
+
+            // iterate over all users, remove reference to this task from user, remove reference to user from this task
+            users.forEach(async user => {
+                user.tasks.pull(task)
+                await user.save()
+
+                task.users.pull(user)
+            })
+
+            await task.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to unassign task from users: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static async assignUserToTask(payload) {
+        try {
+            const userId = payload.user_id
+            const targetTaskId = payload.task_id
+
+            const user = await UserRepository.findById(userId)
+            if (user == null) {
+                throw new Error('Found no user of given ID')
+            }
+
+            const targetTask = await TaskRepository.findById(targetTaskId)
+            if (targetTask == null) {
+                throw new Error('Found no task of given ID')
+            }
+
+            // add reference to assigned user to target task
+            targetTask.users.push(user)
+            await targetTask.save()
+
+            // add reference to task to assigned user
+            user.tasks.push(targetTask)
+            await user.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to assign user to task: ${exception.message}`)
+        }
+    }
+
+    /**
+     * @param {Object} payload
+     * @return {void} 
+     */
+    static async unassignUserFromTask(payload) {
+        try {
+            const userId = payload.user_id
+            const targetTaskId = payload.task_id
+
+            const user = await UserRepository.findById(userId)
+            if (user == null) {
+                throw new Error('Found no user of given ID')
+            }
+
+            const targetTask = await TaskRepository.findById(targetTaskId)
+            if (targetTask == null) {
+                throw new Error('Found no task of given ID')
+            }
+
+            targetTask.users.pull(userId)
+            await targetTask.save()
+
+            user.tasks.pull(targetTaskId)
+            await user.save()
+
+            return
+        } catch (exception) {
+            throw new Error(`Failed to unassign user from task: ${exception.message}`)
         }
     }
 }
