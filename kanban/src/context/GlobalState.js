@@ -39,21 +39,37 @@ export const GlobalProvider = ({ children }) => {
 
   function moveCard(
     card,
-    sourceColumnId,
-    destColumnId,
-    sourceCardIndex,
-    destCardIndex
+    sourceId,
+    destId,
+    sourceBoardIndex,
+    sourceRowIndex,
+    destinationBoardIndex,
+    destinationRowIndex
   ) {
     dispatch({
-      type: "MOVE_CARD",
+      type: "MOVE_CARD_COLUMN",
       payload: {
         card,
-        source_column_id: sourceColumnId,
-        dest_column_id: destColumnId,
-        source_card_index: sourceCardIndex,
-        dest_card_index: destCardIndex,
+        source_droppable_id: sourceId,
+        dest_droppable_id: destId,
+        source_board_index: sourceBoardIndex,
+        dest_row_index: sourceRowIndex,
+        source_board_index: destinationBoardIndex,
+        dest_row_index: destinationRowIndex,
       },
     });
+    // dispatch({
+    //   type: "MOVE_CARD_SUBPROJECT",
+    //   payload: {
+    //     card,
+    //     source_droppable_id: sourceId,
+    //     dest_droppable_id: destId,
+    //     source_board_index: sourceBoardIndex,
+    //     dest_row_index: sourceRowIndex,
+    //     source_board_index: destinationBoardIndex,
+    //     dest_row_index: destinationRowIndex,
+    //   },
+    // });
   }
 
   function addCard(card, columnId, subprojectId) {

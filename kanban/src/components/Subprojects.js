@@ -6,51 +6,55 @@ import { GlobalContext } from "../context/GlobalState";
 import Subproject from "./Subproject";
 import Column from "./Column";
 
-const onDragEnd = (result, columns, moveCard, socket) => {
+const onDragEnd = (result, columns, moveCard, socket, subprojects) => {
   if (!result.destination) return;
 
   const { draggableId, source, destination } = result;
 
   const card = columns
-    .map((column) => column.items.filter((item) => item.id === draggableId))
+    .map((column) => column.tasks.filter((task) => task.id === draggableId))
     .flat()[0];
-  let flag = columns.filter((column) => column.id === destination.droppableId);
-  console.log(flag.flat()[0].items.length);
+  // let flag = columns.filter(
+  //   (column) => column.board_index === destination.droppableBoardIndex
+  // );
+  // console.log(flag.flat()[0].items.length);
 
   moveCard(
     card,
     source.droppableId,
     destination.droppableId,
-    source.index,
-    destination.index
+    source.droppableBoardIndex,
+    source.droppableRowIndex,
+    destination.droppableBoardIndex,
+    destination.droppableRowIndex
   );
 
-  socket.emit(
-    "move-task",
-    {
-      task_id: card.id,
-      content: card.content,
+  // socket.emit(
+  //   "move-task",
+  //   {
+  //     task_id: card.id,
+  //     content: card.content,
 
-      target_row_index: destination.index,
-      target_column_id: destination.droppableId,
+  //     target_row_index: destination.index,
+  //     target_column_id: destination.droppableId,
 
-      source_row_index: source.index,
-      source_column_id: source.droppableId,
-    },
-    (res) => {
-      if (!res.status) {
-        moveCard(
-          card,
-          destination.droppableId,
-          source.droppableId,
-          destination.index,
-          source.index
-        );
+  //     source_row_index: source.index,
+  //     source_column_id: source.droppableId,
+  //   },
+  //   (res) => {
+  //     if (!res.status) {
+  //       moveCard(
+  //         card,
+  //         destination.droppableId,
+  //         source.droppableId,
+  //         destination.index,
+  //         source.index
+  //       );
 
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const newName = prompt("Type column name: ");
@@ -165,7 +169,9 @@ const Subprojects = ({ subprojects }) => {
 
   return (
     <DragDropContext
-      onDragEnd={(result) => onDragEnd(result, columns, moveCard, socket)}
+      onDragEnd={(result) =>
+        onDragEnd(result, columns, moveCard, socket, subprojects)
+      }
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex" }}>

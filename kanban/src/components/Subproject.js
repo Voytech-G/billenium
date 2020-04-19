@@ -54,7 +54,7 @@ const handleClick_addCard = (
 };
 
 const Subproject = ({ subproject }) => {
-  const { subId, name, tasks } = subproject;
+  const { subId, name, tasks, row_index } = subproject;
   const {
     columns,
     subprojects,
@@ -79,7 +79,7 @@ const Subproject = ({ subproject }) => {
         }}
         key={subId}
       >
-        {columns.map((column) => {
+        {columns.map((column, idx) => {
           const id = uuid();
           return (
             <div
@@ -92,7 +92,12 @@ const Subproject = ({ subproject }) => {
                 boxSizing: "border-box",
               }}
             >
-              <Droppable droppableId={id} key={id}>
+              <Droppable
+                droppableId={id}
+                key={id}
+                droppableBoardIndex={idx}
+                droppableRowIndex={row_index}
+              >
                 {(provided, snapshot) => {
                   return (
                     <div

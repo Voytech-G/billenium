@@ -43,19 +43,19 @@ const handleClick_editCard = (
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
-  editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
+  // editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
 
-  // socket.emit(
-  //   "update-task",
-  //   { task_id: cardId, content: cardContent },
-  //   (res) => {
-  //     if (res.status) {
-  //       editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
-  //     } else {
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
+  socket.emit(
+    "update-task",
+    { task_id: cardId, content: cardContent },
+    (res) => {
+      if (res.status) {
+        editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 
 const Card = ({ card, columnId, subprojectId }) => {
