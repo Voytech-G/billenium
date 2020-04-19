@@ -133,45 +133,44 @@ export default (state, action) => {
     case "REMOVE_CARD_COLUMN":
       return {
         ...state,
-        columns: state.columns
-          .map((column) =>
-            column.id === action.payload.column_id
-              ? {
-                  ...column,
-                  tasks: [
-                    ...column.tasks.filter(
-                      (task) => task.id !== action.payload.card.id
-                    ),
-                  ],
-                }
-              : column
-          )
-          .filter(
-            (chosenTask) =>
-              chosenTask.subproject_id === action.payload.subproject_id
-          )
-          .rearrangeCards(),
+        columns: state.columns.map((column) =>
+          column.id === action.payload.column_id
+            ? {
+                ...column,
+                tasks: [
+                  ...column.tasks.filter(
+                    (task) => task.id !== action.payload.card.id
+                  ),
+                ]
+                  .filter(
+                    (chosenTask) =>
+                      chosenTask.subproject_id === action.payload.subproject_id
+                  )
+                  .rearrangeCards(),
+              }
+            : column
+        ),
       };
     case "REMOVE_CARD_SUBPROJECT":
       return {
         ...state,
-        subprojects: state.subprojects
-          .map((subproject) =>
-            subproject.id === action.payload.subproject_id
-              ? {
-                  ...subproject,
-                  tasks: [
-                    ...subproject.tasks.filter(
-                      (task) => task.id !== action.payload.card.id
-                    ),
-                  ],
-                }
-              : subproject
-          )
-          .filter(
-            (chosenTask) => chosenTask.column_id === action.payload.column_id
-          )
-          .rearrangeCards(),
+        subprojects: state.subprojects.map((subproject) =>
+          subproject.id === action.payload.subproject_id
+            ? {
+                ...subproject,
+                tasks: [
+                  ...subproject.tasks.filter(
+                    (task) => task.id !== action.payload.card.id
+                  ),
+                ]
+                  .filter(
+                    (chosenTask) =>
+                      chosenTask.column_id === action.payload.column_id
+                  )
+                  .rearrangeCards(),
+              }
+            : subproject
+        ),
       };
     case "REMOVE_COLUMN":
       return {

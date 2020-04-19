@@ -172,8 +172,8 @@ export const GlobalProvider = ({ children }) => {
           id: cardId,
           row_index: cardIndex,
         },
-        subproject_id: subprojectId,
         column_id: columnId,
+        subproject_id: subprojectId,
       },
     });
   }
