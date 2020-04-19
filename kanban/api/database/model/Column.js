@@ -9,7 +9,7 @@ const ColumnSchema = new mongoose.Schema({
     { type: mongoose.Schema.Types.ObjectId, ref: 'Task' },
   ],
   max_tasks: { type: Number, required: [true, 'Column max number of tasks is required'], default: 3 },
-  project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true }, // project to which the column is assigned
+  project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', nullable: true },
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 })
