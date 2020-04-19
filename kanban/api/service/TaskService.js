@@ -1,5 +1,6 @@
 const ColumnService = require('../service/ColumnService')
 const TaskRepository = require('../database/repository/TaskRepository')
+const SubprojectService = require('../service/SubprojectService')
 const ColumnRepository = require('../database/repository/ColumnRepository')
 
 class TaskService {
@@ -192,17 +193,19 @@ class TaskService {
             const sourceRowIndex = payload.source_row_index
             const sourceColumnId = payload.source_column_id
     
-            await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
-    
-            // after we remove the task we move all tasks above it to fill the created gap
-            await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
-    
             const task = await TaskRepository.findById(taskId)
             if (task == null) {
                 throw new Error('Found no task of given ID')
             }
+    
+            await ColumnService.unassignTaskFromColumn(sourceColumnId, taskId)
+    
+            // after we remove the task we move all tasks above it to fill the created gap
+            await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId)
 
-            // TODO unassign task from subproject
+            // remove reference to this task from its subproject, remove reference to subproject from task
+            const subprojectId = task.subproject
+            await SubprojectService.unassignTaskFromSubproject(taskId, subprojectId)
     
             const removedTask = await TaskRepository.remove(task)
             if (removedTask == null) {

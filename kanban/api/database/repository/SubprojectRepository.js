@@ -69,6 +69,19 @@ class SubprojectRepository {
     }
 
     /**
+     * Find many subprojects with given filter, update all, response contains
+     * 'n' field with number of matched documents and 'nModified' field with
+     * number of documents modified
+     * 
+     * @param {Object} filter 
+     * @param {Object} update
+     * @return {Object} 
+     */
+    static async findManyByFilterAndUpdate(filter, update) {
+        return await Subproject.updateMany(filter, update)
+    }
+
+    /**
      * Populate given subproject's selected fields
      * 
      * @param {Object} subproject 

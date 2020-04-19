@@ -89,8 +89,11 @@ class ColumnService {
     
             // add task to target column tasks collection
             targetColumn.tasks.push(targetTask)
-    
             await targetColumn.save()
+
+            // set reference to parent column on task
+            targetTask.column = columnId
+            await targetTask.save()
     
             return
         } catch (exception) {
@@ -117,8 +120,10 @@ class ColumnService {
             }
 
             column.tasks.pull(taskId)
-
             await column.save()
+
+            task.column = null
+            await task.save()
 
             return
         } catch (exception) {
@@ -210,8 +215,8 @@ class ColumnService {
     static async getOne(payload) {
         try {
             const columnId = payload.column_id
+            
             const column = await ColumnRepository.findById(columnId)
-
             if (column == null) {
                 throw new Error('Found no column of given ID.')
             }
