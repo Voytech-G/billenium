@@ -23,7 +23,6 @@ const handleClick_addCard = (
       .filter((task) => task.column_id === columnId)
       .map((item, idx) => {
         itemCount = ++idx;
-        console.log(item);
       });
   }
 
