@@ -4,15 +4,13 @@ import { GlobalContext } from "../context/GlobalState";
 const handleClick_removeCard = (
   e,
   removeCard,
-  socket,
-  setColumns,
   cardId,
   cardIndex,
   columnId,
   subprojectId
 ) => {
   e.preventDefault();
-  console.log(cardId, cardIndex, columnId, subprojectId);
+  // console.log(cardId, cardIndex, columnId, subprojectId);
   removeCard(cardId, cardIndex, columnId, subprojectId);
   // socket.emit(
   //   "remove-task",
@@ -20,6 +18,7 @@ const handleClick_removeCard = (
   //     task_id: cardId,
   //     source_row_index: cardIndex,
   //     source_column_id: columnId,
+  //     source_subproject_id: subprojectId,
   //   },
   //   (res) => {
   //     if (res.status) {
@@ -123,8 +122,6 @@ const Card = ({ card, columnId, subprojectId }) => {
                   handleClick_removeCard(
                     e,
                     removeCard,
-                    socket,
-                    setColumns,
                     id,
                     row_index,
                     columnId,

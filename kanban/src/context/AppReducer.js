@@ -138,15 +138,19 @@ export default (state, action) => {
             ? {
                 ...column,
                 tasks: [
+                  ...column.tasks
+                    .filter(
+                      (chosenTask) =>
+                        chosenTask.subproject_id ===
+                        action.payload.subproject_id
+                    )
+                    .filter((task) => task.id !== action.payload.card.id)
+                    .rearrangeCards(),
                   ...column.tasks.filter(
-                    (task) => task.id !== action.payload.card.id
+                    (task) =>
+                      task.subproject_id !== action.payload.subproject_id
                   ),
-                ]
-                  .filter(
-                    (chosenTask) =>
-                      chosenTask.subproject_id === action.payload.subproject_id
-                  )
-                  .rearrangeCards(),
+                ],
               }
             : column
         ),
@@ -159,15 +163,17 @@ export default (state, action) => {
             ? {
                 ...subproject,
                 tasks: [
+                  ...subproject.tasks
+                    .filter(
+                      (chosenTask) =>
+                        chosenTask.column_id === action.payload.column_id
+                    )
+                    .filter((task) => task.id !== action.payload.card.id)
+                    .rearrangeCards(),
                   ...subproject.tasks.filter(
-                    (task) => task.id !== action.payload.card.id
+                    (task) => task.column_id !== action.payload.column_id
                   ),
-                ]
-                  .filter(
-                    (chosenTask) =>
-                      chosenTask.column_id === action.payload.column_id
-                  )
-                  .rearrangeCards(),
+                ],
               }
             : subproject
         ),
