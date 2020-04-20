@@ -122,6 +122,9 @@ class ColumnService {
             column.tasks.pull(taskId)
             await column.save()
 
+            task.column = null
+            await task.save()
+
             return
         } catch (exception) {
             throw new Error(`Failed to unassign the task from column: ${exception.message}`)

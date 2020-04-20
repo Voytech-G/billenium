@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const TaskSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId, 
   content: { type: String, required: [true, 'Task content is required'] },
-  row_index: { type: Number, required: [true, 'Task row index is required'] }, // row in which task is placed in specific column
-  column: { type: mongoose.Schema.Types.ObjectId, ref: 'Column', required: [true, 'Task column is required'] },
-  subproject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subproject', required: false, nullable: true, default: null },
+  row_index: { type: Number, required: [true, 'Task row index is required'] },
+  column: { type: mongoose.Schema.Types.ObjectId, ref: 'Column', nullable: true },
+  subproject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subproject', nullable: true, default: null },
   users: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   ],

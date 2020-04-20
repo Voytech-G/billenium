@@ -106,8 +106,12 @@ class ProjectService {
             }
     
             project.columns.pull(columnId)
-    
             await project.save()
+
+            column.project = null
+            await column.save()
+
+            return
         } catch (exception) {
             throw new Error(`Failed to unassign the column from the project: ${exception.message}`)
         }
@@ -135,8 +139,10 @@ class ProjectService {
             }
             
             targetProject.columns.push(column)
-        
             await targetProject.save()
+
+            column.project = projectId
+            await column.save()
             
             return
         } catch (exception) {
@@ -164,8 +170,10 @@ class ProjectService {
             }
 
             project.subprojects.push(subproject)
-
             await project.save()
+
+            subproject.project = projectId
+            await subproject.save()
 
             return
         } catch (exception) {
@@ -193,8 +201,10 @@ class ProjectService {
             }
 
             project.subprojects.pull(subprojectId)
-
             await project.save()
+
+            subproject.project = null
+            await subproject.save()
 
             return
         } catch (exception) {
