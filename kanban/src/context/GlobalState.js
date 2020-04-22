@@ -39,21 +39,37 @@ export const GlobalProvider = ({ children }) => {
 
   function moveCard(
     card,
-    sourceColumnId,
-    destColumnId,
-    sourceCardIndex,
-    destCardIndex
+    sourceId,
+    destId,
+    sourceBoardIndex,
+    sourceRowIndex,
+    destinationBoardIndex,
+    destinationRowIndex
   ) {
     dispatch({
-      type: "MOVE_CARD",
+      type: "MOVE_CARD_COLUMN",
       payload: {
         card,
-        source_column_id: sourceColumnId,
-        dest_column_id: destColumnId,
-        source_card_index: sourceCardIndex,
-        dest_card_index: destCardIndex,
+        source_droppable_id: sourceId,
+        dest_droppable_id: destId,
+        source_board_index: sourceBoardIndex,
+        dest_row_index: sourceRowIndex,
+        source_board_index: destinationBoardIndex,
+        dest_row_index: destinationRowIndex,
       },
     });
+    // dispatch({
+    //   type: "MOVE_CARD_SUBPROJECT",
+    //   payload: {
+    //     card,
+    //     source_droppable_id: sourceId,
+    //     dest_droppable_id: destId,
+    //     source_board_index: sourceBoardIndex,
+    //     dest_row_index: sourceRowIndex,
+    //     source_board_index: destinationBoardIndex,
+    //     dest_row_index: destinationRowIndex,
+    //   },
+    // });
   }
 
   function addCard(card, columnId, subprojectId) {
@@ -111,16 +127,31 @@ export const GlobalProvider = ({ children }) => {
       },
     });
   }
-  function editCard(cardId, cardIndex, columnId, content) {
+  function editCard(cardId, cardIndex, columnId, subprojectId, content) {
     dispatch({
-      type: "EDIT_CARD",
+      type: "EDIT_CARD_COLUMN",
       payload: {
         card: {
           id: cardId,
           content,
           row_index: cardIndex,
+          column_id: columnId,
+          subproject_id: subprojectId,
         },
         column_id: columnId,
+      },
+    });
+    dispatch({
+      type: "EDIT_CARD_SUBPROJECT",
+      payload: {
+        card: {
+          id: cardId,
+          content,
+          row_index: cardIndex,
+          column_id: columnId,
+          subproject_id: subprojectId,
+        },
+        subproject_id: subprojectId,
       },
     });
   }
@@ -157,8 +188,8 @@ export const GlobalProvider = ({ children }) => {
           id: cardId,
           row_index: cardIndex,
         },
-        subproject_id: subprojectId,
         column_id: columnId,
+        subproject_id: subprojectId,
       },
     });
   }

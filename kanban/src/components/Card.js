@@ -4,30 +4,30 @@ import { GlobalContext } from "../context/GlobalState";
 const handleClick_removeCard = (
   e,
   removeCard,
-  socket,
-  setColumns,
   cardId,
   cardIndex,
   columnId,
   subprojectId
 ) => {
   e.preventDefault();
-  console.log(cardId, cardIndex, columnId, subprojectId);
-  socket.emit(
-    "remove-task",
-    {
-      task_id: cardId,
-      source_row_index: cardIndex,
-      source_column_id: columnId,
-    },
-    (res) => {
-      if (res.status) {
-        removeCard(cardId, cardIndex, columnId, subprojectId);
-      } else {
-        alert("Error: server returned false status");
-      }
-    }
-  );
+  // console.log(cardId, cardIndex, columnId, subprojectId);
+  removeCard(cardId, cardIndex, columnId, subprojectId);
+  // socket.emit(
+  //   "remove-task",
+  //   {
+  //     task_id: cardId,
+  //     source_row_index: cardIndex,
+  //     source_column_id: columnId,
+  //     source_subproject_id: subprojectId,
+  //   },
+  //   (res) => {
+  //     if (res.status) {
+  //       removeCard(cardId, cardIndex, columnId, subprojectId);
+  //     } else {
+  //       alert("Error: server returned false status");
+  //     }
+  //   }
+  // );
 };
 const handleClick_editCard = (
   e,
@@ -35,19 +35,21 @@ const handleClick_editCard = (
   socket,
   setColumns,
   cardId,
-  cardIndex,
+  rowIndex,
   columnId,
+  subprojectId,
   content
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
-  console.log(cardContent);
+  // editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
+
   socket.emit(
     "update-task",
     { task_id: cardId, content: cardContent },
     (res) => {
       if (res.status) {
-        editCard(cardId, cardIndex, columnId, cardContent);
+        editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
       } else {
         alert("Error: server returned false status");
       }
@@ -106,6 +108,7 @@ const Card = ({ card, columnId, subprojectId }) => {
                     id,
                     row_index,
                     columnId,
+                    subprojectId,
                     content
                   )
                 }
@@ -119,8 +122,6 @@ const Card = ({ card, columnId, subprojectId }) => {
                   handleClick_removeCard(
                     e,
                     removeCard,
-                    socket,
-                    setColumns,
                     id,
                     row_index,
                     columnId,
