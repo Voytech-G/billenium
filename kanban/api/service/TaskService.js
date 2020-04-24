@@ -215,8 +215,7 @@ class TaskService {
             await this.moveTasksAboveRowIndexDown(sourceRowIndex, sourceColumnId, sourceSubprojectId)
 
             // remove reference to this task from its subproject, remove reference to subproject from task
-            const subprojectId = task.subproject
-            await SubprojectService.unassignTaskFromSubproject(taskId, subprojectId)
+            await SubprojectService.unassignTaskFromSubproject(sourceSubprojectId, taskId)
 
             await this.unassignTaskFromUsers(taskId)
     
@@ -283,7 +282,7 @@ class TaskService {
                 },
             ]
 
-            let populatedTask = TaskRepository.populate(task, populateConfig)
+            let populatedTask = await TaskRepository.populate(task, populateConfig)
             let users = populatedTask.users
 
             // iterate over all users, remove reference to this task from user, remove reference to user from this task
