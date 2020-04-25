@@ -56,14 +56,6 @@ const onDragEnd = (
     (droppable) => droppable.dropId === source.droppableId
   )[0].subId;
 
-  // console.log(
-  //   draggableId,
-  //   sourceColId,
-  //   sourceSubId,
-  //   destColId,
-  //   destSubId,
-  //   destination.index
-  // );
   moveCard(
     card,
     sourceColId,
@@ -73,32 +65,35 @@ const onDragEnd = (
     destination.index
   );
 
-  // socket.emit(
-  //   "move-task",
-  //   {
-  //     task_id: card.id,
-  //     content: card.content,
+  socket.emit(
+    "move-task",
+    {
+      task_id: card.id,
+      content: card.content,
 
-  //     target_row_index: destination.index,
-  //     target_column_id: destination.droppableId,
+      target_row_index: destination.index,
+      target_column_id: destColId,
+      target_subproject_id: destSubId,
 
-  //     source_row_index: source.index,
-  //     source_column_id: source.droppableId,
-  //   },
-  //   (res) => {
-  //     if (!res.status) {
-  //       moveCard(
-  //         card,
-  //         destination.droppableId,
-  //         source.droppableId,
-  //         destination.index,
-  //         source.index
-  //       );
+      source_row_index: source.index,
+      source_column_id: sourceColId,
+      source_subproject_id: sourceSubId,
+    },
+    (res) => {
+      if (!res.status) {
+        moveCard(
+          card,
+          sourceColId,
+          sourceSubId,
+          destColId,
+          destSubId,
+          destination.index
+        );
 
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
   const newName = prompt("Type column name: ");

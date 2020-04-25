@@ -10,24 +10,23 @@ const handleClick_removeCard = (
   subprojectId
 ) => {
   e.preventDefault();
-  // console.log(cardId, cardIndex, columnId, subprojectId);
   removeCard(cardId, cardIndex, columnId, subprojectId);
-  // socket.emit(
-  //   "remove-task",
-  //   {
-  //     task_id: cardId,
-  //     source_row_index: cardIndex,
-  //     source_column_id: columnId,
-  //     source_subproject_id: subprojectId,
-  //   },
-  //   (res) => {
-  //     if (res.status) {
-  //       removeCard(cardId, cardIndex, columnId, subprojectId);
-  //     } else {
-  //       alert("Error: server returned false status");
-  //     }
-  //   }
-  // );
+  socket.emit(
+    "remove-task",
+    {
+      task_id: cardId,
+      source_row_index: cardIndex,
+      source_column_id: columnId,
+      source_subproject_id: subprojectId,
+    },
+    (res) => {
+      if (res.status) {
+        removeCard(cardId, cardIndex, columnId, subprojectId);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 const handleClick_editCard = (
   e,
