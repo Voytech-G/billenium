@@ -44,37 +44,107 @@ export default (state, action) => {
         ...state,
         subprojects: action.payload,
       };
-    case "SET_SUBCOLITEMS":
+    case "SET_DROPPABLES":
       return {
         ...state,
-        subColItems: action.payload,
+        droppables: [...state.droppables, ...action.payload.droppables],
       };
-    case "MOVE_CARD":
+    case "MOVE_CARD_COLUMN":
       return {
         ...state,
         columns: state.columns
           .map((column) =>
-            column.id === action.payload.source_column_id
+            column.id === action.payload.source_col_id
               ? {
                   ...column,
-                  items: column.items
-                    .filter((card) => card.id !== action.payload.card.id)
-                    .rearrangeCards(),
+                  tasks: [
+                    ...column.tasks
+                      .filter(
+                        (chosenTask) =>
+                          chosenTask.subproject_id ===
+                          action.payload.source_sub_id
+                      )
+                      .filter((task) => task.id !== action.payload.card.id)
+                      .rearrangeCards(),
+                    ...column.tasks.filter(
+                      (task) =>
+                        task.subproject_id !== action.payload.source_sub_id
+                    ),
+                  ],
                 }
               : column
           )
-          .map((column) =>
-            column.id === action.payload.dest_column_id
+          .map((columnItem) =>
+            columnItem.id === action.payload.dest_col_id
               ? {
-                  ...column,
-                  items: column.items
-                    .insert(action.payload.dest_card_index, {
-                      ...action.payload.card,
-                      row_index: action.payload.dest_card_index,
-                    })
-                    .rearrangeCards(),
+                  ...columnItem,
+                  tasks: [
+                    ...columnItem.tasks
+                      .filter(
+                        (task) =>
+                          task.subproject_id === action.payload.dest_sub_id
+                      )
+                      .insert(action.payload.dest_card_index, {
+                        ...action.payload.card,
+                        subproject_id: action.payload.dest_sub_id,
+                        column_id: action.payload.dest_col_id,
+                        row_index: action.payload.dest_card_index,
+                      })
+                      .rearrangeCards(),
+                    ...columnItem.tasks.filter(
+                      (task) =>
+                        task.subproject_id !== action.payload.dest_sub_id
+                    ),
+                  ],
                 }
-              : column
+              : columnItem
+          ),
+      };
+    case "MOVE_CARD_SUBPROJECT":
+      return {
+        ...state,
+        subprojects: state.subprojects
+          .map((subproject) =>
+            subproject.id === action.payload.source_sub_id
+              ? {
+                  ...subproject,
+                  tasks: [
+                    ...subproject.tasks
+                      .filter(
+                        (chosenTask) =>
+                          chosenTask.column_id === action.payload.source_col_id
+                      )
+                      .filter((task) => task.id !== action.payload.card.id)
+                      .rearrangeCards(),
+                    ...subproject.tasks.filter(
+                      (task) => task.column_id !== action.payload.source_col_id
+                    ),
+                  ],
+                }
+              : subproject
+          )
+          .map((subprojectItem) =>
+            subprojectItem.id === action.payload.dest_sub_id
+              ? {
+                  ...subprojectItem,
+                  tasks: [
+                    ...subprojectItem.tasks
+                      .filter(
+                        (task) => task.column_id === action.payload.dest_col_id
+                      )
+                      .insert(action.payload.dest_card_index, {
+                        ...action.payload.card,
+                        subproject_id: action.payload.dest_sub_id,
+                        column_id: action.payload.dest_col_id,
+                        row_index: action.payload.dest_card_index,
+                      })
+                      .rearrangeCards(),
+                    ...subprojectItem.tasks.filter(
+                      (task) => task.column_id !== action.payload.dest_col_id
+                    ),
+                  ],
+                }
+              : subprojectItem
           ),
       };
     case "ADD_CARD_COLUMN":
@@ -133,45 +203,50 @@ export default (state, action) => {
     case "REMOVE_CARD_COLUMN":
       return {
         ...state,
-        columns: state.columns
-          .map((column) =>
-            column.id === action.payload.column_id
-              ? {
-                  ...column,
-                  tasks: [
-                    ...column.tasks.filter(
-                      (task) => task.id !== action.payload.card.id
-                    ),
-                  ],
-                }
-              : column
-          )
-          .filter(
-            (chosenTask) =>
-              chosenTask.subproject_id === action.payload.subproject_id
-          )
-          .rearrangeCards(),
+        columns: state.columns.map((column) =>
+          column.id === action.payload.column_id
+            ? {
+                ...column,
+                tasks: [
+                  ...column.tasks
+                    .filter(
+                      (chosenTask) =>
+                        chosenTask.subproject_id ===
+                        action.payload.subproject_id
+                    )
+                    .filter((task) => task.id !== action.payload.card.id)
+                    .rearrangeCards(),
+                  ...column.tasks.filter(
+                    (task) =>
+                      task.subproject_id !== action.payload.subproject_id
+                  ),
+                ],
+              }
+            : column
+        ),
       };
     case "REMOVE_CARD_SUBPROJECT":
       return {
         ...state,
-        subprojects: state.subprojects
-          .map((subproject) =>
-            subproject.id === action.payload.subproject_id
-              ? {
-                  ...subproject,
-                  tasks: [
-                    ...subproject.tasks.filter(
-                      (task) => task.id !== action.payload.card.id
-                    ),
-                  ],
-                }
-              : subproject
-          )
-          .filter(
-            (chosenTask) => chosenTask.column_id === action.payload.column_id
-          )
-          .rearrangeCards(),
+        subprojects: state.subprojects.map((subproject) =>
+          subproject.id === action.payload.subproject_id
+            ? {
+                ...subproject,
+                tasks: [
+                  ...subproject.tasks
+                    .filter(
+                      (chosenTask) =>
+                        chosenTask.column_id === action.payload.column_id
+                    )
+                    .filter((task) => task.id !== action.payload.card.id)
+                    .rearrangeCards(),
+                  ...subproject.tasks.filter(
+                    (task) => task.column_id !== action.payload.column_id
+                  ),
+                ],
+              }
+            : subproject
+        ),
       };
     case "REMOVE_COLUMN":
       return {
@@ -182,24 +257,39 @@ export default (state, action) => {
           ),
         ].rearrangeColumns(),
       };
-    case "EDIT_CARD":
+    case "EDIT_CARD_COLUMN":
       return {
         ...state,
-        columns: state.columns
-          .map((column) =>
-            column.id === action.payload.column_id
-              ? {
-                  ...column,
-                  items: [
-                    ...column.items.filter(
-                      (task) => task.id !== action.payload.card.id
-                    ),
-                    { ...action.payload.card },
-                  ],
-                }
-              : column
-          )
-          .rearrangeCards(),
+        columns: state.columns.map((column) =>
+          column.id === action.payload.column_id
+            ? {
+                ...column,
+                tasks: [
+                  ...column.tasks.filter(
+                    (task) => task.id !== action.payload.card.id
+                  ),
+                  { ...action.payload.card },
+                ],
+              }
+            : column
+        ),
+      };
+    case "EDIT_CARD_SUBPROJECT":
+      return {
+        ...state,
+        subprojects: state.subprojects.map((subproject) =>
+          subproject.id === action.payload.subproject_id
+            ? {
+                ...subproject,
+                tasks: [
+                  ...subproject.tasks.filter(
+                    (task) => task.id !== action.payload.card.id
+                  ),
+                  { ...action.payload.card },
+                ],
+              }
+            : subproject
+        ),
       };
     case "EDIT_COLUMN":
       return {

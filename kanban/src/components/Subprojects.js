@@ -6,22 +6,62 @@ import { GlobalContext } from "../context/GlobalState";
 import Subproject from "./Subproject";
 import Column from "./Column";
 
-const onDragEnd = (result, columns, moveCard, socket) => {
+const onDragEnd = (
+  result,
+  columns,
+  moveCard,
+  socket,
+  subprojects,
+  droppables
+) => {
   if (!result.destination) return;
 
   const { draggableId, source, destination } = result;
 
-  const card = columns
-    .map((column) => column.items.filter((item) => item.id === draggableId))
+  // const card = columns.map((column) =>
+  //   column.tasks.filter((task) => task.id === draggableId)
+  // );
+  const droppableItem = droppables
+    .filter((droppable) => droppable.dropId === source.droppableId)
     .flat()[0];
-  let flag = columns.filter((column) => column.id === destination.droppableId);
-  console.log(flag.flat()[0].items.length);
+
+  const columnItem = columns
+    .filter((column) => column.id === droppableItem.colId)
+    .flat()[0];
+
+  const card = columnItem.tasks
+    .filter((task) => task.id === draggableId)
+    .flat()[0];
+  console.log(card);
+  // let flag = columns.filter(
+  //   (column) => column.board_index === destination.droppableBoardIndex
+  // );
+  // console.log(flag.flat()[0].items.length);
+  // const subIndex = droppables.filter(
+  //   (droppable) => droppable.id === destination.droppableId
+  // );
+  const destColId = droppables.filter(
+    (droppable) => droppable.dropId === destination.droppableId
+  )[0].colId;
+
+  const destSubId = droppables.filter(
+    (droppable) => droppable.dropId === destination.droppableId
+  )[0].subId;
+
+  const sourceColId = droppables.filter(
+    (droppable) => droppable.dropId === source.droppableId
+  )[0].colId;
+
+  const sourceSubId = droppables.filter(
+    (droppable) => droppable.dropId === source.droppableId
+  )[0].subId;
 
   moveCard(
     card,
-    source.droppableId,
-    destination.droppableId,
-    source.index,
+    sourceColId,
+    sourceSubId,
+    destColId,
+    destSubId,
     destination.index
   );
 
@@ -32,19 +72,22 @@ const onDragEnd = (result, columns, moveCard, socket) => {
       content: card.content,
 
       target_row_index: destination.index,
-      target_column_id: destination.droppableId,
+      target_column_id: destColId,
+      target_subproject_id: destSubId,
 
       source_row_index: source.index,
-      source_column_id: source.droppableId,
+      source_column_id: sourceColId,
+      source_subproject_id: sourceSubId,
     },
     (res) => {
       if (!res.status) {
         moveCard(
           card,
-          destination.droppableId,
-          source.droppableId,
-          destination.index,
-          source.index
+          sourceColId,
+          sourceSubId,
+          destColId,
+          destSubId,
+          destination.index
         );
 
         alert("Error: server returned false status");
@@ -162,10 +205,13 @@ const Subprojects = ({ subprojects }) => {
     setColumns,
     setSubprojects,
   } = useContext(GlobalContext);
+  const { droppables } = useContext(GlobalContext);
 
   return (
     <DragDropContext
-      onDragEnd={(result) => onDragEnd(result, columns, moveCard, socket)}
+      onDragEnd={(result) => {
+        onDragEnd(result, columns, moveCard, socket, subprojects, droppables);
+      }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex" }}>
@@ -185,7 +231,7 @@ const Subprojects = ({ subprojects }) => {
           {subprojects
             .sort((a, b) => a.row_index - b.row_index)
             .map((subprojectItem) => (
-              <Subproject subproject={subprojectItem} />
+              <Subproject subproject={subprojectItem} dropabbles={droppables} />
             ))}
         </div>
         <div style={{ display: "flex" }}>

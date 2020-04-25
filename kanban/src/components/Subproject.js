@@ -23,7 +23,6 @@ const handleClick_addCard = (
       .filter((task) => task.column_id === columnId)
       .map((item, idx) => {
         itemCount = ++idx;
-        console.log(item);
       });
   }
 
@@ -54,7 +53,7 @@ const handleClick_addCard = (
 };
 
 const Subproject = ({ subproject }) => {
-  const { subId, name, tasks } = subproject;
+  const { id, name, tasks, row_index } = subproject;
   const {
     columns,
     subprojects,
@@ -63,7 +62,14 @@ const Subproject = ({ subproject }) => {
     setColumns,
     setSubprojects,
     subColItems,
+    setDroppables,
+    droppables,
   } = useContext(GlobalContext);
+  const droppablesArr = [];
+  useEffect(() => {
+    // console.log(droppablesArr);
+    setDroppables(droppablesArr);
+  }, []);
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -77,10 +83,9 @@ const Subproject = ({ subproject }) => {
           border: "2px solid red",
           justifyContent: "space-between",
         }}
-        key={subId}
+        key={id}
       >
-        {columns.map((column) => {
-          const id = uuid();
+        {columns.map((column, idx) => {
           return (
             <div
               style={{
@@ -92,8 +97,22 @@ const Subproject = ({ subproject }) => {
                 boxSizing: "border-box",
               }}
             >
-              <Droppable droppableId={id} key={id}>
+              <Droppable
+                droppableId={`${id}-${idx}`}
+                key={`${id}-${idx}`}
+                droppableBoardIndex={idx}
+                droppableRowIndex={row_index}
+              >
                 {(provided, snapshot) => {
+                  {
+                    droppablesArr.push({
+                      dropId: `${id}-${idx}`,
+                      colIdx: idx,
+                      subIdx: row_index,
+                      colId: column.id,
+                      subId: id,
+                    });
+                  }
                   return (
                     <div
                       {...provided.droppableProps}
