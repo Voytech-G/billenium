@@ -7,7 +7,7 @@ const initialState = {
   socket: undefined,
   columns: [],
   subprojects: [],
-  subColItems: [],
+  droppables: [],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -30,46 +30,42 @@ export const GlobalProvider = ({ children }) => {
       payload: subprojects,
     });
   }
-  function setSubColItems(subColItems) {
+  function setDroppables(droppables) {
     dispatch({
-      type: "SET_SUBCOLITEMS",
-      payload: subColItems,
+      type: "SET_DROPPABLES",
+      payload: { droppables: droppables },
     });
   }
-
   function moveCard(
     card,
-    sourceId,
-    destId,
-    sourceBoardIndex,
-    sourceRowIndex,
-    destinationBoardIndex,
-    destinationRowIndex
+    sourceColId,
+    sourceSubId,
+    destColId,
+    destSubId,
+    destinationCardIndex
   ) {
     dispatch({
       type: "MOVE_CARD_COLUMN",
       payload: {
         card,
-        source_droppable_id: sourceId,
-        dest_droppable_id: destId,
-        source_board_index: sourceBoardIndex,
-        dest_row_index: sourceRowIndex,
-        source_board_index: destinationBoardIndex,
-        dest_row_index: destinationRowIndex,
+        source_col_id: sourceColId,
+        source_sub_id: sourceSubId,
+        dest_col_id: destColId,
+        dest_sub_id: destSubId,
+        dest_card_index: destinationCardIndex,
       },
     });
-    // dispatch({
-    //   type: "MOVE_CARD_SUBPROJECT",
-    //   payload: {
-    //     card,
-    //     source_droppable_id: sourceId,
-    //     dest_droppable_id: destId,
-    //     source_board_index: sourceBoardIndex,
-    //     dest_row_index: sourceRowIndex,
-    //     source_board_index: destinationBoardIndex,
-    //     dest_row_index: destinationRowIndex,
-    //   },
-    // });
+    dispatch({
+      type: "MOVE_CARD_SUBPROJECT",
+      payload: {
+        card,
+        source_col_id: sourceColId,
+        source_sub_id: sourceSubId,
+        dest_col_id: destColId,
+        dest_sub_id: destSubId,
+        dest_card_index: destinationCardIndex,
+      },
+    });
   }
 
   function addCard(card, columnId, subprojectId) {
@@ -218,7 +214,6 @@ export const GlobalProvider = ({ children }) => {
       value={{
         setColumns,
         setSubprojects,
-        setSubColItems,
         moveCard,
         addCard,
         setItems,
@@ -228,9 +223,11 @@ export const GlobalProvider = ({ children }) => {
         addSubproject,
         removeColumn,
         editColumn,
+        setDroppables,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,
+        droppables: state.droppables,
       }}
     >
       {children}

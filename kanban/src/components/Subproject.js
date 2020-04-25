@@ -53,7 +53,7 @@ const handleClick_addCard = (
 };
 
 const Subproject = ({ subproject }) => {
-  const { subId, name, tasks, row_index } = subproject;
+  const { id, name, tasks, row_index } = subproject;
   const {
     columns,
     subprojects,
@@ -62,7 +62,14 @@ const Subproject = ({ subproject }) => {
     setColumns,
     setSubprojects,
     subColItems,
+    setDroppables,
+    droppables,
   } = useContext(GlobalContext);
+  const droppablesArr = [];
+  useEffect(() => {
+    // console.log(droppablesArr);
+    setDroppables(droppablesArr);
+  }, []);
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -76,10 +83,9 @@ const Subproject = ({ subproject }) => {
           border: "2px solid red",
           justifyContent: "space-between",
         }}
-        key={subId}
+        key={id}
       >
         {columns.map((column, idx) => {
-          const id = uuid();
           return (
             <div
               style={{
@@ -92,12 +98,21 @@ const Subproject = ({ subproject }) => {
               }}
             >
               <Droppable
-                droppableId={id}
-                key={id}
+                droppableId={`${id}-${idx}`}
+                key={`${id}-${idx}`}
                 droppableBoardIndex={idx}
                 droppableRowIndex={row_index}
               >
                 {(provided, snapshot) => {
+                  {
+                    droppablesArr.push({
+                      dropId: `${id}-${idx}`,
+                      colIdx: idx,
+                      subIdx: row_index,
+                      colId: column.id,
+                      subId: id,
+                    });
+                  }
                   return (
                     <div
                       {...provided.droppableProps}
