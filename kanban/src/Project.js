@@ -35,7 +35,6 @@ const getProject = (socket, setColumns, setSubprojects) => {
       project_id: "5e98b06eb1b4ab474090034b",
     },
     (data) => {
-      // console.log(data.payload);
       const columnsWithTasks = data.payload.columns.map((column) => ({
         id: column._id,
         name: column.name,
@@ -72,7 +71,7 @@ const getProject = (socket, setColumns, setSubprojects) => {
 const Project = () => {
   const { socket, subprojects } = useContext(GlobalContext);
   const { setColumns, setSubprojects } = useContext(GlobalContext);
-
+  const { columns } = useContext(GlobalContext);
   useEffect(() => {
     if (
       (localStorage.getItem("userName") == "null" &&
@@ -94,7 +93,7 @@ const Project = () => {
       });
     }
   }, []);
-
+  // console.log(columns);
   return (
     <div
       style={{
