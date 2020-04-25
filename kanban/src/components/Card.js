@@ -3,6 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { GlobalContext } from "../context/GlobalState";
 const handleClick_removeCard = (
   e,
+  socket,
   removeCard,
   cardId,
   cardIndex,
@@ -120,6 +121,7 @@ const Card = ({ card, columnId, subprojectId }) => {
                 onClick={(e) =>
                   handleClick_removeCard(
                     e,
+                    socket,
                     removeCard,
                     id,
                     row_index,
