@@ -1,6 +1,7 @@
 const ProjectService = require('../service/ProjectService')
 const TaskRepository = require('../database/repository/TaskRepository')
 const SubprojectRepository = require('../database/repository/SubprojectRepository')
+const TransactionHandler = require('../database/transaction/TransactionHandler')
 
 class SubprojectService {
     /**
@@ -11,17 +12,21 @@ class SubprojectService {
      */
     static async createSubproject(payload) {
         try {
-            const parentProjectId = payload.project_id
-            const subprojectName = payload.subproject_name
-            const rowIndex = payload.row_index
-            
-            const createdSubproject = await SubprojectRepository.create(subprojectName, parentProjectId, rowIndex)
-            if (createdSubproject == null) {
-                throw new Error('An error occured, no subprojects created')
-            }
-
-            const subprojectId = createdSubproject.id
-            await ProjectService.assignSubprojectToProject(subprojectId, parentProjectId)
+            const createdSubproject = await TransactionHandler.run(async () => {
+                const parentProjectId = payload.project_id
+                const subprojectName = payload.subproject_name
+                const rowIndex = payload.row_index
+                
+                const createdSubproject = await SubprojectRepository.create(subprojectName, parentProjectId, rowIndex)
+                if (createdSubproject == null) {
+                    throw new Error('An error occured, no subprojects created')
+                }
+    
+                const subprojectId = createdSubproject.id
+                await ProjectService.assignSubprojectToProject(subprojectId, parentProjectId)
+    
+                return createdSubproject
+            })
 
             return createdSubproject
         } catch (exception) {
@@ -37,23 +42,27 @@ class SubprojectService {
      */
     static async updateSubproject(payload) {
         try {
-            const subprojectId = payload.subproject_id
-            const subprojectName = payload.subproject_name
-
-            // check if subproject of given ID exists
-            const subproject = await SubprojectRepository.findById(subprojectId)
-            if (subproject == null) {
-                throw new Error('Found no subproject of given ID')
-            }
-
-            const update = {
-                subproject_name: subprojectName,
-            }
-
-            const updatedSubproject = await SubprojectRepository.update(subprojectId, update)
-            if (updatedSubproject == null) {
-                throw new Error('An error occured, no subprojects updated')
-            }
+            const updatedSubproject = await TransactionHandler.run(async () => {
+                const subprojectId = payload.subproject_id
+                const subprojectName = payload.subproject_name
+    
+                // check if subproject of given ID exists
+                const subproject = await SubprojectRepository.findById(subprojectId)
+                if (subproject == null) {
+                    throw new Error('Found no subproject of given ID')
+                }
+    
+                const update = {
+                    subproject_name: subprojectName,
+                }
+    
+                const updatedSubproject = await SubprojectRepository.update(subprojectId, update)
+                if (updatedSubproject == null) {
+                    throw new Error('An error occured, no subprojects updated')
+                }
+    
+                return updatedSubproject
+            })
 
             return updatedSubproject
         } catch (exception) {
@@ -69,25 +78,29 @@ class SubprojectService {
      */
     static async removeSubproject(payload) {
         try {
-            const subprojectId = payload.subproject_id
-            const parentProjectId = payload.project_id
-
-            const subproject = await SubprojectRepository.findById(subprojectId)
-            if (subproject == null) {
-                throw new Error('Found no project of given ID')
-            }
-
-            await ProjectService.unassignSubprojectFromProject(subprojectId, parentProjectId)
-            await this.unassignSubprojectFromTasks(subprojectId)
-            
-            const removedSubproject = await SubprojectRepository.remove(subproject)
-            if (removedSubproject == null) {
-                throw new Error('An error occured, removed no subprojects')
-            }
-
-            // move all subprojects above removed subprojects down to remove gaps in row_indexes
-            const removedSubprojectRowIndex = removedSubproject.row_index
-            await this.moveSubprojectsAboveRowIndexDown(parentProjectId, removedSubprojectRowIndex) 
+            const removedSubproject = await TransactionHandler.run(async () => {
+                const subprojectId = payload.subproject_id
+                const parentProjectId = payload.project_id
+    
+                const subproject = await SubprojectRepository.findById(subprojectId)
+                if (subproject == null) {
+                    throw new Error('Found no project of given ID')
+                }
+    
+                await ProjectService.unassignSubprojectFromProject(subprojectId, parentProjectId)
+                await this.unassignSubprojectFromTasks(subprojectId)
+                
+                const removedSubproject = await SubprojectRepository.remove(subproject)
+                if (removedSubproject == null) {
+                    throw new Error('An error occured, removed no subprojects')
+                }
+    
+                // move all subprojects above removed subprojects down to remove gaps in row_indexes
+                const removedSubprojectRowIndex = removedSubproject.row_index
+                await this.moveSubprojectsAboveRowIndexDown(parentProjectId, removedSubprojectRowIndex) 
+    
+                return removedSubproject
+            })
 
             return removedSubproject
         } catch (exception) {
@@ -140,16 +153,22 @@ class SubprojectService {
      */
     static async moveSubprojectsAboveRowIndexDown(projectId, rowIndex) {
         try {
-            const filter = {
-                project: projectId,
-                row_index: { $gt: rowIndex },
-            }
+            await TransactionHandler.run(async () => {
+                const filter = {
+                    project: projectId,
+                    row_index: { $gt: rowIndex },
+                }
+                
+                const update = {
+                    $inc: { row_index: -1 },
+                }
+    
+                await SubprojectRepository.findManyByFilterAndUpdate(filter, update)
             
-            const update = {
-                $inc: { row_index: -1 },
-            }
+                return
+            })
 
-            return await SubprojectRepository.findManyByFilterAndUpdate(filter, update)
+            return
         } catch (exception) {
             throw new Error(`Failed to move subprojects above row index down: ${exception.message}`)
         }
@@ -163,15 +182,19 @@ class SubprojectService {
      */
     static async unassignSubprojectFromTasks(subprojectId) {
         try {
-            const filter = {
-                subproject: subprojectId,
-            }
-
-            const update = {
-                subproject: null,
-            }
-
-            await TaskRepository.findManyByFilterAndUpdate(filter, update)
+            await TransactionHandler.run(async () => {
+                const filter = {
+                    subproject: subprojectId,
+                }
+    
+                const update = {
+                    subproject: null,
+                }
+    
+                await TaskRepository.findManyByFilterAndUpdate(filter, update)
+    
+                return
+            })
 
             return
         } catch (exception) {
@@ -187,21 +210,25 @@ class SubprojectService {
      */
     static async assignTaskToSubproject(subprojectId, taskId) {
         try {
-            const subproject = await SubprojectRepository.findById(subprojectId)
-            if (subproject == null) {
-                throw new Error('Found no subproject of given ID')
-            }
-
-            const task = await TaskRepository.findById(taskId)
-            if (task == null) {
-                throw new Error('Found no task of given ID')
-            }
-
-            task.subproject = subproject
-            await task.save()
-
-            subproject.tasks.push(task)
-            await subproject.save()
+            await TransactionHandler.run(async () => {
+                const subproject = await SubprojectRepository.findById(subprojectId)
+                if (subproject == null) {
+                    throw new Error('Found no subproject of given ID')
+                }
+    
+                const task = await TaskRepository.findById(taskId)
+                if (task == null) {
+                    throw new Error('Found no task of given ID')
+                }
+    
+                task.subproject = subproject
+                await task.save()
+    
+                subproject.tasks.push(task)
+                await subproject.save()
+    
+                return
+            })
 
             return
         } catch (exception) {
@@ -217,21 +244,25 @@ class SubprojectService {
      */
     static async unassignTaskFromSubproject(subprojectId, taskId) {
         try {
-            const subproject = await SubprojectRepository.findById(subprojectId)
-            if (subproject == null) {
-                throw new Error('Found no subproject of given ID')
-            }
-
-            const task = await TaskRepository.findById(taskId)
-            if (task == null) {
-                throw new Error('Found no task of given ID')
-            }
-
-            task.subproject = null
-            await task.save()
-
-            subproject.tasks.pull(taskId)
-            await subproject.save()
+            await TransactionHandler.run(async () => {
+                const subproject = await SubprojectRepository.findById(subprojectId)
+                if (subproject == null) {
+                    throw new Error('Found no subproject of given ID')
+                }
+    
+                const task = await TaskRepository.findById(taskId)
+                if (task == null) {
+                    throw new Error('Found no task of given ID')
+                }
+    
+                task.subproject = null
+                await task.save()
+    
+                subproject.tasks.pull(taskId)
+                await subproject.save()
+    
+                return
+            })
 
             return
         } catch (exception) {
