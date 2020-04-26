@@ -84,7 +84,6 @@ const Project = () => {
       const userToken = localStorage.getItem("userToken");
       socket.emit("authenticate", { token: userToken }, (data) => {
         if (data.status === true) {
-          // console.log(data.status);
           getProject(socket, setColumns, setSubprojects);
         } else {
           alert(`Authentication error ${data.message}`);
@@ -93,7 +92,6 @@ const Project = () => {
       });
     }
   }, []);
-  // console.log(columns);
   return (
     <div
       style={{

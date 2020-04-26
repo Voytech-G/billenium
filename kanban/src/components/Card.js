@@ -42,7 +42,6 @@ const handleClick_editCard = (
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
-  // editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
 
   socket.emit(
     "update-task",
