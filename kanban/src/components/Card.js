@@ -70,35 +70,16 @@ const Card = ({ card, columnId, subprojectId }) => {
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
         return (
-          <div
+          <div className="task-body"
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            style={{
-              userSelect: "none",
-              padding: 16,
-              margin: "0 0 8px 0",
-              minHeight: "50px",
-              backgroundColor: snapshot.isDragging ? "#263B4A" : "#456C86",
-              color: "white",
-              display: "flex",
-              flexDirection: "column",
-              boxSizing: "border-box",
-              padding: "10px",
-              minHeight: "100px",
-              justifyContent: "space-between",
-              ...provided.draggableProps.style,
-            }}
           >
-            {content}
-            <form
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
+            <div className="task-body__content-container">
+                <span>{content}</span>
+            </div>
+            <div className="task-body__edit-button-container">
               <button
-                style={{}}
                 onClick={(e) =>
                   handleClick_editCard(
                     e,
@@ -116,6 +97,8 @@ const Card = ({ card, columnId, subprojectId }) => {
               >
                 Edit
               </button>
+            </div>
+            <div className="task-body__remove-button-container">
               <button
                 style={{}}
                 onClick={(e) =>
@@ -133,7 +116,7 @@ const Card = ({ card, columnId, subprojectId }) => {
               >
                 X
               </button>
-            </form>
+            </div>
           </div>
         );
       }}

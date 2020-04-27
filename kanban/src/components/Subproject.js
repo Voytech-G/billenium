@@ -71,18 +71,12 @@ const Subproject = ({ subproject }) => {
     setDroppables(droppablesArr);
   }, []);
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ display: "flex" }}>
+    <div className="subproject-container">
+      <div className="subproject-container__name-container">
           <h4>{name}</h4>
-        </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          border: "2px solid red",
-          justifyContent: "space-between",
-        }}
+      <div className="subproject-container__tasks-container"
+        
         key={id}
       >
         {columns.map((column, idx) => {
@@ -90,7 +84,6 @@ const Subproject = ({ subproject }) => {
             <div
               style={{
                 margin: 8,
-                border: "2px solid green",
                 display: "flex",
                 flexGrow: "1",
                 justifyContent: "center",

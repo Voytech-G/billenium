@@ -8,12 +8,10 @@ import Card from "./Card";
 
 const Amount = ({ amount, maxTasks }) => {
   return (
-    <h5
-      style={{ margin: "0px 0 0 5px" }}
-      className={amount > maxTasks ? "taskLimit" : false}
+    <div className="column__header-bottom--amount" 
     >
       {amount}/{maxTasks}
-    </h5>
+    </div>
   );
 };
 const deleteColumn = (removeColumn, socket, id, boardIndex) => {
@@ -34,7 +32,6 @@ const DeleteColumnBtn = ({ removeColumn, socket, columnId, boardIndex }) => {
     <button
       className="column__settings-button column__settings-button--delete"
       onClick={() => deleteColumn(removeColumn, socket, columnId, boardIndex)}
-      style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Delete column
     </button>
@@ -110,7 +107,6 @@ const ChangeColumnNameBtn = ({
           btnName
         )
       }
-      style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Change name
     </button>
@@ -139,7 +135,6 @@ const ChangeMaxLimitBtn = ({
           btnName
         )
       }
-      style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Change limit
     </button>
@@ -179,8 +174,10 @@ const Column = ({ column }) => {
           boardIndex={board_index}
         ></DeleteColumnBtn>
       </div>
-      <div className="column__header-bottom">
-        <span>{name}</span>
+      <div className="column__header-bottom--container">
+        <div className="column__header-bottom--title-container">
+            <span>{name}</span>
+        </div>
         <Amount amount={tasks.length} maxTasks={max_tasks}></Amount>
       </div>
     </div>
