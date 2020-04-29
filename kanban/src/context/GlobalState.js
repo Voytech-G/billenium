@@ -209,6 +209,12 @@ export const GlobalProvider = ({ children }) => {
       },
     });
   }
+  function removeSub(subId, subIndex) {
+    dispatch({ type: "REMOVE_SUB", payload: { subId, subIndex } });
+  }
+  function changeSub(subId, content) {
+    dispatch({ type: "EDIT_SUB", payload: { subId, content } });
+  }
   return (
     <GlobalContext.Provider
       value={{
@@ -224,6 +230,8 @@ export const GlobalProvider = ({ children }) => {
         removeColumn,
         editColumn,
         setDroppables,
+        removeSub,
+        changeSub,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,

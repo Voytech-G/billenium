@@ -51,6 +51,59 @@ const handleClick_addCard = (
     }
   });
 };
+const editSub = (changeSub, socket, subId, subName) => {
+  const content = prompt("Type new subproject name: ", subName);
+  socket.emit(
+    "update-subproject",
+    {
+      subproject_id: subId,
+      subproject_name: content,
+    },
+    (res) => {
+      if (res.status) {
+        changeSub(subId, content);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
+};
+const EditButton = ({ changeSub, socket, subId, subName }) => {
+  return (
+    <button
+      style={{ height: "40px", margin: "5px 5px 5px 5px" }}
+      onClick={() => editSub(changeSub, socket, subId, subName)}
+    >
+      Edit
+    </button>
+  );
+};
+const removeSubproject = (removeSub, socket, subId, subIndex) => {
+  socket.emit(
+    "remove-subproject",
+    {
+      subproject_id: subId,
+      project_id: "5e98b06eb1b4ab474090034b",
+    },
+    (res) => {
+      if (res.status) {
+        removeSub(subId, subIndex);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
+};
+const DeleteButton = ({ removeSub, socket, subId, subIndex }) => {
+  return (
+    <button
+      style={{ height: "40px", margin: "5px 5px 5px 5px" }}
+      onClick={() => removeSubproject(removeSub, socket, subId, subIndex)}
+    >
+      Delete
+    </button>
+  );
+};
 
 const Subproject = ({ subproject }) => {
   const { id, name, tasks, row_index } = subproject;
@@ -64,10 +117,11 @@ const Subproject = ({ subproject }) => {
     subColItems,
     setDroppables,
     droppables,
+    changeSub,
+    removeSub,
   } = useContext(GlobalContext);
   const droppablesArr = [];
   useEffect(() => {
-    // console.log(droppablesArr);
     setDroppables(droppablesArr);
   }, []);
   return (
@@ -75,6 +129,18 @@ const Subproject = ({ subproject }) => {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ display: "flex" }}>
           <h4>{name}</h4>
+          <EditButton
+            changeSub={changeSub}
+            socket={socket}
+            subId={id}
+            subName={name}
+          />
+          <DeleteButton
+            removeSub={removeSub}
+            socket={socket}
+            subId={id}
+            subIndex={row_index}
+          />
         </div>
       </div>
       <div

@@ -306,6 +306,30 @@ export default (state, action) => {
           ),
         ].rearrangeColumns(),
       };
+    case "REMOVE_SUB":
+      return {
+        ...state,
+        subprojects: [
+          ...state.subprojects.filter(
+            (subproject) => subproject.id !== action.payload.subId
+          ),
+        ].rearrangeSubprojects(),
+      };
+    case "EDIT_SUB":
+      return {
+        ...state,
+        subprojects: [
+          ...state.subprojects.map((subproject) =>
+            subproject.id === action.payload.subId
+              ? {
+                  ...subproject,
+                  name: action.payload.content,
+                }
+              : subproject
+          ),
+        ].rearrangeColumns(),
+      };
+
     case "SET_COLUMN_CARDS":
       return {
         ...state,
