@@ -8,8 +8,7 @@ import Card from "./Card";
 
 const Amount = ({ amount, maxTasks }) => {
   return (
-    <div className="column__header-bottom--amount" 
-    >
+    <div className="column__header-bottom--amount">
       {amount}/{maxTasks}
     </div>
   );
@@ -30,7 +29,7 @@ const deleteColumn = (removeColumn, socket, id, boardIndex) => {
 const DeleteColumnBtn = ({ removeColumn, socket, columnId, boardIndex }) => {
   return (
     <button
-      className="column__settings-button column__settings-button--delete"
+      className="settings-button column__settings-button--delete"
       onClick={() => deleteColumn(removeColumn, socket, columnId, boardIndex)}
     >
       Delete column
@@ -95,7 +94,7 @@ const ChangeColumnNameBtn = ({
 }) => {
   return (
     <button
-      className="column__settings-button column__settings-button--change-name"
+      className="settings-button column__settings-button--change-name"
       onClick={() =>
         updateColumn(
           editColumn,
@@ -123,7 +122,7 @@ const ChangeMaxLimitBtn = ({
 }) => {
   return (
     <button
-      className="column__settings-button column__settings-button--change-max-limit"
+      className="settings-button column__settings-button--change-max-limit"
       onClick={() =>
         updateColumn(
           editColumn,
@@ -144,10 +143,7 @@ const Column = ({ column }) => {
   const { id, name, tasks, max_tasks, board_index } = column;
   const { socket, removeColumn, editColumn } = useContext(GlobalContext);
   return (
-    <div
-      className="column__header"
-      key={id}
-    >
+    <div className="column__header" key={id}>
       <div className="column__header-top">
         <ChangeMaxLimitBtn
           editColumn={editColumn}
@@ -176,7 +172,7 @@ const Column = ({ column }) => {
       </div>
       <div className="column__header-bottom--container">
         <div className="column__header-bottom--title-container">
-            <span>{name}</span>
+          <span>{name}</span>
         </div>
         <Amount amount={tasks.length} maxTasks={max_tasks}></Amount>
       </div>
