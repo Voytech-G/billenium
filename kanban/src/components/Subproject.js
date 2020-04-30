@@ -179,6 +179,7 @@ const Subproject = ({ subproject }) => {
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
+                      style={{ justifyContent: "space-between" }}
                       className={`
                         tasksarea
                         ${
@@ -188,40 +189,46 @@ const Subproject = ({ subproject }) => {
                         }
                       `}
                     >
-                      {tasks
-                        .sort((a, b) => a.row_index - b.row_index)
-                        .filter((task) => task.column_id === column.id)
-                        .map((item) => {
-                          return (
-                            <Card
-                              card={item}
-                              columnId={column.id}
-                              subprojectId={subproject.id}
-                            />
-                          );
-                        })}
-                      <form
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <button
-                          onClick={(e) =>
-                            handleClick_addCard(
-                              e,
-                              column.id,
-                              subproject.id,
-                              addCard,
-                              socket,
-                              tasks
-                            )
-                          }
-                          type="submit"
+                      <div>
+                        {tasks
+                          .sort((a, b) => a.row_index - b.row_index)
+                          .filter((task) => task.column_id === column.id)
+                          .map((item) => {
+                            return (
+                              <Card
+                                card={item}
+                                columnId={column.id}
+                                subprojectId={subproject.id}
+                              />
+                            );
+                          })}
+                      </div>
+                      <div>
+                        <form
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            margin: "0 5px 0 5px",
+                          }}
                         >
-                          Add task
-                        </button>
-                      </form>
+                          <button
+                            onClick={(e) =>
+                              handleClick_addCard(
+                                e,
+                                column.id,
+                                subproject.id,
+                                addCard,
+                                socket,
+                                tasks
+                              )
+                            }
+                            type="submit"
+                            className="button-addtask"
+                          >
+                            +
+                          </button>
+                        </form>
+                      </div>
                       {provided.placeholder}
                     </div>
                   );

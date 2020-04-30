@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { GlobalContext } from "../context/GlobalState";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 const handleClick_removeCard = (
   e,
   socket,
@@ -78,44 +80,48 @@ const Card = ({ card, columnId, subprojectId }) => {
             <div className="task-body__content-container">
               <span>{content}</span>
             </div>
-            <div className="task-body__edit-button-container">
-              <button
-                onClick={(e) =>
-                  handleClick_editCard(
-                    e,
-                    editCard,
-                    socket,
-                    setColumns,
-                    id,
-                    row_index,
-                    columnId,
-                    subprojectId,
-                    content
-                  )
-                }
-                type="submit"
-              >
-                Edit
-              </button>
-            </div>
-            <div className="task-body__remove-button-container">
-              <button
-                style={{}}
-                onClick={(e) =>
-                  handleClick_removeCard(
-                    e,
-                    socket,
-                    removeCard,
-                    id,
-                    row_index,
-                    columnId,
-                    subprojectId
-                  )
-                }
-                type="submit"
-              >
-                X
-              </button>
+            <div className="task-body__buttons_container">
+              <div className="task-body__edit-button-container">
+                <button
+                  onClick={(e) =>
+                    handleClick_editCard(
+                      e,
+                      editCard,
+                      socket,
+                      setColumns,
+                      id,
+                      row_index,
+                      columnId,
+                      subprojectId,
+                      content
+                    )
+                  }
+                  type="submit"
+                  className={"task-body__button"}
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+              </div>
+              <div className="task-body__remove-button-container">
+                <button
+                  style={{}}
+                  onClick={(e) =>
+                    handleClick_removeCard(
+                      e,
+                      socket,
+                      removeCard,
+                      id,
+                      row_index,
+                      columnId,
+                      subprojectId
+                    )
+                  }
+                  type="submit"
+                  className={"task-body__button"}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
             </div>
           </div>
         );
