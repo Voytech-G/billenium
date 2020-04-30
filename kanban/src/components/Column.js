@@ -8,12 +8,10 @@ import Card from "./Card";
 
 const Amount = ({ amount, maxTasks }) => {
   return (
-    <h5
-      style={{ margin: "0px 0 0 5px" }}
-      className={amount > maxTasks ? "taskLimit" : false}
+    <div className="column__header-bottom--amount" 
     >
       {amount}/{maxTasks}
-    </h5>
+    </div>
   );
 };
 const deleteColumn = (removeColumn, socket, id, boardIndex) => {
@@ -32,8 +30,8 @@ const deleteColumn = (removeColumn, socket, id, boardIndex) => {
 const DeleteColumnBtn = ({ removeColumn, socket, columnId, boardIndex }) => {
   return (
     <button
+      className="column__settings-button column__settings-button--delete"
       onClick={() => deleteColumn(removeColumn, socket, columnId, boardIndex)}
-      style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Delete column
     </button>
@@ -97,6 +95,7 @@ const ChangeColumnNameBtn = ({
 }) => {
   return (
     <button
+      className="column__settings-button column__settings-button--change-name"
       onClick={() =>
         updateColumn(
           editColumn,
@@ -108,7 +107,6 @@ const ChangeColumnNameBtn = ({
           btnName
         )
       }
-      style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Change name
     </button>
@@ -125,6 +123,7 @@ const ChangeMaxLimitBtn = ({
 }) => {
   return (
     <button
+      className="column__settings-button column__settings-button--change-max-limit"
       onClick={() =>
         updateColumn(
           editColumn,
@@ -136,7 +135,6 @@ const ChangeMaxLimitBtn = ({
           btnName
         )
       }
-      style={{ display: "flex", margin: "0 auto", height: "40px" }}
     >
       Change limit
     </button>
@@ -147,44 +145,41 @@ const Column = ({ column }) => {
   const { socket, removeColumn, editColumn } = useContext(GlobalContext);
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        border: "2px solid blue",
-      }}
+      className="column__header"
       key={id}
     >
-      <div style={{ margin: 8 }}>
-        <div style={{ display: "flex" }}>
-          <ChangeMaxLimitBtn
-            editColumn={editColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-            btnName={"limit"}
-            maxTasks={max_tasks}
-            columnName={name}
-          ></ChangeMaxLimitBtn>
-          <ChangeColumnNameBtn
-            editColumn={editColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-            btnName={"name"}
-            maxTasks={max_tasks}
-            columnName={name}
-          ></ChangeColumnNameBtn>
-          <DeleteColumnBtn
-            removeColumn={removeColumn}
-            socket={socket}
-            columnId={id}
-            boardIndex={board_index}
-          ></DeleteColumnBtn>
-        </div>
+      <div className="column__header-top">
+        <ChangeMaxLimitBtn
+          editColumn={editColumn}
+          socket={socket}
+          columnId={id}
+          boardIndex={board_index}
+          btnName={"limit"}
+          maxTasks={max_tasks}
+          columnName={name}
+        ></ChangeMaxLimitBtn>
+        <ChangeColumnNameBtn
+          editColumn={editColumn}
+          socket={socket}
+          columnId={id}
+          boardIndex={board_index}
+          btnName={"name"}
+          maxTasks={max_tasks}
+          columnName={name}
+        ></ChangeColumnNameBtn>
+        <DeleteColumnBtn
+          removeColumn={removeColumn}
+          socket={socket}
+          columnId={id}
+          boardIndex={board_index}
+        ></DeleteColumnBtn>
       </div>
-      <h3>{name}</h3>
-      <Amount amount={tasks.length} maxTasks={max_tasks}></Amount>
+      <div className="column__header-bottom--container">
+        <div className="column__header-bottom--title-container">
+            <span>{name}</span>
+        </div>
+        <Amount amount={tasks.length} maxTasks={max_tasks}></Amount>
+      </div>
     </div>
   );
 };

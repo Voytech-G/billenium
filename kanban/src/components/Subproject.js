@@ -125,9 +125,9 @@ const Subproject = ({ subproject }) => {
     setDroppables(droppablesArr);
   }, []);
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ display: "flex" }}>
+    <div>
+      <div className="subproject-container">
+        <div className="subproject-container__name-container">
           <h4>{name}</h4>
           <EditButton
             changeSub={changeSub}
@@ -143,20 +143,12 @@ const Subproject = ({ subproject }) => {
           />
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          border: "2px solid red",
-          justifyContent: "space-between",
-        }}
-        key={id}
-      >
+      <div className="subproject-container__tasks-container" key={id}>
         {columns.map((column, idx) => {
           return (
             <div
               style={{
                 margin: 8,
-                border: "2px solid green",
                 display: "flex",
                 flexGrow: "1",
                 justifyContent: "center",
