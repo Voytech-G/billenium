@@ -1,8 +1,7 @@
 import React, { useEffect, useContext } from "react";
-
 import Subprojects from "./components/Subprojects";
-
 import { GlobalContext } from "./context/GlobalState";
+import "./styles/prod/main.min.css";
 
 const signIn = (socket, setColumns) => {
   const userName = prompt("Please enter your username.");
@@ -93,14 +92,7 @@ const Project = () => {
     }
   }, []);
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        height: "100%",
-        border: "2px solid gray",
-      }}
-    >
+    <div className="app-container">
       <Subprojects subprojects={subprojects} />
     </div>
   );

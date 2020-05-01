@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { GlobalContext } from "../context/GlobalState";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 const handleClick_removeCard = (
   e,
   socket,
@@ -70,69 +72,57 @@ const Card = ({ card, columnId, subprojectId }) => {
       {(provided, snapshot) => {
         return (
           <div
+            className="task-body"
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            style={{
-              userSelect: "none",
-              padding: 16,
-              margin: "0 0 8px 0",
-              minHeight: "50px",
-              backgroundColor: snapshot.isDragging ? "#263B4A" : "#456C86",
-              color: "white",
-              display: "flex",
-              flexDirection: "column",
-              boxSizing: "border-box",
-              padding: "10px",
-              minHeight: "100px",
-              justifyContent: "space-between",
-              ...provided.draggableProps.style,
-            }}
           >
-            {content}
-            <form
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <button
-                style={{}}
-                onClick={(e) =>
-                  handleClick_editCard(
-                    e,
-                    editCard,
-                    socket,
-                    setColumns,
-                    id,
-                    row_index,
-                    columnId,
-                    subprojectId,
-                    content
-                  )
-                }
-                type="submit"
-              >
-                Edit
-              </button>
-              <button
-                style={{}}
-                onClick={(e) =>
-                  handleClick_removeCard(
-                    e,
-                    socket,
-                    removeCard,
-                    id,
-                    row_index,
-                    columnId,
-                    subprojectId
-                  )
-                }
-                type="submit"
-              >
-                X
-              </button>
-            </form>
+            <div className="task-body__content-container">
+              <span>{content}</span>
+            </div>
+            <div className="task-body__buttons_container">
+              <div className="task-body__edit-button-container">
+                <button
+                  onClick={(e) =>
+                    handleClick_editCard(
+                      e,
+                      editCard,
+                      socket,
+                      setColumns,
+                      id,
+                      row_index,
+                      columnId,
+                      subprojectId,
+                      content
+                    )
+                  }
+                  type="submit"
+                  className={"task-body__button"}
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+              </div>
+              <div className="task-body__remove-button-container">
+                <button
+                  style={{}}
+                  onClick={(e) =>
+                    handleClick_removeCard(
+                      e,
+                      socket,
+                      removeCard,
+                      id,
+                      row_index,
+                      columnId,
+                      subprojectId
+                    )
+                  }
+                  type="submit"
+                  className={"task-body__button"}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+            </div>
           </div>
         );
       }}

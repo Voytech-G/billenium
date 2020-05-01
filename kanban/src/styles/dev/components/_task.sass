@@ -1,0 +1,32 @@
+.task-body
+    user-select: none
+    color: #ffffff
+    background: #349eef
+    border-radius: 5px
+    border: 1px solid #0f8be2
+    padding: 10px
+    margin: 5px
+    &:hover
+        background: #2d87c6
+
+.button-addtask
+    background-color: #7C899A
+    font-size: 20px
+    font-weight: bold
+    border: 1px solid #6b7582
+    color: white
+    border-radius: 3px
+    cursor: pointer
+    transition: 0.2s
+    &:hover
+        background: #344a66
+
+.task-body__button
+    font-size: 24px
+    color: white
+    background: none
+    border: none
+    cursor: pointer
+
+.task-body__buttons_container
+    @include flex-position($justify: flex-end)

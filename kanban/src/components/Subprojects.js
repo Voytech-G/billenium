@@ -213,21 +213,15 @@ const Subprojects = ({ subprojects }) => {
         onDragEnd(result, columns, moveCard, socket, subprojects, droppables);
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex" }}>
+      <div className="board-container">
+        <div className="columns-headers-container">
           {columns
             .sort((a, b) => a.board_index - b.board_index)
             .map((column) => (
               <Column column={column} />
             ))}
         </div>
-        <div
-          style={{
-            display: "flex",
-            border: "2px solid yellow",
-            flexDirection: "column",
-          }}
-        >
+        <div>
           {subprojects
             .sort((a, b) => a.row_index - b.row_index)
             .map((subprojectItem) => (
