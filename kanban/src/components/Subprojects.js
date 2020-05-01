@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 
 import { GlobalContext } from "../context/GlobalState";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import Subproject from "./Subproject";
 import Column from "./Column";
 
@@ -167,9 +168,9 @@ const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
       onClick={() =>
         addNewColumn(columnsItems, socket, addColumnFunc, setColumns)
       }
-      style={{ height: "40px", marginTop: "85px" }}
+      className={"button-add"}
     >
-      Add new column
+      <FontAwesomeIcon icon={faPlusCircle} />
     </button>
   );
 };
@@ -189,9 +190,9 @@ const AddSubprojectBtn = ({
           setSubprojects
         )
       }
-      style={{ height: "40px" }}
+      className={"button-add"}
     >
-      Add new subproject
+      <FontAwesomeIcon icon={faPlusCircle} />
     </button>
   );
 };
@@ -237,7 +238,7 @@ const Subprojects = ({ subprojects }) => {
           ></AddSubprojectBtn>
         </div>
       </div>
-      <div>
+      <div className={"newcolumn-container"}>
         <AddColumnBtn
           columnsItems={columns}
           addColumnFunc={addColumn}
