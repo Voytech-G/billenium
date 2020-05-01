@@ -9,6 +9,36 @@ const UserController = require('../controller/UserController')
 
 class EventsHandler {
     /**
+     * 
+     * @param {Function} callback
+     * @return {void} 
+     */
+    static async getCallbackForEventType(socket, callback, eventName) {
+        return response => {
+            // if event failed (no data to share in given project room) exit
+            if (response.status == false) {
+                callback(response)
+            
+                return
+            }
+
+            // if event is not meant to be broadcasted exit
+            if (EventService.isEventBroadcasted(eventName) == false) {
+                callback(response)
+
+                return
+            }
+
+            const projectRoom = socket.rooms
+
+            console.log(projectRoom)
+            console.log(response)
+
+            callback(response)
+        }
+    }
+
+    /**
      * Setup a socket.io connection, register events
      * 
      * @param {Object} socket
@@ -114,27 +144,33 @@ class EventsHandler {
         })
 
         EventService.registerEvent(socket, 'create-subproject', (payload, callback) => {
-            SubprojectController.create(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'create-subproject')
+            SubprojectController.create(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
-        EventService.registerEvent(socket, 'update-subproject', (payload, callback) => {
-            SubprojectController.update(payload, callback)
+        EventService.registerEvent(socket, 'update-subproject', async (payload, callback) => {
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'update-subproject')
+            SubprojectController.update(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'remove-subproject', (payload, callback) => {
-            SubprojectController.remove(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'remove-subproject')
+            SubprojectController.remove(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'get-one-subproject', (payload, callback) => {
@@ -162,35 +198,43 @@ class EventsHandler {
         })
 
         EventService.registerEvent(socket, 'create-task', (payload, callback) => {
-            TaskController.create(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'create-task')
+            TaskController.create(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'update-task', (payload, callback) => {
-            TaskController.update(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'update-task')
+            TaskController.update(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'move-task', (payload, callback) => {
-            TaskController.move(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'move-task')
+            TaskController.move(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'remove-task', (payload, callback) => {
-            TaskController.remove(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'remove-task')
+            TaskController.remove(payload, eventCallback)
         
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'get-one-task', (payload, callback) => {
@@ -202,43 +246,53 @@ class EventsHandler {
         })
 
         EventService.registerEvent(socket, 'task-assign-user', (payload, callback) => {
-            TaskController.assignUser(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'task-assign-user')
+            TaskController.assignUser(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'task-unassign-user', (payload, callback) => {
-            TaskController.unassignUser(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'task-unassign-user')
+            TaskController.unassignUser(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'create-column', (payload, callback) => {
-            ColumnController.create(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'create-column')
+            ColumnController.create(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'update-column', (payload, callback) => {
-            ColumnController.update(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'update-column')
+            ColumnController.update(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'remove-column', (payload, callback) => {
-            ColumnController.remove(payload, callback)
+            const eventCallback = this.getCallbackForEventType(socket, callback, 'remove-column')
+            ColumnController.remove(payload, eventCallback)
 
             return
         }, {
             authenticate: true,
+            broadcast: true,
         })
 
         EventService.registerEvent(socket, 'get-column', (payload, callback) => {

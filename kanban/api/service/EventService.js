@@ -2,6 +2,9 @@ class EventService {
     // list of events that will not be authenticated
     static AUTHENTICATED_EVENTS = []
 
+    // list of events that will be broadcasted to all users in given project room
+    static BROADCASTED_EVENTS = []
+
     /**
      * Check if given event name is registered as authenticated
      * 
@@ -13,6 +16,22 @@ class EventService {
             return this.AUTHENTICATED_EVENTS.includes(eventName)
         } catch (exception) {
             throw new Error(`Failed to check if event type should be authenticated: ${exception.message}`)
+        }
+    }
+
+    /**
+     * Check if given event name is registered as broadcasted event.
+     * If yes, broadcast result of given event to all sockets currently connected
+     * to given project room.
+     * 
+     * @param {String} eventName
+     * @return {boolean} 
+     */
+    static isEventBroadcasted(eventName) {
+        try {
+            return this.BROADCASTED_EVENTS.includes(eventName)
+        } catch (exception) {
+            throw new Error(`Failed to check if event type should be broadcasted: ${exception.message}`)
         }
     }
 
@@ -60,8 +79,13 @@ class EventService {
      */
     static handleEventOptions(eventName, options) {
         const authenticate = options.authenticate
-        if (authenticate != null && authenticate === true) {
+        if (authenticate != null && authenticate == true) {
             this.AUTHENTICATED_EVENTS.push(eventName)
+        }
+
+        const broadcast = options.broadcast
+        if (broadcast != null && broadcast == true) {
+            this.BROADCASTED_EVENTS.push(eventName)
         }
     }
 }
