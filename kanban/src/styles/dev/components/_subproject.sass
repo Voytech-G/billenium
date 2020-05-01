@@ -1,0 +1,35 @@
+@import '../themes/board-theme'
+@import '../utils/mixins'
+
+.subproject-container 
+    display: flex
+    flex-direction: column
+    background-color: $board-background-color
+
+.subproject-container__name-container
+    @include flex-position($align: center)
+    background-color: #aaa9a9
+    text-transform: uppercase
+    color: #ffffff
+    border: 1px solid #8c8c8c
+    margin: 0 5px 0 5px
+    padding: 0 15px 0 15px
+    font-size: 16px
+
+.subproject-container__tasks-container
+    display: flex
+    justify-content: space-between
+    background-color: $board-background-color
+
+.tasksarea
+    @include flex-position
+    flex-direction: column
+    background-color: $header-background-color
+    min-height: 150px
+    height: 100%
+    padding: 10px
+    border: 1px solid #bababa
+    box-sizing: border-box 
+    &.tasksarea--active
+        background-color: lightblue
+        

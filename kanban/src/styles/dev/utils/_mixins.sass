@@ -1,0 +1,11 @@
+@mixin flex-position($justify: space-between, $align: stretch)
+    display: flex
+    justify-content: $justify
+    align-items: $align
+
+@mixin grid($rows, $columns, $rowGap: 0, $columnGap: 0)
+    display: grid
+    grid-template-rows: $rows
+    grid-template-columns: $columns
+    grid-row-gap: $rowGap
+    grid-column-gap: $columnGap

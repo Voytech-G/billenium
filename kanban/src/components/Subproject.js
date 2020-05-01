@@ -73,6 +73,7 @@ const EditButton = ({ changeSub, socket, subId, subName }) => {
     <button
       style={{ height: "40px", margin: "5px 5px 5px 5px" }}
       onClick={() => editSub(changeSub, socket, subId, subName)}
+      className="settings-button"
     >
       Edit
     </button>
@@ -99,6 +100,7 @@ const DeleteButton = ({ removeSub, socket, subId, subIndex }) => {
     <button
       style={{ height: "40px", margin: "5px 5px 5px 5px" }}
       onClick={() => removeSubproject(removeSub, socket, subId, subIndex)}
+      className="settings-button"
     >
       Delete
     </button>
@@ -125,42 +127,36 @@ const Subproject = ({ subproject }) => {
     setDroppables(droppablesArr);
   }, []);
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ display: "flex" }}>
+    <div>
+      <div className="subproject-container">
+        <div className="subproject-container__name-container">
           <h4>{name}</h4>
-          <EditButton
-            changeSub={changeSub}
-            socket={socket}
-            subId={id}
-            subName={name}
-          />
-          <DeleteButton
-            removeSub={removeSub}
-            socket={socket}
-            subId={id}
-            subIndex={row_index}
-          />
+          <div>
+            <EditButton
+              changeSub={changeSub}
+              socket={socket}
+              subId={id}
+              subName={name}
+            />
+            <DeleteButton
+              removeSub={removeSub}
+              socket={socket}
+              subId={id}
+              subIndex={row_index}
+            />
+          </div>
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          border: "2px solid red",
-          justifyContent: "space-between",
-        }}
-        key={id}
-      >
+      <div className="subproject-container__tasks-container" key={id}>
         {columns.map((column, idx) => {
           return (
             <div
               style={{
-                margin: 8,
-                border: "2px solid green",
-                display: "flex",
+                margin: "0 5px 0 5px",
                 flexGrow: "1",
                 justifyContent: "center",
                 boxSizing: "border-box",
+                width: "100%",
               }}
             >
               <Droppable
@@ -183,49 +179,56 @@ const Subproject = ({ subproject }) => {
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      style={{
-                        background: snapshot.isDraggingOver
-                          ? "lightblue"
-                          : "lightgrey",
-                        padding: 4,
-                        width: 250,
-                        minHeight: 200,
-                      }}
+                      style={{ justifyContent: "space-between" }}
+                      className={`
+                        tasksarea
+                        ${
+                          snapshot.isDraggingOver
+                            ? "tasksarea--active"
+                            : "tasksarea--unactive"
+                        }
+                      `}
                     >
-                      {tasks
-                        .sort((a, b) => a.row_index - b.row_index)
-                        .filter((task) => task.column_id === column.id)
-                        .map((item) => {
-                          return (
-                            <Card
-                              card={item}
-                              columnId={column.id}
-                              subprojectId={subproject.id}
-                            />
-                          );
-                        })}
-                      <form
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <button
-                          onClick={(e) =>
-                            handleClick_addCard(
-                              e,
-                              column.id,
-                              subproject.id,
-                              addCard,
-                              socket,
-                              tasks
-                            )
-                          }
-                          type="submit"
+                      <div>
+                        {tasks
+                          .sort((a, b) => a.row_index - b.row_index)
+                          .filter((task) => task.column_id === column.id)
+                          .map((item) => {
+                            return (
+                              <Card
+                                card={item}
+                                columnId={column.id}
+                                subprojectId={subproject.id}
+                              />
+                            );
+                          })}
+                      </div>
+                      <div>
+                        <form
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            margin: "0 5px 0 5px",
+                          }}
                         >
-                          Add task
-                        </button>
-                      </form>
+                          <button
+                            onClick={(e) =>
+                              handleClick_addCard(
+                                e,
+                                column.id,
+                                subproject.id,
+                                addCard,
+                                socket,
+                                tasks
+                              )
+                            }
+                            type="submit"
+                            className="button-addtask"
+                          >
+                            +
+                          </button>
+                        </form>
+                      </div>
                       {provided.placeholder}
                     </div>
                   );
