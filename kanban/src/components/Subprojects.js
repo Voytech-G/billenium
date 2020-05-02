@@ -96,9 +96,17 @@ const onDragEnd = (
     }
   );
 };
-const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
+const addNewColumn = (
+  columns,
+  socket,
+  addColumnFunc,
+  setColumns,
+  setDroppables,
+  subprojects
+) => {
   const newName = prompt("Type column name: ");
   const maxLimit = prompt("Type max tasks limit: ");
+  const droppablesArr = [];
   socket.emit(
     "create-column",
     {
@@ -122,6 +130,17 @@ const addNewColumn = (columns, socket, addColumnFunc, setColumns) => {
             projectId: res.payload.project,
           },
         ]);
+        subprojects.map((subproject, index) => {
+          droppablesArr.push({
+            dropId: `${subproject.id}-${columns.length}`,
+            colIdx: columns.length,
+            subIdx: index,
+            colId: res.payload._id,
+            subId: subproject.id,
+          });
+        });
+
+        setDroppables(droppablesArr);
       } else {
         alert("Error: server returned false status");
       }
@@ -162,11 +181,25 @@ const addNewSubproject = (
     }
   );
 };
-const AddColumnBtn = ({ columnsItems, socket, addColumnFunc, setColumns }) => {
+const AddColumnBtn = ({
+  columnsItems,
+  socket,
+  addColumnFunc,
+  setColumns,
+  setDroppables,
+  subprojects,
+}) => {
   return (
     <button
       onClick={() =>
-        addNewColumn(columnsItems, socket, addColumnFunc, setColumns)
+        addNewColumn(
+          columnsItems,
+          socket,
+          addColumnFunc,
+          setColumns,
+          setDroppables,
+          subprojects
+        )
       }
       className={"button-add"}
     >
@@ -205,6 +238,7 @@ const Subprojects = ({ subprojects }) => {
     addSubproject,
     setColumns,
     setSubprojects,
+    setDroppables,
   } = useContext(GlobalContext);
   const { droppables } = useContext(GlobalContext);
 
@@ -244,6 +278,8 @@ const Subprojects = ({ subprojects }) => {
           addColumnFunc={addColumn}
           socket={socket}
           setColumns={setColumns}
+          setDroppables={setDroppables}
+          subprojects={subprojects}
         ></AddColumnBtn>
       </div>
     </DragDropContext>
