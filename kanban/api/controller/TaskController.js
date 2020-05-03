@@ -149,6 +149,30 @@ class TaskController {
     /**
      * @param {Object} payload 
      * @param {Function} callback 
+     */
+    static async getAll(callback) {
+        try {
+            const tasks = await TaskService.getAllTasks()
+
+            callback({
+                status: true,
+                payload: tasks,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `${exception.message}`
+            })
+
+            return
+        }
+    }
+
+    /**
+     * @param {Object} payload 
+     * @param {Function} callback 
      * @return {void}
      */
     static async assignUser(payload, callback) {

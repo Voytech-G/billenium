@@ -294,6 +294,32 @@ class TaskService {
     }
 
     /**
+     * @return {Object}
+     */
+    static async getAllTasks() {
+        try {
+            const tasks = await TaskRepository.findAll()
+
+            let result = []
+
+            const populateConfig = [
+                {
+                    path: 'users',
+                    model: 'User',
+                },
+            ]
+
+            for (let task of tasks) {
+                result.push(await TaskRepository.populate(task, populateConfig))
+            }
+
+            return result
+        } catch (exception) {
+            throw new Error(`Failed to get all tasks: ${exception.message}`)
+        }
+    }
+
+    /**
      * Iterate over all users of given task, remove reference to that task
      * 
      * @param {String} taskId

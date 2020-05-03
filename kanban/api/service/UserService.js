@@ -130,7 +130,7 @@ class UserService {
      */
     static async getAllUsers() {
         try {
-            let users = await UserRepository.findAll()
+            const users = await UserRepository.findAll()
 
             const populateConfig = [
                 {
