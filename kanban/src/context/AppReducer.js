@@ -39,10 +39,20 @@ export default (state, action) => {
         ...state,
         columns: action.payload,
       };
+    case "SET_USERS":
+      return {
+        ...state,
+        users: action.payload,
+      };
     case "SET_MENU":
       return {
         ...state,
         menuActive: action.payload,
+      };
+    case "SET_FORM":
+      return {
+        ...state,
+        userFormActive: action.payload,
       };
     case "SET_SUBPROJECTS":
       return {

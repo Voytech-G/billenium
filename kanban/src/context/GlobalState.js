@@ -9,7 +9,9 @@ const initialState = {
   columns: [],
   subprojects: [],
   droppables: [],
-  userFormActive: true,
+  users: [],
+  userFormActive: false,
+  chosenTask: "",
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -25,10 +27,22 @@ export const GlobalProvider = ({ children }) => {
       payload: columns,
     });
   }
+  function setUsers(users) {
+    dispatch({
+      type: "SET_USERS",
+      payload: users,
+    });
+  }
   function setMenu(menuActive) {
     dispatch({
       type: "SET_MENU",
       payload: !menuActive,
+    });
+  }
+  function setForm(formActive) {
+    dispatch({
+      type: "SET_FORM",
+      payload: formActive,
     });
   }
 
@@ -229,6 +243,8 @@ export const GlobalProvider = ({ children }) => {
         setColumns,
         setSubprojects,
         setMenu,
+        setUsers,
+        setForm,
         moveCard,
         addCard,
         setItems,
@@ -247,6 +263,7 @@ export const GlobalProvider = ({ children }) => {
         droppables: state.droppables,
         menuActive: state.menuActive,
         userFormActive: state.userFormActive,
+        users: state.users,
       }}
     >
       {children}

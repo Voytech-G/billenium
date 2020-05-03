@@ -3,7 +3,8 @@ import Subprojects from "./components/Subprojects";
 import Header from "./components/Header";
 import { GlobalContext } from "./context/GlobalState";
 import "./styles/prod/main.min.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 const signIn = (socket, setColumns) => {
   const userName = prompt("Please enter your username.");
   const userPin = prompt("Please enter your PIN code.");
@@ -28,14 +29,14 @@ const signIn = (socket, setColumns) => {
     }
   );
 };
-const getProject = (socket, setColumns, setSubprojects) => {
+const getProject = (socket, setColumns, setSubprojects, setUsers) => {
   socket.emit(
     "get-project",
     {
       project_id: "5e98b06eb1b4ab474090034b",
     },
     (data) => {
-      console.log(data);
+      // console.log(data);
       const columnsWithTasks = data.payload.columns.map((column) => ({
         id: column._id,
         name: column.name,
@@ -67,17 +68,46 @@ const getProject = (socket, setColumns, setSubprojects) => {
       setSubprojects(subprojectsWithTasks);
     }
   );
+  socket.emit("get-all-users", (data) => {
+    setUsers(data.payload);
+  });
 };
-const AddUserForm = ({ active }) => {
+const AddUserForm = ({ active, users, setForm }) => {
   if (active) {
-    return <div className="app-container__user-addform">Siema</div>;
+    console.log(users);
+    return (
+      <div className="app-container__user-addform--container">
+        <div className="app-container__user-addform">
+          <div>
+            <FontAwesomeIcon
+              icon={faTimesCircle}
+              className="form-icon"
+              onClick={() => setForm(false)}
+            />
+          </div>
+          <h4>ASSIGN A USER</h4>
+          <form action="">
+            <select name="" id="">
+              {users.map((user) => {
+                return <option value={user.username}>{user.username}</option>;
+              })}
+            </select>
+            <button>Add</button>
+          </form>
+        </div>
+      </div>
+    );
   } else {
     return false;
   }
 };
 const Project = () => {
-  const { socket, subprojects, userFormActive } = useContext(GlobalContext);
-  const { setColumns, setSubprojects } = useContext(GlobalContext);
+  const { socket, subprojects, userFormActive, users } = useContext(
+    GlobalContext
+  );
+  const { setColumns, setSubprojects, setUsers, setForm } = useContext(
+    GlobalContext
+  );
   const { columns } = useContext(GlobalContext);
   const username = localStorage.getItem("userName");
   useEffect(() => {
@@ -92,7 +122,7 @@ const Project = () => {
       const userToken = localStorage.getItem("userToken");
       socket.emit("authenticate", { token: userToken }, (data) => {
         if (data.status === true) {
-          getProject(socket, setColumns, setSubprojects);
+          getProject(socket, setColumns, setSubprojects, setUsers);
         } else {
           alert(`Authentication error ${data.message}`);
           signIn(socket, setColumns, setSubprojects);
@@ -104,7 +134,7 @@ const Project = () => {
     <div className="app-container">
       <Header username={username}></Header>
       <Subprojects subprojects={subprojects} />
-      <AddUserForm active={userFormActive} />
+      <AddUserForm active={userFormActive} users={users} setForm={setForm} />
     </div>
   );
 };

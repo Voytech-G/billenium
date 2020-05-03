@@ -61,7 +61,6 @@ const handleClick_editCard = (
     }
   );
 };
-const handleUserAdd = () => {};
 const Card = ({ card, columnId, subprojectId }) => {
   const { id, content, row_index } = card;
   const {
@@ -70,6 +69,7 @@ const Card = ({ card, columnId, subprojectId }) => {
     editCard,
     setColumns,
     setSubprojects,
+    setForm,
   } = useContext(GlobalContext);
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
@@ -89,21 +89,21 @@ const Card = ({ card, columnId, subprojectId }) => {
                     <FontAwesomeIcon
                       icon={faUserCircle}
                       className="task-body__userbutton"
-                      onClick={() => handleUserAdd()}
+                      onClick={() => setForm(true)}
                     />
                   </div>
                   <div>
                     <FontAwesomeIcon
                       icon={faUserCircle}
                       className="task-body__userbutton"
-                      onClick={() => handleUserAdd()}
+                      onClick={() => setForm(true)}
                     />
                   </div>
                   <div>
                     <FontAwesomeIcon
                       icon={faUserCircle}
                       className="task-body__userbutton"
-                      onClick={() => handleUserAdd()}
+                      onClick={() => setForm(true)}
                     />
                   </div>
                 </div>
