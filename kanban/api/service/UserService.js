@@ -121,9 +121,36 @@ class UserService {
 
             return user
         } catch (exception) {
-            throw new Error(`Failed to get the user: ${exception}`)
+            throw new Error(`Failed to get the user: ${exception.message}`)
         }
     }
+
+    /**
+     * @return {Object}
+     */
+    static async getAllUsers() {
+        try {
+            let users = await UserRepository.findAll()
+
+            const populateConfig = [
+                {
+                    path: 'tasks',
+                    model: 'Task',
+                },
+            ] 
+
+            let result = []
+
+            // populate tasks field in each user
+            for (let user of users) {
+                result.push(await UserRepository.populate(user, populateConfig))
+            }
+
+            return result
+        } catch (exception) {
+            throw new Error(`Failed to get all users: ${exception.message}`)
+        }
+    } 
 
     /**
      * Check if given user type key is a valid available type

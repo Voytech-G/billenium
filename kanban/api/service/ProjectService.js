@@ -264,6 +264,10 @@ class ProjectService {
                     populate: {
                         path: 'tasks',
                         model: 'Task',
+                        populate: {
+                            path: 'users',
+                            model: 'User',
+                        },
                     },
                 },
                 {
@@ -272,6 +276,10 @@ class ProjectService {
                     populate: {
                         path: 'tasks',
                         model: 'Task',
+                        populate: {
+                            path: 'users',
+                            model: 'User',
+                        },
                     },
                 },
             ]
