@@ -1,0 +1,58 @@
+.header-bar
+  box-sizing: border-box
+  position: fixed
+  background: #344a66
+  color: #ffffff
+  height: 50px
+  width: 100vw
+  top: 0
+  left: 0
+  right: 100%
+  box-shadow: 0px 3px 13px 0px rgba(0,0,0,0.6)
+  font-size: 24px
+  padding: 10px 40px 10px 20px
+  display: flex
+  justify-content: space-between
+  border-bottom: 1px solid #243549
+
+.header-bar__menu
+  display: flex
+  justify-content: space-between
+  width: 250px
+
+.header-bar__elements-container
+  display: flex
+  justify-content: space-between
+  width: 200px
+.header-bar__elements-container--active
+  display: flex
+
+.header-bar__elements-container--unactive
+  display: none
+
+.header-bar__menu-element
+  font-size: 22px
+  padding-top: 3px
+  text-transform: uppercase
+  cursor: pointer
+  &:hover
+    color: #969696
+
+.header-bar__hamburger-menu
+    font-size: 30px
+    cursor: pointer
+    transition: 0.2s
+    &:hover
+      color: #969696
+      
+.header-bar__username
+    display: flex
+
+.header-bar__useravatar
+  margin-left: 10px
+
+.header-bar__hamburger-menu--active
+  display: block
+
+.header-bar__hamburger-menu--unactive
+  display: none

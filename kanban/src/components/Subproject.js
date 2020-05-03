@@ -156,7 +156,7 @@ const Subproject = ({ subproject }) => {
                 flexGrow: "1",
                 justifyContent: "center",
                 boxSizing: "border-box",
-                width: "100%",
+                width: "309.5px",
               }}
             >
               <Droppable

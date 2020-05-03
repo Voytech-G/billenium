@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import Subprojects from "./components/Subprojects";
+import Header from "./components/Header";
 import { GlobalContext } from "./context/GlobalState";
 import "./styles/prod/main.min.css";
 
@@ -34,6 +35,7 @@ const getProject = (socket, setColumns, setSubprojects) => {
       project_id: "5e98b06eb1b4ab474090034b",
     },
     (data) => {
+      console.log(data);
       const columnsWithTasks = data.payload.columns.map((column) => ({
         id: column._id,
         name: column.name,
@@ -71,6 +73,7 @@ const Project = () => {
   const { socket, subprojects } = useContext(GlobalContext);
   const { setColumns, setSubprojects } = useContext(GlobalContext);
   const { columns } = useContext(GlobalContext);
+  const username = localStorage.getItem("userName");
   useEffect(() => {
     if (
       (localStorage.getItem("userName") == "null" &&
@@ -93,6 +96,7 @@ const Project = () => {
   }, []);
   return (
     <div className="app-container">
+      <Header username={username}></Header>
       <Subprojects subprojects={subprojects} />
     </div>
   );

@@ -13,6 +13,7 @@
     margin: 5px 5px 0px 5px
     min-height: 130px
     border: 1px solid #bababa
+    width: 277.5px
 
 .column__header-top
     @include grid(1fr, 32% 32% 32%, 0, 2%)
@@ -32,6 +33,8 @@
     text-transform: uppercase
     border: 1px solid #1c7ec9
     border-radius: 5px
+    &.active
+        background: #dd2130
 
 .column__header-bottom--amount
     @include flex-position(center, end)
