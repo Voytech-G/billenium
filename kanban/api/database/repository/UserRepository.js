@@ -29,6 +29,13 @@ class UserRepository {
     }
 
     /**
+     * @return {Object}
+     */
+    static async findAll() {
+        return await User.find({})
+    }
+
+    /**
      * Find user by ID
      * 
      * @param {String} userId

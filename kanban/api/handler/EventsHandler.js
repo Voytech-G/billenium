@@ -73,6 +73,14 @@ class EventsHandler {
             authenticate: true,
         })
 
+        EventService.registerEvent(socket, 'get-all-users', (payload, callback) => {
+            UserController.getAll(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
         EventService.registerEvent(socket, 'create-project', (payload, callback) => {
             ProjectController.create(payload, callback)
 
