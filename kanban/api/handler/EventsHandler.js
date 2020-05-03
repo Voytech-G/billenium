@@ -73,8 +73,8 @@ class EventsHandler {
             authenticate: true,
         })
 
-        EventService.registerEvent(socket, 'get-all-users', (payload, callback) => {
-            UserController.getAll(payload, callback)
+        EventService.registerEvent(socket, 'get-all-users', callback => {
+            UserController.getAll(callback)
 
             return
         }, {
@@ -203,6 +203,14 @@ class EventsHandler {
 
         EventService.registerEvent(socket, 'get-one-task', (payload, callback) => {
             TaskController.getOne(payload, callback)
+
+            return
+        }, {
+            authenticate: true,
+        })
+
+        EventService.registerEvent(socket, 'get-all-tasks', callback => {
+            TaskController.getAll(callback)
 
             return
         }, {

@@ -87,9 +87,9 @@ class UserController {
      * @param {Object} payload 
      * @param {Function} callback 
      */
-    static async getAll(payload, callback) {
+    static async getAll(callback) {
         try {
-            const users = await UserService.getAllUsers(payload)
+            const users = await UserService.getAllUsers()
 
             callback({
                 status: true,
