@@ -1,4 +1,4 @@
-// const SubprojectHandler = require('../handler/SubprojectHandler')
+const SubprojectHandler = require('../handler/SubprojectHandler')
 const mongoose = require("mongoose")
 
 const SubprojectSchema = new mongoose.Schema({
@@ -13,8 +13,8 @@ const SubprojectSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
-// SubprojectSchema.post('remove', async subproject => {
-//     SubprojectHandler.handleSubprojectRemoved(subproject)
-// })
+SubprojectSchema.post('remove', async subproject => {
+    SubprojectHandler.handleSubprojectRemoved(subproject)
+})
 
 module.exports = mongoose.model("Subproject", SubprojectSchema);

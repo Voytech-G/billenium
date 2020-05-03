@@ -88,13 +88,14 @@ class SubprojectService {
                 }
     
                 await ProjectService.unassignSubprojectFromProject(subprojectId, parentProjectId)
-                await this.unassignSubprojectFromTasks(subprojectId)
                 
                 const removedSubproject = await SubprojectRepository.remove(subproject)
                 if (removedSubproject == null) {
                     throw new Error('An error occured, removed no subprojects')
                 }
-    
+
+                await this.unassignSubprojectFromTasks(subprojectId)
+
                 // move all subprojects above removed subprojects down to remove gaps in row_indexes
                 const removedSubprojectRowIndex = removedSubproject.row_index
                 await this.moveSubprojectsAboveRowIndexDown(parentProjectId, removedSubprojectRowIndex) 
