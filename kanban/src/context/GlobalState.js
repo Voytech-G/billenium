@@ -9,6 +9,7 @@ const initialState = {
   columns: [],
   subprojects: [],
   droppables: [],
+  userFormActive: true,
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -245,6 +246,7 @@ export const GlobalProvider = ({ children }) => {
         subprojects: state.subprojects,
         droppables: state.droppables,
         menuActive: state.menuActive,
+        userFormActive: state.userFormActive,
       }}
     >
       {children}

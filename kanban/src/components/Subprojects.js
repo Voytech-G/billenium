@@ -33,7 +33,6 @@ const onDragEnd = (
   const card = columnItem.tasks
     .filter((task) => task.id === draggableId)
     .flat()[0];
-  console.log(card);
   // let flag = columns.filter(
   //   (column) => column.board_index === destination.droppableBoardIndex
   // );

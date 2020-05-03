@@ -37,8 +37,8 @@ const Header = ({ username }) => {
               : "header-bar__elements-container--unactive"
           }`}
         >
-          <div className={`header-bar__menu-element`}>Projekty</div>
-          <div className={`header-bar__menu-element`}>Widoki</div>
+          <div className={`header-bar__menu-element`}>Projects</div>
+          <div className={`header-bar__menu-element`}>Views</div>
         </div>
       </div>
       <div className={"header-bar__username"}>

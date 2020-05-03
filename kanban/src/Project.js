@@ -68,9 +68,15 @@ const getProject = (socket, setColumns, setSubprojects) => {
     }
   );
 };
-
+const AddUserForm = ({ active }) => {
+  if (active) {
+    return <div className="app-container__user-addform">Siema</div>;
+  } else {
+    return false;
+  }
+};
 const Project = () => {
-  const { socket, subprojects } = useContext(GlobalContext);
+  const { socket, subprojects, userFormActive } = useContext(GlobalContext);
   const { setColumns, setSubprojects } = useContext(GlobalContext);
   const { columns } = useContext(GlobalContext);
   const username = localStorage.getItem("userName");
@@ -98,6 +104,7 @@ const Project = () => {
     <div className="app-container">
       <Header username={username}></Header>
       <Subprojects subprojects={subprojects} />
+      <AddUserForm active={userFormActive} />
     </div>
   );
 };
