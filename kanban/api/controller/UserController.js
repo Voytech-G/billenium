@@ -82,6 +82,30 @@ class UserController {
             return
         }
     }
+
+    /**
+     * @param {Object} payload 
+     * @param {Function} callback 
+     */
+    static async getAll(payload, callback) {
+        try {
+            const users = await UserService.getAllUsers(payload)
+
+            callback({
+                status: true,
+                payload: users,
+            })
+
+            return
+        } catch (exception) {
+            callback({
+                status: false,
+                message: `${exception.message}`,
+            })
+
+            return
+        }
+    }
 }
 
 module.exports = UserController
