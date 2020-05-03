@@ -170,7 +170,11 @@ const Column = ({ column }) => {
           boardIndex={board_index}
         ></DeleteColumnBtn>
       </div>
-      <div className="column__header-bottom--container">
+      <div
+        className={`column__header-bottom--container ${
+          tasks.length > max_tasks ? "active" : "unactive"
+        }`}
+      >
         <div className="column__header-bottom--title-container">
           <span>{name}</span>
         </div>

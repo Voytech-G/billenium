@@ -5,6 +5,7 @@ import socketIOClient from "socket.io-client";
 
 const initialState = {
   socket: undefined,
+  menuActive: false,
   columns: [],
   subprojects: [],
   droppables: [],
@@ -21,6 +22,12 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "SET_COLUMNS",
       payload: columns,
+    });
+  }
+  function setMenu(menuActive) {
+    dispatch({
+      type: "SET_MENU",
+      payload: !menuActive,
     });
   }
 
@@ -220,6 +227,7 @@ export const GlobalProvider = ({ children }) => {
       value={{
         setColumns,
         setSubprojects,
+        setMenu,
         moveCard,
         addCard,
         setItems,
@@ -236,6 +244,7 @@ export const GlobalProvider = ({ children }) => {
         columns: state.columns,
         subprojects: state.subprojects,
         droppables: state.droppables,
+        menuActive: state.menuActive,
       }}
     >
       {children}
