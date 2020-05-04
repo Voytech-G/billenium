@@ -12,7 +12,8 @@ const handleClick_addCard = (
   subprojectId,
   addCard,
   socket,
-  tasks
+  tasks,
+  addTask
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type task name to add");
@@ -35,6 +36,7 @@ const handleClick_addCard = (
     if (res.status) {
       newCard._id = res.payload._id;
       addCard(newCard, columnId, subprojectId);
+      addTask(res.payload._id, []);
       socket.emit(
         "subproject-assign-task",
         { task_id: res.payload._id, subproject_id: subprojectId },
@@ -121,6 +123,7 @@ const Subproject = ({ subproject }) => {
     droppables,
     changeSub,
     removeSub,
+    addTask,
   } = useContext(GlobalContext);
   const droppablesArr = [];
   useEffect(() => {
@@ -219,7 +222,8 @@ const Subproject = ({ subproject }) => {
                                 subproject.id,
                                 addCard,
                                 socket,
-                                tasks
+                                tasks,
+                                addTask
                               )
                             }
                             type="submit"

@@ -29,7 +29,14 @@ const signIn = (socket, setColumns) => {
     }
   );
 };
-const getProject = (socket, setColumns, setSubprojects, setUsers) => {
+const getProject = (
+  socket,
+  setColumns,
+  setSubprojects,
+  setUsers,
+  setTasks,
+  setChosenUser
+) => {
   socket.emit(
     "get-project",
     {
@@ -70,11 +77,58 @@ const getProject = (socket, setColumns, setSubprojects, setUsers) => {
   );
   socket.emit("get-all-users", (data) => {
     setUsers(data.payload);
+    setChosenUser(data.payload[0]._id);
+  });
+  socket.emit("get-all-tasks", (data) => {
+    setTasks(data.payload);
   });
 };
-const AddUserForm = ({ active, users, setForm }) => {
+const assignUser = (
+  e,
+  chosenUser,
+  assignUserTask,
+  chosenTask,
+  tasks,
+  socket,
+  setTasks,
+  users
+) => {
+  e.preventDefault();
+  console.log(chosenTask);
+  const task = tasks.filter((task) => task._id === chosenTask);
+  const initials = users.filter((user) => user._id === chosenUser.id)[0]
+    .initials;
+  console.log(initials);
+  console.log(task);
+  const isAssigned = task[0].users.filter((user) => user._id === chosenUser.id);
+  console.log(isAssigned[0]);
+  if (isAssigned[0] === undefined && task[0].users.length < 3) {
+    socket.emit(
+      "task-assign-user",
+      { task_id: chosenTask, user_id: chosenUser.id },
+      (res) => {
+        console.log(res);
+      }
+    );
+    assignUserTask(chosenUser.id, chosenTask, initials);
+  } else {
+    console.log("Too much users assigned");
+  }
+};
+const AddUserForm = ({
+  active,
+  users,
+  setForm,
+  setChosenUser,
+  chosenUser,
+  assignUserTask,
+  chosenTask,
+  tasks,
+  socket,
+  setTasks,
+}) => {
   if (active) {
-    console.log(users);
+    // console.log(users);
     return (
       <div className="app-container__user-addform--container">
         <div className="app-container__user-addform">
@@ -87,12 +141,39 @@ const AddUserForm = ({ active, users, setForm }) => {
           </div>
           <h4>ASSIGN A USER</h4>
           <form action="">
-            <select name="" id="">
+            <select
+              name=""
+              id=""
+              onChange={(e) => setChosenUser(e.target.value)}
+            >
               {users.map((user) => {
-                return <option value={user.username}>{user.username}</option>;
+                return (
+                  <option
+                    name={user.username}
+                    value={user._id}
+                    initials={user.initials}
+                  >
+                    {user.username}
+                  </option>
+                );
               })}
             </select>
-            <button>Add</button>
+            <button
+              onClick={(e) =>
+                assignUser(
+                  e,
+                  chosenUser,
+                  assignUserTask,
+                  chosenTask,
+                  tasks,
+                  socket,
+                  setTasks,
+                  users
+                )
+              }
+            >
+              Add
+            </button>
           </form>
         </div>
       </div>
@@ -105,9 +186,18 @@ const Project = () => {
   const { socket, subprojects, userFormActive, users } = useContext(
     GlobalContext
   );
-  const { setColumns, setSubprojects, setUsers, setForm } = useContext(
-    GlobalContext
-  );
+  const {
+    setColumns,
+    setSubprojects,
+    setUsers,
+    setForm,
+    setTasks,
+    setChosenUser,
+    chosenUser,
+    assignUserTask,
+    chosenTask,
+    tasks,
+  } = useContext(GlobalContext);
   const { columns } = useContext(GlobalContext);
   const username = localStorage.getItem("userName");
   useEffect(() => {
@@ -122,7 +212,14 @@ const Project = () => {
       const userToken = localStorage.getItem("userToken");
       socket.emit("authenticate", { token: userToken }, (data) => {
         if (data.status === true) {
-          getProject(socket, setColumns, setSubprojects, setUsers);
+          getProject(
+            socket,
+            setColumns,
+            setSubprojects,
+            setUsers,
+            setTasks,
+            setChosenUser
+          );
         } else {
           alert(`Authentication error ${data.message}`);
           signIn(socket, setColumns, setSubprojects);
@@ -134,7 +231,18 @@ const Project = () => {
     <div className="app-container">
       <Header username={username}></Header>
       <Subprojects subprojects={subprojects} />
-      <AddUserForm active={userFormActive} users={users} setForm={setForm} />
+      <AddUserForm
+        active={userFormActive}
+        users={users}
+        setForm={setForm}
+        setChosenUser={setChosenUser}
+        chosenUser={chosenUser}
+        assignUserTask={assignUserTask}
+        chosenTask={chosenTask}
+        tasks={tasks}
+        socket={socket}
+        setTasks={setTasks}
+      />
     </div>
   );
 };

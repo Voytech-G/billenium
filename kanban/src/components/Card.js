@@ -61,6 +61,7 @@ const handleClick_editCard = (
     }
   );
 };
+
 const Card = ({ card, columnId, subprojectId }) => {
   const { id, content, row_index } = card;
   const {
@@ -70,10 +71,15 @@ const Card = ({ card, columnId, subprojectId }) => {
     setColumns,
     setSubprojects,
     setForm,
+    setChosenTask,
+    tasks,
   } = useContext(GlobalContext);
+
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
+        let userCounter = 3;
+        const taskItem = tasks.filter((task) => task._id === id)[0];
         return (
           <div
             className="task-body"
@@ -85,27 +91,28 @@ const Card = ({ card, columnId, subprojectId }) => {
               <div className="task-body__content-container">{content}</div>
               <div className="task-body__buttons_container">
                 <div className="task-body__userbuttons_container">
-                  <div>
-                    <FontAwesomeIcon
-                      icon={faUserCircle}
-                      className="task-body__userbutton"
-                      onClick={() => setForm(true)}
-                    />
-                  </div>
-                  <div>
-                    <FontAwesomeIcon
-                      icon={faUserCircle}
-                      className="task-body__userbutton"
-                      onClick={() => setForm(true)}
-                    />
-                  </div>
-                  <div>
-                    <FontAwesomeIcon
-                      icon={faUserCircle}
-                      className="task-body__userbutton"
-                      onClick={() => setForm(true)}
-                    />
-                  </div>
+                  {/* {taskItem.users.map((user) => {
+                    userCounter--;
+                    return (
+                      <div className="task-body__username-initials">
+                        {user.initials}
+                      </div>
+                    );
+                  })} */}
+                  {Array.from(Array(userCounter), (e, i) => {
+                    return (
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faUserCircle}
+                          className="task-body__userbutton"
+                          onClick={() => {
+                            setForm(true);
+                            setChosenTask(id);
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="task-body__settingsbuttons_container">
                   <div className="task-body__edit-button-container">

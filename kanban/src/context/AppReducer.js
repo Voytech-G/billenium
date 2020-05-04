@@ -44,6 +44,43 @@ export default (state, action) => {
         ...state,
         users: action.payload,
       };
+    case "SET_CHOSENUSER":
+      return {
+        ...state,
+        chosenUser: {
+          id: action.payload.id,
+        },
+      };
+    case "SET_CHOSENTASK":
+      return {
+        ...state,
+        chosenTask: action.payload,
+      };
+    case "ASSIGN_USER":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.user.task_id
+              ? {
+                  ...task,
+                  users: [
+                    ...task.users,
+                    {
+                      _id: action.payload.user.user_id,
+                      initials: action.payload.user.initials,
+                    },
+                  ],
+                }
+              : task
+          ),
+        ],
+      };
+    case "SET_TASKS":
+      return {
+        ...state,
+        tasks: action.payload,
+      };
     case "SET_MENU":
       return {
         ...state,
@@ -206,6 +243,11 @@ export default (state, action) => {
       return {
         ...state,
         columns: [...state.columns, action.payload.column].rearrangeColumns(),
+      };
+    case "ADD_TASK":
+      return {
+        ...state,
+        tasks: [...state.tasks, action.payload.task],
       };
     case "ADD_SUBPROJECT":
       return {

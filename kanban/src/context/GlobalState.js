@@ -10,8 +10,10 @@ const initialState = {
   subprojects: [],
   droppables: [],
   users: [],
+  tasks: [],
   userFormActive: false,
   chosenTask: "",
+  chosenUser: "",
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -33,6 +35,12 @@ export const GlobalProvider = ({ children }) => {
       payload: users,
     });
   }
+  function setTasks(tasks) {
+    dispatch({
+      type: "SET_TASKS",
+      payload: tasks,
+    });
+  }
   function setMenu(menuActive) {
     dispatch({
       type: "SET_MENU",
@@ -45,7 +53,20 @@ export const GlobalProvider = ({ children }) => {
       payload: formActive,
     });
   }
-
+  function setChosenUser(chosenUser) {
+    dispatch({
+      type: "SET_CHOSENUSER",
+      payload: {
+        id: chosenUser,
+      },
+    });
+  }
+  function setChosenTask(chosenTask) {
+    dispatch({
+      type: "SET_CHOSENTASK",
+      payload: chosenTask,
+    });
+  }
   function setSubprojects(subprojects) {
     dispatch({
       type: "SET_SUBPROJECTS",
@@ -128,6 +149,30 @@ export const GlobalProvider = ({ children }) => {
           board_index: subprojectColItems,
           tasks: [],
           max_tasks: parseInt(maxLimit),
+        },
+      },
+    });
+  }
+  function addTask(taskId, users) {
+    dispatch({
+      type: "ADD_TASK",
+      payload: {
+        task: {
+          _id: taskId,
+          users: users,
+        },
+      },
+    });
+  }
+  function assignUserTask(chosenUser, taskId, initials) {
+    console.log(chosenUser, taskId, initials);
+    dispatch({
+      type: "ASSIGN_USER",
+      payload: {
+        user: {
+          task_id: taskId,
+          user_id: chosenUser,
+          initials: initials,
         },
       },
     });
@@ -245,8 +290,13 @@ export const GlobalProvider = ({ children }) => {
         setMenu,
         setUsers,
         setForm,
+        setTasks,
+        setChosenUser,
+        setChosenTask,
+        assignUserTask,
         moveCard,
         addCard,
+        addTask,
         setItems,
         removeCard,
         editCard,
@@ -264,6 +314,9 @@ export const GlobalProvider = ({ children }) => {
         menuActive: state.menuActive,
         userFormActive: state.userFormActive,
         users: state.users,
+        tasks: state.tasks,
+        chosenUser: state.chosenUser,
+        chosenTask: state.chosenTask,
       }}
     >
       {children}
