@@ -94,11 +94,14 @@ const Card = ({ card, columnId, subprojectId }) => {
                   {tasks
                     .filter((task) => task._id === id)
                     .map((task) =>
-                      task.users.map((user) => (
-                        <div className={"task-body__username-initials"}>
-                          {user.initials}
-                        </div>
-                      ))
+                      task.users.map((user) => {
+                        userCounter--;
+                        return (
+                          <div className={"task-body__username-initials"}>
+                            {user.initials}
+                          </div>
+                        );
+                      })
                     )}
 
                   {Array.from(Array(userCounter), (e, i) => {
