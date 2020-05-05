@@ -79,7 +79,7 @@ const Card = ({ card, columnId, subprojectId }) => {
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
         let userCounter = 3;
-        const taskItem = tasks.filter((task) => task._id === id)[0];
+        const taskItem = tasks.filter((task) => task._id === id);
         return (
           <div
             className="task-body"
@@ -91,14 +91,16 @@ const Card = ({ card, columnId, subprojectId }) => {
               <div className="task-body__content-container">{content}</div>
               <div className="task-body__buttons_container">
                 <div className="task-body__userbuttons_container">
-                  {/* {taskItem.users.map((user) => {
-                    userCounter--;
-                    return (
-                      <div className="task-body__username-initials">
-                        {user.initials}
-                      </div>
-                    );
-                  })} */}
+                  {tasks
+                    .filter((task) => task._id === id)
+                    .map((task) =>
+                      task.users.map((user) => (
+                        <div className={"task-body__username-initials"}>
+                          {user.initials}
+                        </div>
+                      ))
+                    )}
+
                   {Array.from(Array(userCounter), (e, i) => {
                     return (
                       <div>
