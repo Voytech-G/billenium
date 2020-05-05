@@ -76,6 +76,24 @@ export default (state, action) => {
           ),
         ],
       };
+    case "UNASSIGN_USER":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.user.task_id
+              ? {
+                  ...task,
+                  users: [
+                    ...task.users.filter(
+                      (user) => user._id !== action.payload.user.user_id
+                    ),
+                  ],
+                }
+              : task
+          ),
+        ],
+      };
     case "SET_TASKS":
       return {
         ...state,

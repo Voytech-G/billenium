@@ -61,7 +61,20 @@ const handleClick_editCard = (
     }
   );
 };
-
+const unAssignUser = (userId, taskId, unassignUserTask, socket) => {
+  socket.emit(
+    "task-unassign-user",
+    { user_id: userId, task_id: taskId },
+    (res) => {
+      if (res.status) {
+        unassignUserTask(userId, taskId);
+        console.log(res.status);
+      } else {
+        console.log(res.status);
+      }
+    }
+  );
+};
 const Card = ({ card, columnId, subprojectId }) => {
   const { id, content, row_index } = card;
   const {
@@ -73,6 +86,7 @@ const Card = ({ card, columnId, subprojectId }) => {
     setForm,
     setChosenTask,
     tasks,
+    unassignUserTask,
   } = useContext(GlobalContext);
 
   return (
@@ -97,13 +111,22 @@ const Card = ({ card, columnId, subprojectId }) => {
                       task.users.map((user) => {
                         userCounter--;
                         return (
-                          <div className={"task-body__username-initials"}>
+                          <div
+                            className={"task-body__username-initials"}
+                            onClick={(e) =>
+                              unAssignUser(
+                                user._id,
+                                task._id,
+                                unassignUserTask,
+                                socket
+                              )
+                            }
+                          >
                             {user.initials}
                           </div>
                         );
                       })
                     )}
-
                   {Array.from(Array(userCounter), (e, i) => {
                     return (
                       <div>

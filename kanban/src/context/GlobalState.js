@@ -165,7 +165,6 @@ export const GlobalProvider = ({ children }) => {
     });
   }
   function assignUserTask(chosenUser, taskId, initials) {
-    console.log(chosenUser, taskId, initials);
     dispatch({
       type: "ASSIGN_USER",
       payload: {
@@ -173,6 +172,17 @@ export const GlobalProvider = ({ children }) => {
           task_id: taskId,
           user_id: chosenUser,
           initials: initials,
+        },
+      },
+    });
+  }
+  function unassignUserTask(userId, taskId) {
+    dispatch({
+      type: "UNASSIGN_USER",
+      payload: {
+        user: {
+          task_id: taskId,
+          user_id: userId,
         },
       },
     });
@@ -307,6 +317,7 @@ export const GlobalProvider = ({ children }) => {
         setDroppables,
         removeSub,
         changeSub,
+        unassignUserTask,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,

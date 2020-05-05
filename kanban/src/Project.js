@@ -94,14 +94,10 @@ const assignUser = (
   users
 ) => {
   e.preventDefault();
-  console.log(chosenTask);
   const task = tasks.filter((task) => task._id === chosenTask);
   const initials = users.filter((user) => user._id === chosenUser.id)[0]
     .initials;
-  console.log(initials);
-  console.log(task);
   const isAssigned = task[0].users.filter((user) => user._id === chosenUser.id);
-  console.log(isAssigned[0]);
   if (isAssigned[0] === undefined && task[0].users.length < 3) {
     socket.emit(
       "task-assign-user",
@@ -148,11 +144,7 @@ const AddUserForm = ({
             >
               {users.map((user) => {
                 return (
-                  <option
-                    name={user.username}
-                    value={user._id}
-                    initials={user.initials}
-                  >
+                  <option name={user.username} value={user._id}>
                     {user.username}
                   </option>
                 );
