@@ -201,7 +201,6 @@ const Subproject = ({ subproject }) => {
                             const taskItem = tasksItems.filter(
                               (task) => task._id === item.id
                             );
-                            // console.log(taskItem[0]);
                             return (
                               <Card
                                 card={item}

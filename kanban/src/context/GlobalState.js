@@ -14,7 +14,8 @@ const initialState = {
   userFormActive: false,
   chosenTask: "",
   chosenUser: "",
-  taskColors: ["#349eef", "#ed344f", "#34ed74", "#335bea", "#eda934"],
+  // taskColors: ["#349eef", "#ed344f", "#34ed74", "#9633e8", "#eda934"],
+  taskColors: ["blue", "orange", "yellow", "red", "green"],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -161,6 +162,7 @@ export const GlobalProvider = ({ children }) => {
         task: {
           _id: taskId,
           users: users,
+          color_id: 0,
         },
       },
     });

@@ -439,7 +439,7 @@ export default (state, action) => {
             task._id === action.payload.taskId
               ? {
                   ...task,
-                  colorId: action.payload.colorId,
+                  color_id: action.payload.colorId,
                 }
               : task
           ),
