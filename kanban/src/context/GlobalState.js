@@ -9,6 +9,11 @@ const initialState = {
   columns: [],
   subprojects: [],
   droppables: [],
+  users: [],
+  tasks: [],
+  userFormActive: false,
+  chosenTask: "",
+  chosenUser: "",
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -24,13 +29,44 @@ export const GlobalProvider = ({ children }) => {
       payload: columns,
     });
   }
+  function setUsers(users) {
+    dispatch({
+      type: "SET_USERS",
+      payload: users,
+    });
+  }
+  function setTasks(tasks) {
+    dispatch({
+      type: "SET_TASKS",
+      payload: tasks,
+    });
+  }
   function setMenu(menuActive) {
     dispatch({
       type: "SET_MENU",
       payload: !menuActive,
     });
   }
-
+  function setForm(formActive) {
+    dispatch({
+      type: "SET_FORM",
+      payload: formActive,
+    });
+  }
+  function setChosenUser(chosenUser) {
+    dispatch({
+      type: "SET_CHOSENUSER",
+      payload: {
+        id: chosenUser,
+      },
+    });
+  }
+  function setChosenTask(chosenTask) {
+    dispatch({
+      type: "SET_CHOSENTASK",
+      payload: chosenTask,
+    });
+  }
   function setSubprojects(subprojects) {
     dispatch({
       type: "SET_SUBPROJECTS",
@@ -113,6 +149,40 @@ export const GlobalProvider = ({ children }) => {
           board_index: subprojectColItems,
           tasks: [],
           max_tasks: parseInt(maxLimit),
+        },
+      },
+    });
+  }
+  function addTask(taskId, users) {
+    dispatch({
+      type: "ADD_TASK",
+      payload: {
+        task: {
+          _id: taskId,
+          users: users,
+        },
+      },
+    });
+  }
+  function assignUserTask(chosenUser, taskId, initials) {
+    dispatch({
+      type: "ASSIGN_USER",
+      payload: {
+        user: {
+          task_id: taskId,
+          user_id: chosenUser,
+          initials: initials,
+        },
+      },
+    });
+  }
+  function unassignUserTask(userId, taskId) {
+    dispatch({
+      type: "UNASSIGN_USER",
+      payload: {
+        user: {
+          task_id: taskId,
+          user_id: userId,
         },
       },
     });
@@ -228,8 +298,15 @@ export const GlobalProvider = ({ children }) => {
         setColumns,
         setSubprojects,
         setMenu,
+        setUsers,
+        setForm,
+        setTasks,
+        setChosenUser,
+        setChosenTask,
+        assignUserTask,
         moveCard,
         addCard,
+        addTask,
         setItems,
         removeCard,
         editCard,
@@ -240,11 +317,17 @@ export const GlobalProvider = ({ children }) => {
         setDroppables,
         removeSub,
         changeSub,
+        unassignUserTask,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,
         droppables: state.droppables,
         menuActive: state.menuActive,
+        userFormActive: state.userFormActive,
+        users: state.users,
+        tasks: state.tasks,
+        chosenUser: state.chosenUser,
+        chosenTask: state.chosenTask,
       }}
     >
       {children}

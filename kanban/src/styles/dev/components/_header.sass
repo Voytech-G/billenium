@@ -18,17 +18,25 @@
 .header-bar__menu
   display: flex
   justify-content: space-between
-  width: 250px
+  width: 230px
 
 .header-bar__elements-container
   display: flex
   justify-content: space-between
-  width: 200px
+  width: 180px
+  transition: 0.3s
+  ::selection 
+    color: none
+    background: none
+
+
 .header-bar__elements-container--active
   display: flex
+  opacity: 1
 
 .header-bar__elements-container--unactive
-  display: none
+  display: flex
+  opacity: 0
 
 .header-bar__menu-element
   font-size: 22px
@@ -47,9 +55,15 @@
       
 .header-bar__username
     display: flex
+    &::selection 
+      color: none
+      background: none
 
 .header-bar__useravatar
   margin-left: 10px
+  &::selection 
+      color: none
+      background: none
 
 .header-bar__hamburger-menu--active
   display: block

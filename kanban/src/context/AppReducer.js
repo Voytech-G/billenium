@@ -39,10 +39,75 @@ export default (state, action) => {
         ...state,
         columns: action.payload,
       };
+    case "SET_USERS":
+      return {
+        ...state,
+        users: action.payload,
+      };
+    case "SET_CHOSENUSER":
+      return {
+        ...state,
+        chosenUser: {
+          id: action.payload.id,
+        },
+      };
+    case "SET_CHOSENTASK":
+      return {
+        ...state,
+        chosenTask: action.payload,
+      };
+    case "ASSIGN_USER":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.user.task_id
+              ? {
+                  ...task,
+                  users: [
+                    ...task.users,
+                    {
+                      _id: action.payload.user.user_id,
+                      initials: action.payload.user.initials,
+                    },
+                  ],
+                }
+              : task
+          ),
+        ],
+      };
+    case "UNASSIGN_USER":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.user.task_id
+              ? {
+                  ...task,
+                  users: [
+                    ...task.users.filter(
+                      (user) => user._id !== action.payload.user.user_id
+                    ),
+                  ],
+                }
+              : task
+          ),
+        ],
+      };
+    case "SET_TASKS":
+      return {
+        ...state,
+        tasks: action.payload,
+      };
     case "SET_MENU":
       return {
         ...state,
         menuActive: action.payload,
+      };
+    case "SET_FORM":
+      return {
+        ...state,
+        userFormActive: action.payload,
       };
     case "SET_SUBPROJECTS":
       return {
@@ -196,6 +261,11 @@ export default (state, action) => {
       return {
         ...state,
         columns: [...state.columns, action.payload.column].rearrangeColumns(),
+      };
+    case "ADD_TASK":
+      return {
+        ...state,
+        tasks: [...state.tasks, action.payload.task],
       };
     case "ADD_SUBPROJECT":
       return {
