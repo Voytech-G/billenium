@@ -110,7 +110,7 @@ const DeleteButton = ({ removeSub, socket, subId, subIndex }) => {
 };
 
 const Subproject = ({ subproject }) => {
-  const { id, name, tasks, row_index } = subproject;
+  const { id, name, tasks: subTasks, row_index } = subproject;
   const {
     columns,
     subprojects,
@@ -124,6 +124,7 @@ const Subproject = ({ subproject }) => {
     changeSub,
     removeSub,
     addTask,
+    tasks: tasksItems,
   } = useContext(GlobalContext);
   const droppablesArr = [];
   useEffect(() => {
@@ -193,15 +194,20 @@ const Subproject = ({ subproject }) => {
                       `}
                     >
                       <div>
-                        {tasks
+                        {subTasks
                           .sort((a, b) => a.row_index - b.row_index)
                           .filter((task) => task.column_id === column.id)
                           .map((item) => {
+                            const taskItem = tasksItems.filter(
+                              (task) => task._id === item.id
+                            );
+                            // console.log(taskItem[0]);
                             return (
                               <Card
                                 card={item}
                                 columnId={column.id}
                                 subprojectId={subproject.id}
+                                task={taskItem[0]}
                               />
                             );
                           })}
@@ -222,7 +228,7 @@ const Subproject = ({ subproject }) => {
                                 subproject.id,
                                 addCard,
                                 socket,
-                                tasks,
+                                subTasks,
                                 addTask
                               )
                             }

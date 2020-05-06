@@ -14,6 +14,7 @@ const initialState = {
   userFormActive: false,
   chosenTask: "",
   chosenUser: "",
+  taskColors: ["#349eef", "#ed344f", "#34ed74", "#335bea", "#eda934"],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -292,6 +293,9 @@ export const GlobalProvider = ({ children }) => {
   function changeSub(subId, content) {
     dispatch({ type: "EDIT_SUB", payload: { subId, content } });
   }
+  function changeColor(taskId, colorId) {
+    dispatch({ type: "CHANGE_COLOR", payload: { taskId, colorId } });
+  }
   return (
     <GlobalContext.Provider
       value={{
@@ -318,6 +322,7 @@ export const GlobalProvider = ({ children }) => {
         removeSub,
         changeSub,
         unassignUserTask,
+        changeColor,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,
@@ -328,6 +333,7 @@ export const GlobalProvider = ({ children }) => {
         tasks: state.tasks,
         chosenUser: state.chosenUser,
         chosenTask: state.chosenTask,
+        taskColors: state.taskColors,
       }}
     >
       {children}

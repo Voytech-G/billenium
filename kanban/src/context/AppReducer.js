@@ -431,6 +431,20 @@ export default (state, action) => {
             : column.items
         ),
       };
+    case "CHANGE_COLOR":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.taskId
+              ? {
+                  ...task,
+                  colorId: action.payload.colorId,
+                }
+              : task
+          ),
+        ],
+      };
 
     default:
       return state;

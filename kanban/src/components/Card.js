@@ -75,6 +75,18 @@ const unAssignUser = (userId, taskId, unassignUserTask, socket) => {
     }
   );
 };
+const colorChange = (id, changeColor, tasks, taskColors) => {
+  let actualColorIndex = tasks.filter((task) => task._id === id)[0].colorId;
+  console.log(taskColors[actualColorIndex]);
+  if (actualColorIndex != 4) {
+    changeColor(id, ++actualColorIndex);
+    // console.log(actualColorIndex);
+  } else {
+    actualColorIndex = 0;
+    changeColor(id, actualColorIndex);
+    // console.log(actualColorIndex);
+  }
+};
 const Card = ({ card, columnId, subprojectId }) => {
   const { id, content, row_index } = card;
   const {
@@ -87,28 +99,36 @@ const Card = ({ card, columnId, subprojectId }) => {
     setChosenTask,
     tasks,
     unassignUserTask,
+    changeColor,
+    task,
+    taskColors,
   } = useContext(GlobalContext);
+  // const taskItem = tasks.filter((task) => task._id === id)[0];
 
   return (
     <Draggable key={id} draggableId={id} index={row_index}>
       {(provided, snapshot) => {
         let userCounter = 3;
-        const taskItem = tasks.filter((task) => task._id === id);
+        let colorId = 0;
+        let nextColorId = 1;
         return (
           <div
             className="task-body"
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            style={{}}
           >
             <div className="task-body__task-container">
               <div className="task-body__content-container">{content}</div>
               <div className="task-body__buttons_container">
                 <div className="task-body__userbuttons_container">
                   {tasks
-                    .filter((task) => task._id === id)
-                    .map((task) =>
-                      task.users.map((user) => {
+                    .filter((taskElement) => taskElement._id === id)
+                    .map((taskItem) => {
+                      colorId = taskItem.colorId;
+                      nextColorId = colorId === 4 ? 0 : ++colorId;
+                      return taskItem.users.map((user) => {
                         userCounter--;
                         return (
                           <div
@@ -116,7 +136,7 @@ const Card = ({ card, columnId, subprojectId }) => {
                             onClick={(e) =>
                               unAssignUser(
                                 user._id,
-                                task._id,
+                                taskItem._id,
                                 unassignUserTask,
                                 socket
                               )
@@ -125,8 +145,8 @@ const Card = ({ card, columnId, subprojectId }) => {
                             {user.initials}
                           </div>
                         );
-                      })
-                    )}
+                      });
+                    })}
                   {Array.from(Array(userCounter), (e, i) => {
                     return (
                       <div>
@@ -143,6 +163,13 @@ const Card = ({ card, columnId, subprojectId }) => {
                   })}
                 </div>
                 <div className="task-body__settingsbuttons_container">
+                  <div
+                    className="task-body__button--colorchanger"
+                    style={{ backgroundColor: taskColors[nextColorId] }}
+                    onClick={() =>
+                      colorChange(id, changeColor, tasks, taskColors)
+                    }
+                  ></div>
                   <div className="task-body__edit-button-container">
                     <button
                       onClick={(e) =>

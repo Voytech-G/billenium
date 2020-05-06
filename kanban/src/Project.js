@@ -80,7 +80,11 @@ const getProject = (
     setChosenUser(data.payload[0]._id);
   });
   socket.emit("get-all-tasks", (data) => {
-    setTasks(data.payload);
+    const tasks = data.payload.map((task) => ({
+      ...task,
+      colorId: 0,
+    }));
+    setTasks(tasks);
   });
 };
 const assignUser = (
