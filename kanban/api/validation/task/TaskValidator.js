@@ -40,7 +40,13 @@ class TaskValidator extends ValidatorAbstract {
 
             const taskContent = payload.content
             this.validateTaskContent(taskContent)
-            
+
+            // color ID is optional, only if its not null check if its convertable to number
+            const colorId = payload.color_id
+            if (colorId != null && isNaN(colorId)) {
+                throw new Error('Color ID is invalid')
+            }
+
             return
         } catch (exception) {
             throw new Error(`Update task request validation failed: ${exception.message}`)

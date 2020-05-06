@@ -194,16 +194,21 @@ class TaskService {
             const updatedTask = await TransactionHandler.run(async () => {
                 const taskId = payload.task_id
                 const content = payload.content
+                const colorId = payload.color_id
         
                 const task = await TaskRepository.findById(taskId)
                 if (task == null) {
                     throw new Error('Found no task of given ID')
                 }
     
-                const update = { 
+                let update = { 
                     content, 
                 }
-    
+                
+                if (colorId != null) {
+                    update.color_id = colorId
+                }
+
                 const updatedTask = await TaskRepository.update(taskId, update)
                 if (updatedTask == null) {
                     throw new Error('An error occured, no tasks updated')
