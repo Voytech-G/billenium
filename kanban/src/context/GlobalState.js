@@ -231,6 +231,14 @@ export const GlobalProvider = ({ children }) => {
       },
     });
   }
+  function blockCard(id) {
+    dispatch({
+      type: "CHANGE_BLOCK",
+      payload: {
+        id,
+      },
+    });
+  }
   function editColumn(columnId, name, boardIndex, maxTasks) {
     dispatch({
       type: "EDIT_COLUMN",
@@ -325,6 +333,7 @@ export const GlobalProvider = ({ children }) => {
         changeSub,
         unassignUserTask,
         changeColor,
+        blockCard,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,

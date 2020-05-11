@@ -445,6 +445,20 @@ export default (state, action) => {
           ),
         ],
       };
+    case "CHANGE_BLOCK":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.id
+              ? {
+                  ...task,
+                  blocked: !task.blocked,
+                }
+              : task
+          ),
+        ],
+      };
 
     default:
       return state;

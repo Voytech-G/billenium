@@ -6,6 +6,7 @@ import {
   faTrash,
   faEdit,
   faUserCircle,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 const handleClick_removeCard = (
   e,
@@ -116,7 +117,14 @@ const colorChange = (
     );
   }
 };
-const Card = ({ card, columnId, subprojectId }) => {
+
+const changeBlockage = (id, blockCard, socket, taskCard, taskColors) => {
+  console.log(taskCard[0].color_id);
+  console.log(taskColors[taskCard[0].color_id]);
+  blockCard(id);
+};
+
+const Card = ({ card, columnId, subprojectId, taskCard }) => {
   const { id, content, row_index } = card;
   const {
     socket,
@@ -129,27 +137,34 @@ const Card = ({ card, columnId, subprojectId }) => {
     tasks,
     unassignUserTask,
     changeColor,
-    task,
     taskColors,
+    blockCard,
   } = useContext(GlobalContext);
-  const taskItem = tasks.filter((task) => task._id === id)[0];
-
+  let taskColor =
+    taskCard[0] === undefined ? "#349eef" : taskColors[taskCard[0].color_id];
   return (
-    <Draggable key={id} draggableId={id} index={row_index}>
+    <Draggable
+      key={id}
+      draggableId={id}
+      index={row_index}
+      isDragDisabled={false}
+    >
       {(provided, snapshot) => {
         let userCounter = 3;
         let colorId = 0;
         let nextColorId;
+
         return (
           <div
             className="task-body"
+            style={{ backgroundColor: taskColor }}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
             <div
               className="task-body__task-container"
-              style={{ backgroundColor: taskColors[nextColorId] }}
+              style={{ backgroundColor: taskColor }}
             >
               <div className="task-body__content-container">{content}</div>
               <div className="task-body__buttons_container">
@@ -209,6 +224,24 @@ const Card = ({ card, columnId, subprojectId }) => {
                         )
                       }
                     ></div>
+                  </div>
+
+                  <div className="task-body__block-button-container">
+                    <button
+                      onClick={(e) =>
+                        changeBlockage(
+                          id,
+                          blockCard,
+                          socket,
+                          taskCard,
+                          taskColors
+                        )
+                      }
+                      type="submit"
+                      className={"task-body__button"}
+                    >
+                      <FontAwesomeIcon icon={faBan} />
+                    </button>
                   </div>
                   <div className="task-body__edit-button-container">
                     <button

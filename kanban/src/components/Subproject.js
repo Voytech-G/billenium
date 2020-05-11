@@ -206,7 +206,7 @@ const Subproject = ({ subproject }) => {
                                 card={item}
                                 columnId={column.id}
                                 subprojectId={subproject.id}
-                                task={taskItem[0]}
+                                taskCard={taskItem}
                               />
                             );
                           })}
