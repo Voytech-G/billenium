@@ -41,6 +41,11 @@ class TaskValidator extends ValidatorAbstract {
             const taskContent = payload.content
             this.validateTaskContent(taskContent)
 
+            const taskBlocked = payload.blocked
+            if (taskBlocked != null && typeof taskBlocked != 'boolean') {
+                throw new Error('Task blocked field must be boolean')
+            }
+
             // color ID is optional, only if its not null check if its convertable to number
             const colorId = payload.color_id
             if (colorId != null && isNaN(colorId)) {

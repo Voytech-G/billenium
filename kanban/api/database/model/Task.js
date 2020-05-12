@@ -14,7 +14,9 @@ const TaskSchema = new mongoose.Schema({
   // subtasks: [
   //   { type: mongoose.Schema.Types.ObjectId, ref: 'Subtask' },
   // ],
-}, {
+  blocked: { type: Boolean, default: false },
+}, 
+{
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
