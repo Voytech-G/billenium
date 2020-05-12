@@ -431,6 +431,34 @@ export default (state, action) => {
             : column.items
         ),
       };
+    case "CHANGE_COLOR":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.taskId
+              ? {
+                  ...task,
+                  color_id: action.payload.colorId,
+                }
+              : task
+          ),
+        ],
+      };
+    case "CHANGE_BLOCK":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.id
+              ? {
+                  ...task,
+                  blocked: !task.blocked,
+                }
+              : task
+          ),
+        ],
+      };
 
     default:
       return state;

@@ -6,6 +6,7 @@ import {
   faTrash,
   faEdit,
   faUserCircle,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 const handleClick_removeCard = (
   e,
@@ -44,14 +45,15 @@ const handleClick_editCard = (
   rowIndex,
   columnId,
   subprojectId,
-  content
+  content,
+  colorId
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
 
   socket.emit(
     "update-task",
-    { task_id: cardId, content: cardContent },
+    { task_id: cardId, content: cardContent, color_id: colorId },
     (res) => {
       if (res.status) {
         editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
@@ -75,7 +77,54 @@ const unAssignUser = (userId, taskId, unassignUserTask, socket) => {
     }
   );
 };
-const Card = ({ card, columnId, subprojectId }) => {
+const colorChange = (
+  id,
+  changeColor,
+  tasks,
+  taskColors,
+  cardContent,
+  socket
+) => {
+  let actualColorIndex = tasks.filter((task) => task._id === id)[0].color_id;
+  // console.log(taskColors[actualColorIndex]);
+  console.log(actualColorIndex);
+  if (actualColorIndex != 4) {
+    socket.emit(
+      "update-task",
+      { task_id: id, content: cardContent, color_id: actualColorIndex + 1 },
+      (res) => {
+        if (res.status) {
+          changeColor(id, actualColorIndex + 1);
+          console.log(actualColorIndex + 1);
+        } else {
+          alert("Error: server returned false status");
+        }
+      }
+    );
+  } else {
+    actualColorIndex = 0;
+    socket.emit(
+      "update-task",
+      { task_id: id, content: cardContent, color_id: actualColorIndex },
+      (res) => {
+        if (res.status) {
+          changeColor(id, actualColorIndex);
+          console.log(actualColorIndex);
+        } else {
+          alert("Error: server returned false status");
+        }
+      }
+    );
+  }
+};
+
+const changeBlockage = (id, blockCard, socket, taskCard, taskColors) => {
+  console.log(taskCard[0].color_id);
+  console.log(taskColors[taskCard[0].color_id]);
+  blockCard(id);
+};
+
+const Card = ({ card, columnId, subprojectId, taskCard }) => {
   const { id, content, row_index } = card;
   const {
     socket,
@@ -87,28 +136,45 @@ const Card = ({ card, columnId, subprojectId }) => {
     setChosenTask,
     tasks,
     unassignUserTask,
+    changeColor,
+    taskColors,
+    blockCard,
   } = useContext(GlobalContext);
-
+  let taskColor =
+    taskCard[0] === undefined ? "#349eef" : taskColors[taskCard[0].color_id];
   return (
-    <Draggable key={id} draggableId={id} index={row_index}>
+    <Draggable
+      key={id}
+      draggableId={id}
+      index={row_index}
+      isDragDisabled={false}
+    >
       {(provided, snapshot) => {
         let userCounter = 3;
-        const taskItem = tasks.filter((task) => task._id === id);
+        let colorId = 0;
+        let nextColorId;
+
         return (
           <div
             className="task-body"
+            style={{ backgroundColor: taskColor }}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <div className="task-body__task-container">
+            <div
+              className="task-body__task-container"
+              style={{ backgroundColor: taskColor }}
+            >
               <div className="task-body__content-container">{content}</div>
               <div className="task-body__buttons_container">
                 <div className="task-body__userbuttons_container">
                   {tasks
-                    .filter((task) => task._id === id)
-                    .map((task) =>
-                      task.users.map((user) => {
+                    .filter((taskElement) => taskElement._id === id)
+                    .map((taskItem) => {
+                      colorId = taskItem.color_id;
+                      nextColorId = colorId === 4 ? 0 : colorId + 1;
+                      return taskItem.users.map((user) => {
                         userCounter--;
                         return (
                           <div
@@ -116,7 +182,7 @@ const Card = ({ card, columnId, subprojectId }) => {
                             onClick={(e) =>
                               unAssignUser(
                                 user._id,
-                                task._id,
+                                taskItem._id,
                                 unassignUserTask,
                                 socket
                               )
@@ -125,8 +191,8 @@ const Card = ({ card, columnId, subprojectId }) => {
                             {user.initials}
                           </div>
                         );
-                      })
-                    )}
+                      });
+                    })}
                   {Array.from(Array(userCounter), (e, i) => {
                     return (
                       <div>
@@ -144,6 +210,40 @@ const Card = ({ card, columnId, subprojectId }) => {
                 </div>
                 <div className="task-body__settingsbuttons_container">
                   <div className="task-body__edit-button-container">
+                    <div
+                      className="task-body__button--colorchanger"
+                      style={{ backgroundColor: taskColors[nextColorId] }}
+                      onClick={() =>
+                        colorChange(
+                          id,
+                          changeColor,
+                          tasks,
+                          taskColors,
+                          content,
+                          socket
+                        )
+                      }
+                    ></div>
+                  </div>
+
+                  <div className="task-body__block-button-container">
+                    <button
+                      onClick={(e) =>
+                        changeBlockage(
+                          id,
+                          blockCard,
+                          socket,
+                          taskCard,
+                          taskColors
+                        )
+                      }
+                      type="submit"
+                      className={"task-body__button"}
+                    >
+                      <FontAwesomeIcon icon={faBan} />
+                    </button>
+                  </div>
+                  <div className="task-body__edit-button-container">
                     <button
                       onClick={(e) =>
                         handleClick_editCard(
@@ -155,7 +255,8 @@ const Card = ({ card, columnId, subprojectId }) => {
                           row_index,
                           columnId,
                           subprojectId,
-                          content
+                          content,
+                          colorId
                         )
                       }
                       type="submit"

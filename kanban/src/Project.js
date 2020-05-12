@@ -5,7 +5,14 @@ import { GlobalContext } from "./context/GlobalState";
 import "./styles/prod/main.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-const signIn = (socket, setColumns) => {
+const signIn = (
+  socket,
+  setColumns,
+  setSubprojects,
+  setUsers,
+  setTasks,
+  setChosenUser
+) => {
   const userName = prompt("Please enter your username.");
   const userPin = prompt("Please enter your PIN code.");
   socket.emit(
@@ -21,7 +28,14 @@ const signIn = (socket, setColumns) => {
         alert("signed in!");
         localStorage.setItem("userName", userName);
         localStorage.setItem("userPin", userPin);
-        getProject(socket, setColumns);
+        getProject(
+          socket,
+          setColumns,
+          setSubprojects,
+          setUsers,
+          setTasks,
+          setChosenUser
+        );
         return;
       } else {
         alert(`not signed in: ${data.message}`);
@@ -71,6 +85,7 @@ const getProject = (
           })),
         })
       );
+      // setColumnAndProjects(columnsWithTasks, subprojectsWithTasks)
       setColumns(columnsWithTasks);
       setSubprojects(subprojectsWithTasks);
     }
@@ -80,7 +95,11 @@ const getProject = (
     setChosenUser(data.payload[0]._id);
   });
   socket.emit("get-all-tasks", (data) => {
-    setTasks(data.payload);
+    const tasks = data.payload.map((task) => ({
+      ...task,
+      blocked: 0,
+    }));
+    setTasks(tasks);
   });
 };
 const assignUser = (
@@ -199,7 +218,14 @@ const Project = () => {
       (localStorage.getItem("userName") == null &&
         localStorage.getItem("userPin") == null)
     ) {
-      signIn(socket, setColumns);
+      signIn(
+        socket,
+        setColumns,
+        setSubprojects,
+        setUsers,
+        setTasks,
+        setChosenUser
+      );
     } else {
       const userToken = localStorage.getItem("userToken");
       socket.emit("authenticate", { token: userToken }, (data) => {
@@ -214,7 +240,14 @@ const Project = () => {
           );
         } else {
           alert(`Authentication error ${data.message}`);
-          signIn(socket, setColumns, setSubprojects);
+          signIn(
+            socket,
+            setColumns,
+            setSubprojects,
+            setUsers,
+            setTasks,
+            setChosenUser
+          );
         }
       });
     }

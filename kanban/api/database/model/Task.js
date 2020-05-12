@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const TaskSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId, 
   content: { type: String, required: [true, 'Task content is required'] },
+  color_id: { type: Number, default: 0 },
   row_index: { type: Number, required: [true, 'Task row index is required'] },
   column: { type: mongoose.Schema.Types.ObjectId, ref: 'Column', nullable: true },
   subproject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subproject', nullable: true, default: null },
@@ -13,7 +14,9 @@ const TaskSchema = new mongoose.Schema({
   // subtasks: [
   //   { type: mongoose.Schema.Types.ObjectId, ref: 'Subtask' },
   // ],
-}, {
+  blocked: { type: Boolean, default: false },
+}, 
+{
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
