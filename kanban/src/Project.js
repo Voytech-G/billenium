@@ -95,9 +95,9 @@ const getProject = (
     setChosenUser(data.payload[0]._id);
   });
   socket.emit("get-all-tasks", (data) => {
+    console.log(data);
     const tasks = data.payload.map((task) => ({
       ...task,
-      blocked: 0,
     }));
     setTasks(tasks);
   });

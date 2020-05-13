@@ -119,8 +119,9 @@ const colorChange = (
 };
 
 const changeBlockage = (id, blockCard, socket, taskCard, taskColors) => {
-  console.log(taskCard[0].color_id);
-  console.log(taskColors[taskCard[0].color_id]);
+  // console.log(taskCard[0].color_id);
+  // console.log(taskColors[taskCard[0].color_id]);
+  console.log(taskCard);
   blockCard(id);
 };
 
