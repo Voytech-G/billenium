@@ -46,7 +46,8 @@ const handleClick_editCard = (
   columnId,
   subprojectId,
   content,
-  colorId
+  colorId,
+  editContent
 ) => {
   e.preventDefault();
   const cardContent = prompt("Type new text", content);
@@ -57,6 +58,7 @@ const handleClick_editCard = (
     (res) => {
       if (res.status) {
         editCard(cardId, rowIndex, columnId, subprojectId, cardContent);
+        editContent(cardId, cardContent);
       } else {
         alert("Error: server returned false status");
       }
@@ -118,10 +120,21 @@ const colorChange = (
   }
 };
 
-const changeBlockage = (id, blockCard, socket, taskCard, taskColors) => {
-  console.log(taskCard[0].color_id);
-  console.log(taskColors[taskCard[0].color_id]);
-  blockCard(id);
+const changeBlockage = (id, blockCard, socket, taskCard, tasks) => {
+  console.log(tasks);
+  const blocked = tasks.filter((task) => task._id === id)[0].blocked;
+  const content = tasks.filter((task) => task._id === id)[0].content;
+  socket.emit(
+    "update-task",
+    { task_id: id, content: content, blocked: !blocked },
+    (res) => {
+      if (res.status) {
+        blockCard(id);
+      } else {
+        alert("Error: server returned false status");
+      }
+    }
+  );
 };
 
 const Card = ({ card, columnId, subprojectId, taskCard }) => {
@@ -139,15 +152,18 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
     changeColor,
     taskColors,
     blockCard,
+    editContent,
   } = useContext(GlobalContext);
   let taskColor =
     taskCard[0] === undefined ? "#349eef" : taskColors[taskCard[0].color_id];
+  let blocked = taskCard[0] === undefined ? "#349eef" : taskCard[0].blocked;
+
   return (
     <Draggable
       key={id}
       draggableId={id}
       index={row_index}
-      isDragDisabled={false}
+      isDragDisabled={blocked}
     >
       {(provided, snapshot) => {
         let userCounter = 3;
@@ -156,15 +172,17 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
 
         return (
           <div
-            className="task-body"
-            style={{ backgroundColor: taskColor }}
+            className={`task-body ${blocked ? "task-blocked" : ""}`}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
             <div
               className="task-body__task-container"
-              style={{ backgroundColor: taskColor }}
+              style={{
+                backgroundColor: blocked ? "#afafaf" : taskColor,
+                border: blocked ? "1px solid transparent" : "1px solid black",
+              }}
             >
               <div className="task-body__content-container">{content}</div>
               <div className="task-body__buttons_container">
@@ -229,18 +247,15 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
                   <div className="task-body__block-button-container">
                     <button
                       onClick={(e) =>
-                        changeBlockage(
-                          id,
-                          blockCard,
-                          socket,
-                          taskCard,
-                          taskColors
-                        )
+                        changeBlockage(id, blockCard, socket, taskCard, tasks)
                       }
                       type="submit"
                       className={"task-body__button"}
                     >
-                      <FontAwesomeIcon icon={faBan} />
+                      <FontAwesomeIcon
+                        icon={faBan}
+                        style={{ color: blocked ? "black" : "white" }}
+                      />
                     </button>
                   </div>
                   <div className="task-body__edit-button-container">
@@ -256,7 +271,8 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
                           columnId,
                           subprojectId,
                           content,
-                          colorId
+                          colorId,
+                          editContent
                         )
                       }
                       type="submit"

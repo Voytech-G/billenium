@@ -459,6 +459,20 @@ export default (state, action) => {
           ),
         ],
       };
+    case "CHANGE_CONTENT":
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map((task) =>
+            task._id === action.payload.taskId
+              ? {
+                  ...task,
+                  content: action.payload.content,
+                }
+              : task
+          ),
+        ],
+      };
 
     default:
       return state;

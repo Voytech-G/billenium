@@ -14,8 +14,7 @@ const initialState = {
   userFormActive: false,
   chosenTask: "",
   chosenUser: "",
-  // taskColors: ["#349eef", "#ed344f", "#34ed74", "#9633e8", "#eda934"],
-  taskColors: ["blue", "orange", "yellow", "red", "green"],
+  taskColors: ["#ca6641", "#016612", "#5c2935", "#9f0fef", "#ffa010"],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
@@ -306,6 +305,9 @@ export const GlobalProvider = ({ children }) => {
   function changeColor(taskId, colorId) {
     dispatch({ type: "CHANGE_COLOR", payload: { taskId, colorId } });
   }
+  function editContent(taskId, content) {
+    dispatch({ type: "CHANGE_CONTENT", payload: { taskId, content } });
+  }
   return (
     <GlobalContext.Provider
       value={{
@@ -334,6 +336,7 @@ export const GlobalProvider = ({ children }) => {
         unassignUserTask,
         changeColor,
         blockCard,
+        editContent,
         socket: state.socket,
         columns: state.columns,
         subprojects: state.subprojects,

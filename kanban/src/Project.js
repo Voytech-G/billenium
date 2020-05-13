@@ -97,7 +97,6 @@ const getProject = (
   socket.emit("get-all-tasks", (data) => {
     const tasks = data.payload.map((task) => ({
       ...task,
-      blocked: 0,
     }));
     setTasks(tasks);
   });
