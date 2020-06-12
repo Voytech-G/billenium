@@ -181,7 +181,9 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
               className="task-body__task-container"
               style={{
                 backgroundColor: blocked ? "#afafaf" : taskColor,
-                border: blocked ? "1px solid transparent" : "1px solid black",
+                border: blocked
+                  ? "1px solid transparent"
+                  : "1px solid transparent",
               }}
             >
               <div className="task-body__content-container">{content}</div>
@@ -254,7 +256,7 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
                     >
                       <FontAwesomeIcon
                         icon={faBan}
-                        style={{ color: blocked ? "black" : "white" }}
+                        style={{ color: blocked ? "red" : "white" }}
                       />
                     </button>
                   </div>
@@ -298,7 +300,8 @@ const Card = ({ card, columnId, subprojectId, taskCard }) => {
                       type="submit"
                       className={"task-body__button"}
                     >
-                      <FontAwesomeIcon icon={faTrash} />
+                      {/* {blocked ? "" : <FontAwesomeIcon icon={faTrash} />} */}
+                      {<FontAwesomeIcon icon={faTrash} />}
                     </button>
                   </div>
                 </div>

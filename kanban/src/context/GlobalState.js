@@ -14,7 +14,7 @@ const initialState = {
   userFormActive: false,
   chosenTask: "",
   chosenUser: "",
-  taskColors: ["#ca6641", "#016612", "#5c2935", "#9f0fef", "#ffa010"],
+  taskColors: ["#00205b", "#e4002b", "#a51890", "#ff9933", "#009f4d"],
 };
 
 initialState.socket = socketIOClient("http://localhost:4000");
