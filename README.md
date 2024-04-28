@@ -1,6 +1,6 @@
 # billenium
 
-Project created by students for a company
+Kanban Project created by students for a company
 
 Przydatne linki:
 
